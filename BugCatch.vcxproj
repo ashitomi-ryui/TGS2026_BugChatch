@@ -141,7 +141,7 @@
     <ClCompile Include="source\Object\Bug.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
     <ClCompile Include="source\Object\Tree.cpp" />
-    <ClCompile Include="source\Scene\InGame.cpp" />
+    <ClCompile Include="source\Scene\InGameScene.cpp" />
     <ClCompile Include="source\Scene\ResultScene.cpp" />
     <ClCompile Include="source\Scene\SceneManager.cpp" />
     <ClCompile Include="source\Scene\TitleScene.cpp" />
@@ -152,8 +152,10 @@
     <ClInclude Include="source\Object\Bug.h" />
     <ClInclude Include="source\Object\Player.h" />
     <ClInclude Include="source\Object\Tree.h" />
-    <ClInclude Include="source\Scene\InGame.h" />
+    <ClInclude Include="source\Scene\InGameScene.h" />
     <ClInclude Include="source\Scene\ResultScene.h" />
+    <ClInclude Include="source\Scene\SceneManager.h" />
+    <ClInclude Include="source\Scene\SceneType.h" />
     <ClInclude Include="source\Scene\TitleScene.h" />
     <ClInclude Include="source\Utilitys\Input.h" />
     <ClInclude Include="source\Utilitys\Math.h" />
