@@ -140,13 +140,19 @@
     <ClCompile Include="source\AppMain.cpp" />
     <ClCompile Include="source\Object\Bug.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
+    <ClCompile Include="source\Object\Tree.cpp" />
     <ClCompile Include="source\Scene\InGame.cpp" />
+    <ClCompile Include="source\Scene\ResultScene.cpp" />
     <ClCompile Include="source\Scene\SceneManager.cpp" />
+    <ClCompile Include="source\Scene\TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Object\Bug.h" />
     <ClInclude Include="source\Object\Player.h" />
+    <ClInclude Include="source\Object\Tree.h" />
     <ClInclude Include="source\Scene\InGame.h" />
+    <ClInclude Include="source\Scene\ResultScene.h" />
+    <ClInclude Include="source\Scene\TitleScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
