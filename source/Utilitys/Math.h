@@ -14,6 +14,14 @@ struct Vector2D
 	float y;
 };
 
+// 3次元ベクトル構造体
+struct Vector3D
+{
+	float x;
+	float y;
+	float z;
+};
+
 // 度数法から弧度法に変換する
 float ToRadians(float dedrees);
 // 弧度法から度数法に変換する
