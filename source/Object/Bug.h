@@ -1,4 +1,5 @@
 #pragma once
+#include"../Utilitys/Math.h"
 
 struct Bug
 {
