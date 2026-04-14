@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\AppMain.cpp" />
+    <ClCompile Include="source\Object\Batta.cpp" />
     <ClCompile Include="source\Object\Bug.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
     <ClCompile Include="source\Object\Tree.cpp" />
@@ -149,6 +150,7 @@
     <ClCompile Include="source\Utilitys\Math.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Object\Batta.h" />
     <ClInclude Include="source\Object\Bug.h" />
     <ClInclude Include="source\Object\Player.h" />
     <ClInclude Include="source\Object\Tree.h" />
