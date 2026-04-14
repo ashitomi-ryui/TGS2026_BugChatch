@@ -9,10 +9,15 @@ int TitleInit(void)//タイトルの初期化
 
 eSceneType TitleUpdate(float delta_second)//タイトル更新処理
 {
+	if (GetKeyInputState(KEY_INPUT_SPACE) == ePressed)
+	{
+		return eInGame;
+	}
+	
 	return eTitle;
 }
 
 void TitleDraw(void)//タイトル表示
 {
-	
+	DrawString(200, 200, "SPACEを押してメイン画面へ移動",GetColor(225, 0, 0), TRUE);
 }
