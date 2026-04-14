@@ -18,6 +18,7 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
+	BattaDraw();
 	TonboDraw();
 	
 }
