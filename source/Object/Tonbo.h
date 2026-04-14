@@ -1,7 +1,8 @@
 #pragma once
+#ifndef WEIRD_MOTION_H
+#define WEIRD_MOTION_H
 
-struct Vector2D
-{
-	float x;
-	float y;
-};
+void GetWeirdMotion(double t, int centerX, int centerY, int* x, int* y);
+void TonboDraw(void);
+
+#endif

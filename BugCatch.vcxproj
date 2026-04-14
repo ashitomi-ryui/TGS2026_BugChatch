@@ -141,6 +141,7 @@
     <ClCompile Include="source\Object\Batta.cpp" />
     <ClCompile Include="source\Object\Bug.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
+    <ClCompile Include="source\Object\Tonbo.cpp" />
     <ClCompile Include="source\Object\Tree.cpp" />
     <ClCompile Include="source\Scene\InGameScene.cpp" />
     <ClCompile Include="source\Scene\ResultScene.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="source\Object\Batta.h" />
     <ClInclude Include="source\Object\Bug.h" />
     <ClInclude Include="source\Object\Player.h" />
+    <ClInclude Include="source\Object\Tonbo.h" />
     <ClInclude Include="source\Object\Tree.h" />
     <ClInclude Include="source\Scene\InGameScene.h" />
     <ClInclude Include="source\Scene\ResultScene.h" />

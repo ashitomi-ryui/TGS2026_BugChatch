@@ -2,7 +2,9 @@
 #include"../source/Utilitys/Input.h"
 #include"../source/Scene/SceneManager.h"
 
+
 float GetDeltaSecond();
+
 
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
@@ -21,9 +23,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	}
 	while (ProcessMessage() != -1)
 	{
+		
 		InputUpdate();
 		int result = SceneUpdate(GetDeltaSecond());
-
 		//シーン継続不可orESCキーが離された瞬間
 		if (result != TRUE || GetKeyInputState(KEY_INPUT_ESCAPE) == eReleased)
 		{

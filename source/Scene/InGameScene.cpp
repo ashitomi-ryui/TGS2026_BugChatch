@@ -1,6 +1,7 @@
 #include"InGameScene.h"
 #include"../Utilitys/Input.h"
 #include<DxLib.h>
+#include"../Object/Tonbo.h"
 
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
@@ -14,5 +15,6 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
+	TonboDraw();
 	
 }
