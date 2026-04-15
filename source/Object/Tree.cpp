@@ -17,10 +17,10 @@ Tree::~Tree()
 
 }
 
-int Tree::TreeUpdate()
-{
-
-}
+//int Tree::TreeUpdate()
+//{
+//
+//}
 
 void Tree::TreeDraw()const
 {

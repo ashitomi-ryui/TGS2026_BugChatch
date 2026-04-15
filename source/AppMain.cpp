@@ -1,9 +1,12 @@
 #include <DxLib.h>
-#include"../source/Utilitys/Input.h"
-#include"../source/Scene/SceneManager.h"
+#include"Object/player.h"
+#include"Utilitys/Input.h"
+#include"Scene/SceneManager.h"
 
 
 float GetDeltaSecond();
+
+//Player player;
 
 
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)

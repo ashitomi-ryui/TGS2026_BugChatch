@@ -30,5 +30,25 @@ void Player::Update()
 
 void Player::Draw() const
 {
+	float x1, y1, x2, y2, x3, y3, x4, y4;
+	x1 = stickLocation.x - 10;
+	y1 = stickLocation.y;
+	
+	x2 = stickLocation.x;
+	y2 = stickLocation.y + 10;
 
+	x3 = stickLocation.x + 10;
+	y3 = stickLocation.y;
+
+	x4 = stickLocation.x;
+	y4 = stickLocation.y - 10;
+
+	DrawTriangle(x1, y1, x2, y2, x3, y3, 0xffffff, true);
+	DrawTriangle(x1, y1, x4, y4, x3, y3, 0xffffff, true);
+
+}
+
+Vector2D Player::GetNetLocation()
+{
+	return stickLocation;
 }

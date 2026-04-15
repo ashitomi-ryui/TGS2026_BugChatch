@@ -27,5 +27,5 @@ public:
 	void Draw() const;
 
 public:
-
+	Vector2D GetNetLocation();
 };

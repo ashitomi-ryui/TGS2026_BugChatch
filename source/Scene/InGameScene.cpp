@@ -12,12 +12,13 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 
 eSceneType InGameUpdate(float delta_second)
 {
-	BattaUpdate();
+	BattaUpdate(delta_second);
 	return eInGame;
 }
 
 void InGameDraw(void)
 {
+
 	BattaDraw();
 	TonboDraw();
 	
