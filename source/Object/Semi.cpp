@@ -10,7 +10,7 @@ int count2 = 0;
 
 void SemiInit(void)
 {
-	Semi.x = 640.0f;
+	Semi.x = 20.0f;
 	Semi.y = 500.0f;
 }
 
@@ -21,7 +21,7 @@ void SemiUpdate(float delta_second)
 	static int Reverse = 1;
 	static bool isStop = false;    // ¡~‚Ü‚Á‚Ä‚¢‚é‚©
 	static float StopTimer = 0.0f; // ~‚Ü‚Á‚Ä‚¢‚éŠÔ
-	const float speed = 500.0f; //‘¬“x
+	const float speed = 1000.0f; //‘¬“x
 	time3 += delta_second;
 	time4 += delta_second;
 
