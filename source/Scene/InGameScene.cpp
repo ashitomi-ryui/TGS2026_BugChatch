@@ -5,16 +5,19 @@
 #include<DxLib.h>
 #include"../Object/Tonbo.h"
 #include"../Object/Bug.h"
+#include"../Object/Semi.h"
 
 
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
 	BattaInit();
+	SemiInit();
 	return TRUE;
 }
 
 eSceneType InGameUpdate(float delta_second)
 {
+	SemiUpdate(delta_second);
 	BattaUpdate(delta_second);
 	BugUpdate();
 	return eInGame;
@@ -25,5 +28,6 @@ void InGameDraw(void)
 
 	BattaDraw();
 	TonboDraw();
+	SemiDraw();
 	
 }

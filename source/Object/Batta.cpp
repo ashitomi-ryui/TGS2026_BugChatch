@@ -23,11 +23,11 @@ void BattaUpdate(float delta_second)
 	time2 += delta_second;
 
 	Batta.x += i;
-	if (Batta.x > 400)
+	if (Batta.x > 720)
 	{
 		i = -1;
 	}
-	if (Batta.x < 50)
+	if (Batta.x < 300)
 	{
 		i = 1;
 	}
