@@ -21,12 +21,17 @@ void BattaUpdate(float delta_second)
 
 	time += delta_second;
 	time2 += delta_second;
+
+	Batta.x += i;
+	if (Batta.x > 400)
+	{
+		i = -1;
+	}
+	if (Batta.x < 50)
+	{
+		i = 1;
+	}
 	
-
-
-
-
-
 	/*if ((int)time2 % 5 == 0)
 	{
 		count = 1;
@@ -37,15 +42,7 @@ void BattaUpdate(float delta_second)
 	/*switch (count)
 	{
 	case 0:
-		Batta.x += i;
-		if (Batta.x > 400)
-		{
-			i = -1;
-		}
-		if (Batta.x < 50)
-		{
-			i = 1;
-		}
+	
 		break;
 	case 1:
 		if (Batta.y > 400)
