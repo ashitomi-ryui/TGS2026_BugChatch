@@ -1,5 +1,5 @@
 #pragma once
 
 void BattaInit(void);
-void BattaUpdate(void);
+void BattaUpdate(float delta_second);
 void BattaDraw(void);
