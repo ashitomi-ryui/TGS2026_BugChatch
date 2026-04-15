@@ -1,8 +1,11 @@
 #include"InGameScene.h"
 #include"../Utilitys/Input.h"
 #include"../Object/Batta.h"
+#include"../Object/player.h"
 #include<DxLib.h>
 #include"../Object/Tonbo.h"
+#include"../Object/Bug.h"
+
 
 int InGameInit(void)//各プログラムの初期化
 {
@@ -13,6 +16,7 @@ int InGameInit(void)//各プログラムの初期化
 eSceneType InGameUpdate(float delta_second)
 {
 	BattaUpdate(delta_second);
+	BugUpdate();
 	return eInGame;
 }
 
