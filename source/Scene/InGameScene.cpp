@@ -6,7 +6,9 @@
 #include"../Object/Tonbo.h"
 #include"../Object/Bug.h"
 #include"../Object/Semi.h"
+#include"../Object/Tree.h"
 
+Tree tree;
 
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
@@ -29,5 +31,5 @@ void InGameDraw(void)
 	BattaDraw();
 	TonboDraw();
 	SemiDraw();
-	
+	tree.TreeDraw();
 }

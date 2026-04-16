@@ -17,12 +17,13 @@ Tree::~Tree()
 
 }
 
-//int Tree::TreeUpdate()
-//{
-//
-//}
+int Tree::TreeUpdate()
+{
+	return TRUE;
+}
 
 void Tree::TreeDraw()const
 {
-
+	DrawBox(200, 100, 300, 300, GetColor(210, 160, 100), TRUE);
+	DrawBox(700, 400, 800, 800, GetColor(210, 160, 100), TRUE);
 }
