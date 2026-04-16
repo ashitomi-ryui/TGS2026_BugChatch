@@ -2,9 +2,9 @@
 
 #include"SceneType.h"
 
-int TitleInit(void);
-eSceneType TitleUpdate(float delta_second);
-void TitleDraw(void);
+//int TitleInit(void);
+//eSceneType TitleUpdate(float delta_second);
+//void TitleDraw(void);
 
 class Title
 {
@@ -13,6 +13,12 @@ private:
 	int y;
 	int start_pressed;
 	int start_not_pressed;
+	int help_pressed;
+	int help_not_pressed;
+	int end_pressed;
+	int end_not_pressed;
+	int select;
+	int pressed;
 public:
 	Title();
 	~Title();

@@ -26,7 +26,7 @@
 
 Title::Title()
 {
-	/*start_not_pressed = LoadGraph("assets/Title/start_off.png");*/
+	start_not_pressed = LoadGraph("assets/Title/start_off.png");
 }
 
 Title::~Title()
@@ -36,8 +36,13 @@ Title::~Title()
 
 int Title::TitleInit()
 {
-	start_not_pressed = LoadGraph("assets/Title/start_off.png");
-
+	/*start_not_pressed = LoadGraph("assets/Title/start_off.png");*/
+	start_pressed = LoadGraph("assets/Title/start_on.png");
+	help_not_pressed = LoadGraph("assets/Title/help_off.png");
+	help_pressed = LoadGraph("assets/Title/help_on.png");
+	end_not_pressed = LoadGraph("assets/Title/end_off.png");
+	end_pressed = LoadGraph("assets/Title/end_on.png");
+	
 	return TRUE;
 }
 
@@ -53,5 +58,7 @@ eSceneType Title::TitleUpdate(float delta_second)
 
 void Title::TitleDraw()const
 {
-	DrawRotaGraph(600, 600, 1.0, 0.0, start_not_pressed, TRUE);
+	DrawRotaGraph(640, 400, 1.0, 0.0, start_not_pressed, TRUE);
+	DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);
+	DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);
 }
