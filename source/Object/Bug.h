@@ -5,3 +5,5 @@ void BugInit(void);
 void BugUpdate(void);
 void BugDraw(void);
 void BugGet(void);
+
+void SetPlayer(class Player* p);

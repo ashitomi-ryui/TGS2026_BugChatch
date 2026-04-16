@@ -15,6 +15,7 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
 	BattaInit();
 	SemiInit();
+	SetPlayer(&player);
 	return TRUE;
 }
 
@@ -33,6 +34,7 @@ void InGameDraw(void)
 	BattaDraw();
 	TonboDraw();
 	SemiDraw();
+	BugDraw();
 	tree.TreeDraw();
 }
 
