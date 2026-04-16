@@ -1,5 +1,5 @@
 #include "Batta.h"
-
+#include "bug.h"
 #include "Math.h"
 #include "DxLib.h" 
 
@@ -8,6 +8,7 @@ float time = 0;
 float time2 = 1;
 
 int count = 0;
+bool BattaDestroy;
 
 void BattaInit(void)
 {
@@ -17,6 +18,7 @@ void BattaInit(void)
 
 void BattaUpdate(float delta_second)
 {
+	BattaDestroy = TRUE;
 	float vx = 0;
 	float vy = 0;
 	static float Watitime = 0;
@@ -27,7 +29,10 @@ void BattaUpdate(float delta_second)
 	time += delta_second;
 	time2 += delta_second;
 
-	
+	if (GetBattaScore() == 1)
+	{
+		BattaDestroy = FALSE;
+	}
 
 	if (Batta.y >= groundyY)
 	{
@@ -108,10 +113,13 @@ void BattaUpdate(float delta_second)
 
 void BattaDraw(void)
 {
-	
-	DrawCircle(Batta.x, Batta.y, 20, GetColor(255, 0, 255),TRUE);
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);
+	if (BattaDestroy == TRUE)
+	{
+		DrawCircle(Batta.x, Batta.y, 20, GetColor(255, 0, 255), TRUE);
+		DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);
+	}
 }
+	
 
 Vector2D* BattaLocation(void)
 {

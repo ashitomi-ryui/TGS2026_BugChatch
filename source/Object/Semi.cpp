@@ -1,5 +1,6 @@
 #include"../Utilitys/Math.h"
 #include"Semi.h"
+#include "Bug.h"
 #include "Math.h"
 #include "DxLib.h" 
 
@@ -7,6 +8,7 @@ Vector2D Semi;
 float time3 = 0;
 float time4 = 0.0f;
 int count2 = 0;
+bool SemiDestroy;
 
 void SemiInit(void)
 {
@@ -16,6 +18,7 @@ void SemiInit(void)
 
 void SemiUpdate(float delta_second)
 {
+	SemiDestroy = TRUE;
 	static int i = 1;
 	static int j = 1;
 	static int Reverse = 1;
@@ -26,6 +29,11 @@ void SemiUpdate(float delta_second)
 	time4 += delta_second;
 
 	
+	if (GetSemiScore() == 1)
+	{
+		SemiDestroy = FALSE;
+	}
+
 	if (isStop)
 	{
 		StopTimer += delta_second;
@@ -56,13 +64,21 @@ void SemiUpdate(float delta_second)
 		isStop = true;
 		StopTimer = 0.0f;
 		//i = 1;
+
+		
 	}
+
+	
+
 }
 
 void SemiDraw(void)
 {
-
-	DrawCircle(Semi.x, Semi.y, 20, GetColor(0, 0, 255), TRUE);
+	if (SemiDestroy == TRUE)
+	{
+		DrawCircle(Semi.x, Semi.y, 20, GetColor(0, 0, 255), TRUE);
+	}
+	
 	DrawFormatString(200, 100, GetColor(255, 255, 255), "%f", time3);
 }
 
