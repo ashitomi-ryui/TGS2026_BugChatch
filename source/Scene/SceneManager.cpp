@@ -8,6 +8,8 @@
 
 eSceneType current_type;
 
+Title title;
+
 int ChangeScene(eSceneType new_scene_type);
 
 int SceneInit(void)
@@ -26,7 +28,7 @@ int SceneUpdate(float delta_second)
 	switch (current_type)//現在シーンに応じた更新処理
 	{
 	case eTitle:
-		next_type = TitleUpdate(delta_second);
+		next_type = title.TitleUpdate(delta_second);
 		break;
 	case eInGame:
 		next_type = InGameUpdate(delta_second);
@@ -56,7 +58,7 @@ void SceneDraw(void)
 	switch (current_type)//現在シーンに応じて描画
 	{
 	case eTitle:
-		TitleDraw();
+		title.TitleDraw();
 		break;
 	case eInGame:
 		InGameDraw();
@@ -76,7 +78,7 @@ int ChangeScene(eSceneType new_scene_type)
 	switch (new_scene_type)//遷移先シーン種別に応じた初期化
 	{
 	case eTitle:
-		result = TitleInit();
+		result = title.TitleInit();
 		break;
 	case eRestart:
 		new_scene_type = eInGame;
