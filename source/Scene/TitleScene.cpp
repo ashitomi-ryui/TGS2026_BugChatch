@@ -26,7 +26,7 @@
 
 Title::Title()
 {
-	start_not_pressed = LoadGraph("assets/Title/start_off.png");
+	/*start_not_pressed = LoadGraph("assets/Title/start_off.png");*/
 }
 
 Title::~Title()
@@ -36,21 +36,53 @@ Title::~Title()
 
 int Title::TitleInit()
 {
-	/*start_not_pressed = LoadGraph("assets/Title/start_off.png");*/
+	start_not_pressed = LoadGraph("assets/Title/start_off.png");
 	start_pressed = LoadGraph("assets/Title/start_on.png");
 	help_not_pressed = LoadGraph("assets/Title/help_off.png");
 	help_pressed = LoadGraph("assets/Title/help_on.png");
 	end_not_pressed = LoadGraph("assets/Title/end_off.png");
 	end_pressed = LoadGraph("assets/Title/end_on.png");
+
+	select, pressed = 0;
+	time = 0.0f;
+	time_rug = 0.5f;
 	
 	return TRUE;
 }
 
 eSceneType Title::TitleUpdate(float delta_second)
 {
+	time += delta_second;
+	if (pressed == 0)
+	{
+		time_rug += delta_second;
+	}
+
 	if (GetKeyInputState(KEY_INPUT_SPACE) == ePressed)
 	{
 		return eInGame;
+	}
+	if (GetKeyInputState(KEY_INPUT_UP) == ePressed)
+	{
+		if (select <= 0)
+		{
+			select = 2;
+		}
+		else
+		{
+			select--;
+		}
+	}
+	if (GetKeyInputState(KEY_INPUT_DOWN) == ePressed)
+	{
+		if (select >= 2)
+		{
+			select = 0;
+		}
+		else
+		{
+			select++;
+		}
 	}
 
 	return eTitle;
@@ -58,7 +90,34 @@ eSceneType Title::TitleUpdate(float delta_second)
 
 void Title::TitleDraw()const
 {
-	DrawRotaGraph(640, 400, 1.0, 0.0, start_not_pressed, TRUE);
-	DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);
-	DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);
+	if (select == 0)
+	{
+		DrawRotaGraph(640, 400, 1.2, 0.0, start_not_pressed, TRUE);
+	}
+	else
+	{
+		DrawRotaGraph(640, 400, 1.0, 0.0, start_not_pressed, TRUE);
+	}
+
+	if (select == 1)
+	{
+		DrawRotaGraph(640, 520, 1.2, 0.0, help_not_pressed, TRUE);
+	}
+	else
+	{
+		DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);
+	}
+
+	if (select == 2)
+	{
+		DrawRotaGraph(640, 640, 1.2, 0.0, end_not_pressed, TRUE);
+	}
+	else
+	{
+		DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);
+	}
+
+	SetFontSize(50);
+	DrawString(200, 200, "コントローラーで動かせるようにします", GetColor(255, 255, 255), TRUE);
+	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
 }
