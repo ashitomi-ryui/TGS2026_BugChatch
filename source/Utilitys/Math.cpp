@@ -46,8 +46,8 @@ Vector2D Vec2Sub(Vector2D a, Vector2D b)
 Vector2D Vec2Mult(Vector2D a, float scalar)
 {
 	Vector2D ret = {};
-	ret.x *= scalar;
-	ret.y *= scalar;
+	ret.x = a.x * scalar;
+	ret.y = a.y * scalar;
 	return ret;
 }
 
@@ -92,4 +92,29 @@ Vector2D Reflect(Vector2D v, Vector2D n)
 	result.y -= 2.0f * d * n.y;
 
 	return result;
+}
+
+float FindTheAngle(Vector2D a, Vector2D b)
+{
+	if (a.x < b.x)
+	{
+		return atanf(-(a.y - b.y) / (a.x - b.x)) + 1.5;
+	}
+	if (a.x > b.x)
+	{
+		if (a.y < b.y)
+		{
+			return atanf(-(a.y - b.y) / (a.x - b.x)) - 1.5;
+		}
+		else
+		{
+			return atanf(-(a.y - b.y) / (a.x - b.x)) + 4.5;
+		}
+	}
+	if (a.y > b.y)
+
+	{
+		return 2.5f;
+	}
+	return 0.5f;
 }

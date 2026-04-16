@@ -48,3 +48,6 @@ float Dot(Vector2D va, Vector2D vb);
 Vector2D Reflect(Vector2D v, Vector2D n);
 
 float Lerp(float a, float b, float t);
+
+// Šp“x‚ğ‹‚ß‚é
+float FindTheAngle(Vector2D a, Vector2D b);
