@@ -28,8 +28,9 @@ void BugDraw(void)
 {
 
 	DrawFormatString(500, 600, GetColor(255, 255, 255), "%f,%f", NetLocation.x, NetLocation.y);
-	DrawFormatString(800, 300, GetColor(255, 255, 255), "%d", getcount[0]);
-	DrawFormatString(800, 350, GetColor(255, 255, 255), "%d", getcount[1]);
+	DrawFormatString(800, 300, GetColor(255, 255, 255), "トンボ捕獲:%d", getcount[2]);
+	DrawFormatString(800, 350, GetColor(255, 255, 255), "セミ捕獲:%d", getcount[1]);
+	DrawFormatString(800, 400, GetColor(255, 255, 255), "バッタ捕獲:%d", getcount[0]);
 }
 
 void BugGet(void)
@@ -48,7 +49,8 @@ void BugHitCheck(Vector2D NetLocation)
 {
 	BugLocation[0] = *BattaLocation();
 	BugLocation[1] = *SemiLocation();
-	for (int i = 0; i < 2; i++)
+	BugLocation[2] = *TonboLocation();
+	for (int i = 0; i < 3; i++)
 	{
 		if (NetLocation.x < BugLocation[i].x + 20 && NetLocation.x>BugLocation[i].x - 20 &&
 			NetLocation.y<BugLocation[i].y + 20 && NetLocation.y>BugLocation[i].y - 20)
@@ -70,4 +72,9 @@ int GetBattaScore(void)
 int GetSemiScore(void)
 {
 	return getcount[1];
+}
+
+int GetTonboScore(void)
+{
+	return getcount[2];
 }
