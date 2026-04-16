@@ -1,4 +1,4 @@
-#include"../Utilitys/Math.h"
+#include "Batta.h"
 
 #include "Math.h"
 #include "DxLib.h" 
@@ -6,8 +6,7 @@
 Vector2D Batta;
 float time = 0;
 float time2 = 1;
-float vx = 0;
-float vy = 0;
+
 int count = 0;
 
 void BattaInit(void)
@@ -18,6 +17,11 @@ void BattaInit(void)
 
 void BattaUpdate(float delta_second)
 {
+	float vx = 0;
+	float vy = 0;
+	static float Watitime = 0;
+	float Gravity = 0.5f;
+	float groundyY = 700.0f;
 	static int i = 1;
 	static int j = 1;
 
@@ -26,20 +30,40 @@ void BattaUpdate(float delta_second)
 
 	Batta.x += i;
 	Batta.y += j;
-	if (Batta.x > 720)
+
+	if (Batta.y >= groundyY)
 	{
-		
-		i = -1;
+		Batta.y = groundyY;
+		vy = 0;
+
+		Watitime += delta_second;
+
+		if (Watitime > 1.5f)
+		{
+			Watitime = 0;
+
+			vx = (rand() % 5 + 2) * (rand() % 2 ? 1 : -1);
+			vy = -10.0f;
+		}
 	}
-	if (Batta.x < 300)
-	{
-		
-		i = 1;
-	}
-	if (Batta.y > 720)
-	{
-		j = 1;
-	}
+
+	vy += Gravity;
+	Batta.x += vx;
+	Batta.y += vy;
+	//if (Batta.x > 720)
+	//{
+	//	
+	//	i = -1;
+	//}
+	//if (Batta.x < 300)
+	//{
+	//	
+	//	i = 1;
+	//}
+	//if (Batta.y > 720)
+	//{
+	//	j = 1;
+	//}
 	
 	/*if ((int)time2 % 5 == 0)
 	{
@@ -87,7 +111,7 @@ void BattaDraw(void)
 	DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);
 }
 
-int BattaLocation(void)
+Vector2D* BattaLocation(void)
 {
-	return Batta.x,Batta.y;
+	return &Batta;
 }

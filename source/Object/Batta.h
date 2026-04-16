@@ -1,6 +1,9 @@
 #pragma once
 
+#include"../Utilitys/Math.h"
+
+
 void BattaInit(void);
 void BattaUpdate(float delta_second);
 void BattaDraw(void);
-int BattaLocation(void);
+Vector2D* BattaLocation(void);

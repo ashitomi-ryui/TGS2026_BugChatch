@@ -62,11 +62,11 @@ void SemiUpdate(float delta_second)
 void SemiDraw(void)
 {
 
-	DrawCircle(Semi.x, Semi.y, 20, GetColor(255, 0, 255), TRUE);
+	DrawCircle(Semi.x, Semi.y, 20, GetColor(0, 0, 255), TRUE);
 	DrawFormatString(200, 100, GetColor(255, 255, 255), "%f", time3);
 }
 
-int SemiLocation(void)
+Vector2D* SemiLocation(void)
 {
-	return Semi.x, Semi.y;
+	return &Semi;
 }

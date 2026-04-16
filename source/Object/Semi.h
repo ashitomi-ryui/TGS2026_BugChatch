@@ -3,4 +3,4 @@
 void SemiInit(void);
 void SemiUpdate(float delta_second);
 void SemiDraw(void);
-int BattaLocation(void);
+Vector2D* BattaLocation(void);

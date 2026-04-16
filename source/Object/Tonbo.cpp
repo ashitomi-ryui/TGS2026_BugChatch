@@ -3,7 +3,8 @@
 #include <math.h>
 #include"../Scene/InGameScene.h"
 
-int x, y; // ‰~‚Ì•`‰æˆÊ’u
+int x, y;
+//Vector2D tonbo; // ‰~‚Ì•`‰æˆÊ’u
 double t = 0.0;
 // •s‹K‘¥‚Á‚Û‚­Œ©‚¦‚éÀ•W‚ğŒvZ‚·‚éŠÖ”
 void TonboMotion(double t, int centerX, int centerY, int* x, int* y)
@@ -40,7 +41,7 @@ void TonboDraw(void)
   t += 0.03;
 }
 
-int TonboLocation(void)
-{
-    return x, y;
-}
+//Vector2D* TonboLocation(void)
+//{
+//    return &tonbo;
+//}
