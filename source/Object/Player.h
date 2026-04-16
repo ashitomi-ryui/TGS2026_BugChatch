@@ -11,10 +11,9 @@ private:
 	// プレイヤーキャラ
 	Vector2D location;	// プレイヤーの座標
 	Vector2D moveSpeed;	// 動く速度
-	Vector2D maxSpeed;	// 最大速度
 
 	// 虫網
-	Vector2D stickLocation;		// 虫網（棒）の終点座標（一番端）
+	Vector2D ringLocation;		// 虫網（棒）の終点座標（一番端）
 	Vector2D netLocation;	// 虫網（網）の終点（膨らんでいる部分）
 	Vector2D netMoveSpeed;	// 網の動く速さ
 
@@ -27,5 +26,6 @@ public:
 	void Draw() const;
 
 public:
+	Vector2D GetRingLocation();
 	Vector2D GetNetLocation();
 };

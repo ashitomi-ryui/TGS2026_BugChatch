@@ -9,6 +9,7 @@
 #include"../Object/Tree.h"
 
 Tree tree;
+Player player;
 
 int InGameInit(void)//各プログラムの初期化
 {
@@ -19,6 +20,7 @@ int InGameInit(void)//各プログラムの初期化
 
 eSceneType InGameUpdate(float delta_second)
 {
+	player.Update();
 	SemiUpdate(delta_second);
 	BattaUpdate(delta_second);
 	BugUpdate();
@@ -27,9 +29,19 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
-
+	player.Draw();
 	BattaDraw();
 	TonboDraw();
 	SemiDraw();
 	tree.TreeDraw();
+}
+
+Vector2D GetRingLocation()
+{
+	return player.GetRingLocation();
+}
+
+Vector2D GetNetLocation()
+{
+	return player.GetNetLocation();
 }
