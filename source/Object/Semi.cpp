@@ -43,9 +43,9 @@ void SemiUpdate(float delta_second)
 	
 
 	Semi.x += Reverse * speed * delta_second;
-	if (Semi.x >= 1250)
+	if (Semi.x >= 677)
 	{
-		Semi.x = 1250;
+		Semi.x = 677;
 		isStop = true;
 		StopTimer = 0.0f;
 	}
@@ -62,6 +62,11 @@ void SemiUpdate(float delta_second)
 void SemiDraw(void)
 {
 
-	DrawCircle(Semi.x, Semi.y, 20, GetColor(0, 0, 255), TRUE);
+	DrawCircle(Semi.x, Semi.y, 20, GetColor(255, 0, 255), TRUE);
 	DrawFormatString(200, 100, GetColor(255, 255, 255), "%f", time3);
+}
+
+int SemiLocation(void)
+{
+	return Semi.x, Semi.y;
 }

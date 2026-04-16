@@ -6,6 +6,8 @@
 Vector2D Batta;
 float time = 0;
 float time2 = 1;
+float vx = 0;
+float vy = 0;
 int count = 0;
 
 void BattaInit(void)
@@ -23,13 +25,20 @@ void BattaUpdate(float delta_second)
 	time2 += delta_second;
 
 	Batta.x += i;
+	Batta.y += j;
 	if (Batta.x > 720)
 	{
+		
 		i = -1;
 	}
 	if (Batta.x < 300)
 	{
+		
 		i = 1;
+	}
+	if (Batta.y > 720)
+	{
+		j = 1;
 	}
 	
 	/*if ((int)time2 % 5 == 0)
@@ -76,4 +85,9 @@ void BattaDraw(void)
 	
 	DrawCircle(Batta.x, Batta.y, 20, GetColor(255, 0, 255),TRUE);
 	DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);
+}
+
+int BattaLocation(void)
+{
+	return Batta.x,Batta.y;
 }
