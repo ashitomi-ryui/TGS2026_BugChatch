@@ -19,6 +19,8 @@ private:
 	int end_not_pressed;
 	int select;
 	int pressed;
+	float time;
+	float time_rug;
 public:
 	Title();
 	~Title();
