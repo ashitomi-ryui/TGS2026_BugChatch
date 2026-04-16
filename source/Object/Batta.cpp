@@ -22,14 +22,12 @@ void BattaUpdate(float delta_second)
 	static float Watitime = 0;
 	float Gravity = 0.5f;
 	float groundyY = 700.0f;
-	static int i = 1;
-	static int j = 1;
+	
 
 	time += delta_second;
 	time2 += delta_second;
 
-	Batta.x += i;
-	Batta.y += j;
+	
 
 	if (Batta.y >= groundyY)
 	{
@@ -50,6 +48,10 @@ void BattaUpdate(float delta_second)
 	vy += Gravity;
 	Batta.x += vx;
 	Batta.y += vy;
+	if (Batta.x > 720 || Batta.x < 300)
+	{
+		vx *= -1;
+	}
 	//if (Batta.x > 720)
 	//{
 	//	

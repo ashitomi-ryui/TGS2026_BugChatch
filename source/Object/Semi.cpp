@@ -1,5 +1,5 @@
 #include"../Utilitys/Math.h"
-
+#include"Semi.h"
 #include "Math.h"
 #include "DxLib.h" 
 
