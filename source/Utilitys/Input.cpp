@@ -15,6 +15,8 @@ char now_key[D_KEYCODE_MAX];				// 現在フレームのキー状態
 char old_key[D_KEYCODE_MAX];				// 1フレーム前のキー状態
 unsigned char now_button[16];				// 現在フレームのボタン状態
 unsigned char old_button[16];				// 1フレーム前のボタン状態
+Vector2D now_stick_left;
+Vector2D old_stick_left;
 
 // アナログ入力
 Vector2D left_stick;						// 左スティック(正規化済み)
@@ -42,6 +44,7 @@ void InputInit(void)
 
 void InputUpdate(void)
 {
+	old_stick_left = left_stick;
 	// キー状態更新(過去→現在)
 	memcpy(old_key, now_key, (sizeof(char) * D_KEYCODE_MAX));
 	GetHitKeyStateAll(now_key);
@@ -79,6 +82,39 @@ eInputState GetKeyInputState(int key)
 		}
 	}
 	return eNone;										// 非入力
+}
+
+eInputState GetLeftStickState(bool direction)
+{
+	int n;
+	if (direction)
+	{
+		n = 1;
+	}
+	else
+	{
+		n = -1;
+	}
+
+	if (n * old_stick_left.y > 0.0f)
+	{
+		if (n * left_stick.y > 0.0f)
+		{
+			return eHeld;							// 押しっぱなし
+		}
+		else
+		{
+			return eReleased;						// 離された瞬間
+		}
+	}
+	else
+	{
+		if (n * left_stick.y > 0.0f)
+		{
+			return ePressed;						// 押された瞬間
+		}
+	}
+	return eNone;
 }
 
 eInputState GetButtonState(int button)

@@ -46,7 +46,7 @@ int Title::TitleInit()
 	select, pressed = 0;
 	time = 0.0f;
 	time_rug = 0.5f;
-	
+
 	return TRUE;
 }
 
@@ -58,11 +58,14 @@ eSceneType Title::TitleUpdate(float delta_second)
 		time_rug += delta_second;
 	}
 
+	left = GetLeftStick();
+	right = GetRightStick();
+
 	if (GetKeyInputState(KEY_INPUT_SPACE) == ePressed)
 	{
 		return eInGame;
 	}
-	if (GetKeyInputState(KEY_INPUT_UP) == ePressed)
+	if (GetKeyInputState(KEY_INPUT_UP) == ePressed || GetLeftStickState(true)==ePressed)
 	{
 		if (select <= 0)
 		{
@@ -73,7 +76,7 @@ eSceneType Title::TitleUpdate(float delta_second)
 			select--;
 		}
 	}
-	if (GetKeyInputState(KEY_INPUT_DOWN) == ePressed)
+	if (GetKeyInputState(KEY_INPUT_DOWN) == ePressed || GetLeftStickState(false) == ePressed)
 	{
 		if (select >= 2)
 		{

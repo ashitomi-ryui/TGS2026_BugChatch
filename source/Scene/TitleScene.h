@@ -1,6 +1,7 @@
 #pragma once
 
 #include"SceneType.h"
+#include"../Utilitys/Input.h"
 
 //int TitleInit(void);
 //eSceneType TitleUpdate(float delta_second);
@@ -21,6 +22,8 @@ private:
 	int pressed;
 	float time;
 	float time_rug;
+	Vector2D left;
+	Vector2D right;
 public:
 	Title();
 	~Title();
