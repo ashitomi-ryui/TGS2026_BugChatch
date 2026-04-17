@@ -19,17 +19,69 @@ void BattaInit(void)
 void BattaUpdate(float delta_second)
 {
 	BattaDestroy = TRUE;
-	float vx = 0;
-	float vy = 0;
-	static float Watitime = 0;
-	float Gravity = 0.5f;
-	float groundyY = 700.0f;
-	
+	static float vx = 0.0f;
+	static float vy = 0.0f;
+	static float Watitime = 0.0f;
+	float Gravity = 0.45f;
+	float groundyY = 690.0f;
+	static bool Groundy = TRUE;
 
 	time += delta_second;
 	time2 += delta_second;
 
-	if (GetBattaScore() == 1)
+
+	if (Groundy == TRUE)
+	{
+		Batta.y = groundyY;
+		vy = 0.0f;
+		vx = 0.0f;
+
+		Watitime += delta_second;
+
+		if (Watitime > 1.5f)
+		{
+			Watitime = 0.0f;
+			Groundy = FALSE;
+
+			if (rand() % 2 == 0)
+			{
+				vx = 5.0f;
+			}
+			else
+			{
+				vx = -5.0f;
+			}
+			
+			vy = -15.0f;
+		}
+
+	}
+	else
+	{
+		vy += Gravity;
+
+		vx *= 0.995f;
+
+		Batta.x += vx;
+		Batta.y += vy;
+		if (Batta.y >= groundyY)
+		{
+			Batta.y = groundyY;
+			vy = 0.0f;
+			vx = 0.0f;
+			Groundy = TRUE;
+		}
+	}
+	if (Batta.x < 20.0f)
+	{
+		Batta.x = 20.0f;
+	}
+	if (Batta.x > 650.0f)
+	{
+		Batta.x = 650.0f;
+	}
+
+	/*if (GetBattaScore() == 1)
 	{
 		BattaDestroy = FALSE;
 	}
@@ -39,15 +91,9 @@ void BattaUpdate(float delta_second)
 		Batta.y = groundyY;
 		vy = 0;
 
-		Watitime += delta_second;
+	
 
-		if (Watitime > 1.5f)
-		{
-			Watitime = 0;
-
-			vx = (rand() % 5 + 2) * (rand() % 2 ? 1 : -1);
-			vy = -10.0f;
-		}
+		
 	}
 
 	vy += Gravity;
@@ -55,8 +101,8 @@ void BattaUpdate(float delta_second)
 	Batta.y += vy;
 	if (Batta.x > 720 || Batta.x < 300)
 	{
-		vx *= -1;
-	}
+		vx *= -10;
+	}*/
 	//if (Batta.x > 720)
 	//{
 	//	
