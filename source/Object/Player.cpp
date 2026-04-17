@@ -13,17 +13,29 @@ Player::Player()
 	moveSpeed = { 0.0f, 0.0f };	// 動く速度
 
 	// 虫網
-	stickLength = 100.0f;	// 虫網（棒）の長さ
-	netLength = 30.0f;		// 網の終点までの長さ
+	stickLength = 150.0f;	// 虫網（棒）の長さ
+	netLength = 40.0f;		// 網の終点までの長さ
 
-	ringLocation = location;	// 虫網（リング）の座標（一番端）
-	netLocation = location;	// 網の終点（膨らんでいる部分）
+	ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
+	netLocation = { 640.0f, 360.0f + netLength};	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
 	netMoveSpeed = { 0.0f, 0.0f };	// 網の動く速さ
 
-	ringMaxSize = 30.0f;// リングの見た目の大きさ最大値
-	ringMinSize = 0.0f;	// リングの見た目の大きさ最小値（変動値）
-	ringAngle = 0.0f;	// リングの大きさ最大値の角度
+	ringRadius = 40.0f;// リングの半径
+
+	// 虫網（リング）の3D座標
+	ringThickness = ringRadius;
+
 	stickAngle = 1.0f;	// 棒の角度
+
+	// 右スティック
+	rightStick = { 0.0f, 0.0f };
+	oldRightStick;
+	// スティックの倒しこみ（ 1 ～ -1 ）
+	tiltStick = 0.0f;
+	oldTiltStick;
+	// スティックの回転（90°= 1）
+	rotateStick = 0.0f;
+	oldRotateStick;
 }
 
 Player::Player::~Player()
@@ -36,8 +48,9 @@ void Player::Update()
 	float deceleration = 0.2f;
 	float maxSpeed = 3.0f;
 
+	oldRightStick = rightStick;
 	Vector2D leftStick = GetLeftStick();
-	Vector2D rightStick = GetRightStick();
+	rightStick = GetRightStick();
 
 	leftStick.y *= -1;
 	rightStick.y *= -1;
@@ -111,80 +124,35 @@ void Player::Update()
 	location = Vec2Add(location, moveSpeed);
 
 	// 虫網
-	Vector2D ringNextLocation = Vec2Add(location, Vec2Mult(rightStick, stickLength));	// 次のリング位置
-	float ringMove = sqrtf(LengthSq(Vec2Sub(ringLocation, ringNextLocation)));		// リングの移動距離
-	float ringDistance = sqrtf(LengthSq(Vec2Sub(location, ringLocation)));			// リング位置とプレイヤー位置間の距離
-	float ringNextDistance = sqrtf(LengthSq(Vec2Sub(location, ringNextLocation)));	// 次のリング位置とプレイヤー位置間の距離
-	float ringAwayDistance = ringNextDistance - ringDistance;	// リングを遠ざける距離
-	ringMove -= fabsf(ringAwayDistance);
-
-	if (LengthSq(Vec2Sub(location, ringLocation)) != 0)
-	{	// リング位置がデフォルトではないなら
-
-		// 棒の角度を変更
-		stickAngle = FindTheAngle(location, ringLocation);
-		
-		if (LengthSq(Vec2Sub(ringLocation, ringNextLocation)) != 0)
-		{	// リング位置が移動しているなら
-
-			// リングのサイズ最大値の角度を変更
-			if (ringAngle < 1.0f && ringAngle>-1.0f)
-			{
-				ringAngle += 1.0f * ringAwayDistance / ringMaxSize;
-			}
-			else
-			{
-				ringAngle -= 1.0f * ringAwayDistance / ringMaxSize;
-			}
-			if ((ringAngle < 2.0f || ringAngle>-2.0) && ringAngle > 0.0f)
-			{
-				ringAngle += ringMove * ringMaxSize/ 1.0f;
-			}
-			else
-			{
-				ringAngle -= ringMove * ringMaxSize / 1.0f;
-			}
-
-			// スティックを倒す・戻してリング最小値を変動させる
-			ringMinSize += ringMaxSize * ringAwayDistance / stickLength;
-
-			// スティックを回してリング最小値を減らす
-			ringMinSize -= ringMaxSize * ringMove / stickLength;
-		}
+	ringVector = Vec2Mult(rightStick, stickLength);
+	
+	oldTiltStick = tiltStick;
+	oldRotateStick = rotateStick;
+	tiltStick = sqrtf(LengthSq(Vec2Sub({ 0.0f, 0.0f }, rightStick)));
+	rotateStick = FindTheAngle({ 0.0f, 0.0f }, rightStick);
+	if (tiltStick == 0.0f)
+	{
+		rotateStick = oldRotateStick;
+		ringThickness = ringRadius;
 	}
 	else
 	{
-		ringAngle = 0.0f;
-	}
+		// リングの太さ
+		ringThickness += fabs(tiltStick - oldTiltStick) * ringRadius;
+		ringThickness -= fabs(rotateStick - oldRotateStick) * ringRadius;
 
-	if (stickAngle > 2.0f)
-	{
-		stickAngle -= 4.0f;
+		// 虫網を回す最小値、最大値を設定
+		if (ringThickness < 0.0f)
+		{
+			ringThickness = 0.0f;
+		}
+		else if (ringThickness > ringRadius)
+		{
+			ringThickness = ringRadius;
+		}
 	}
-	if (stickAngle < -2.0f)
-	{
-		stickAngle += 4.0f;
-	}
-	if (ringAngle > 2.0f)
-	{
-		ringAngle -= 4.0f;
-	}
-	if (ringAngle < -2.0f)
-	{
-		ringAngle += 4.0f;
-	}
-	if (ringMinSize > ringMaxSize)
-	{	// 最大値を越えないようにする
-		ringMinSize = ringMaxSize;
-	}
-	if (ringMinSize < 0)
-	{	// 最小値を0未満にしないようにする
-		ringMinSize = 0;
-	}
-
-	// リングを移動
-	ringLocation = ringNextLocation;
-
+	
+	Vector2D ringLocation = Vec2Add(location, ringVector);	// リングの位置
 	float netDistance;	// リングと網の距離
 	float netAngle;
 	netDistance = sqrtf(LengthSq(Vec2Sub(netLocation, ringLocation)));
@@ -195,37 +163,47 @@ void Player::Update()
 		netLocation.x += sinf(netAngle) * (netDistance - netLength);
 		netLocation.y += cosf(netAngle) * (netDistance - netLength);
 	}
+
+	oldRightStick = rightStick;
 }
 
 void Player::Draw() const
 {
 	DrawCircle(location.x, location.y, 25, 0x00ffff, true);
-
-	Vector2D min1, min2, max1, max2;
-
 	
+	Vector2D point[4];
+	Vector2D ringLocation = Vec2Add(location, ringVector);
 
-	min1.x = ringLocation.x + sinf(ringAngle + 1) * ringMinSize;
-	min1.y = ringLocation.y + cosf(ringAngle + 1) * ringMinSize;
+	DrawLine(location.x, location.y, ringLocation.x, ringLocation.y, 0x00ff00, 5);
+
+	point[0].x = ringLocation.x + sinf(rotateStick) * (tiltStick * ringRadius + 10.0f);
+	point[0].y = ringLocation.y + cosf(rotateStick) * (tiltStick * ringRadius + 10.0f);
 	
-	min2.x = ringLocation.x - sinf(ringAngle + 1) * ringMinSize;
-	min2.y = ringLocation.y - cosf(ringAngle + 1) * ringMinSize;
+	point[1].x = ringLocation.x - sinf(rotateStick) * (tiltStick * ringRadius + 10.0f);
+	point[1].y = ringLocation.y - cosf(rotateStick) * (tiltStick * ringRadius + 10.0f);
 
-	max1.x = ringLocation.x + sinf(ringAngle) * ringMaxSize;
-	max1.y = ringLocation.y + cosf(ringAngle) * ringMaxSize;
+	point[2].x = ringLocation.x + sinf(rotateStick + 1.0f) * (ringThickness + 10.0f);
+	point[2].y = ringLocation.y + cosf(rotateStick + 1.0f) * (ringThickness + 10.0f);
 
-	max2.x = ringLocation.x - sinf(ringAngle) * ringMaxSize;
-	max2.y = ringLocation.y - cosf(ringAngle) * ringMaxSize;
+	point[3].x = ringLocation.x - sinf(rotateStick + 1.0f) * (ringThickness + 10.0f);
+	point[3].y = ringLocation.y - cosf(rotateStick + 1.0f) * (ringThickness + 10.0f);
 
-	DrawTriangle(min1.x, min1.y, min2.x, min2.y, max1.x, max1.y, 0x00ff00, true);
-	DrawTriangle(min1.x, min1.y, min2.x, min2.y, max2.x, max2.y, 0x00ff00, true);
-	DrawCircle(netLocation.x, netLocation.y, 10, 0xffffff, true);
-	DrawFormatString(100, 10, 0xffffff, "%.2f", FindTheAngle(netLocation, ringLocation));
+	DrawTriangle(point[0].x, point[0].y, point[2].x, point[2].y, netLocation.x, netLocation.y, 0xffffff, true);
+	DrawTriangle(point[1].x, point[1].y, point[3].x, point[3].y, netLocation.x, netLocation.y, 0xffffff, true);
+	DrawTriangle(point[2].x, point[2].y, point[1].x, point[1].y, netLocation.x, netLocation.y, 0xffffff, true);
+	DrawTriangle(point[3].x, point[3].y, point[0].x, point[0].y, netLocation.x, netLocation.y, 0xffffff, true);
+	//DrawCircle(point[0].x, point[0].y, 5, 0xffffff, true);
+	//DrawCircle(point[1].x, point[1].y, 5, 0xffffff, true);
+	//DrawCircle(point[2].x, point[2].y, 5, 0xffffff, true);
+	//DrawCircle(point[3].x, point[3].y, 5, 0xffffff, true);
+	//DrawFormatString(100, 400, 0xffffff, "%.2f %.2f ", tiltStick, rotateStick);
+	//DrawFormatString(100, 450, 0xffffff, "%.2f %.2f ", tiltStick, rotateStick);
+	//DrawFormatString(100, 500, 0xffffff, "%.2f", ringThickness);
 }
 
 Vector2D Player::GetRingLocation()
 {
-	return ringLocation;
+	return ringVector;
 }
 
 Vector2D Player::GetNetLocation()

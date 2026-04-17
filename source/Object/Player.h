@@ -13,18 +13,27 @@ private:
 	Vector2D moveSpeed;	// 動く速度
 
 	// 虫網
-	Vector2D ringLocation;	// 虫網（リング）の座標（一番端）
-	Vector2D netLocation;	// 網の終点（膨らんでいる部分）
-	Vector2D netMoveSpeed;	// 網の動く速さ
-
 	float stickLength;	// 虫網（棒）の長さ
 	float netLength;	// 網の終点までの長さ
 
-	float ringMaxSize;	// リングの見た目の大きさ最大値
-	float ringMinSize;	// リングの見た目の大きさ最小値（変動値）
-	float ringAngle;	// リングの大きさ最大値の角度
+	Vector2D ringVector;	// プレイヤーを基準とした虫網（リング）の中心の座標
+	Vector2D netLocation;	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
+	Vector2D netMoveSpeed;	// 網の動く速さ
+
+	float ringThickness;	// 虫網（リング）の太さ
+
+	float ringRadius;	// リングの大きさ最大値
 	float stickAngle;	// 棒の角度
 
+	// 右スティック
+	Vector2D rightStick;
+	Vector2D oldRightStick;
+	// スティックの倒しこみ（ 1 ～ -1 ）
+	float tiltStick;
+	float oldTiltStick;
+	// スティックの回転（90°= 1）
+	float rotateStick;
+	float oldRotateStick;
 public:
 	Player();
 	~Player();
