@@ -20,8 +20,8 @@ void BugInit(void)
 
 void BugUpdate(void)
 {
-	NetLocation = target_player->GetNetLocation();
-	BugHitCheck(target_player->GetNetLocation());
+	NetLocation = target_player->GetRingLocation();
+	BugHitCheck(NetLocation);
 }
 
 void BugDraw(void)
@@ -57,10 +57,10 @@ void BugHitCheck(Vector2D NetLocation)
 		{
 			getcount[i] = 1;
 		}
-		else
+		/*else
 		{
 			getcount[i] = 0;
-		}
+		}*/
 	}
 }
 

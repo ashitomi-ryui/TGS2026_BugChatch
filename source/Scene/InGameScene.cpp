@@ -10,6 +10,7 @@
 
 Tree tree;
 Player player;
+float seigenjikann;
 
 int InGameInit(void)//各プログラムの初期化
 {
@@ -21,6 +22,11 @@ int InGameInit(void)//各プログラムの初期化
 
 eSceneType InGameUpdate(float delta_second)
 {
+	seigenjikann += delta_second;
+	if (seigenjikann > 60)
+	{
+		return eResult;
+	}
 	player.Update();
 	SemiUpdate(delta_second);
 	BattaUpdate(delta_second);
