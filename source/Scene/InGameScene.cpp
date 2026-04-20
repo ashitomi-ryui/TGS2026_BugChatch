@@ -48,8 +48,3 @@ Vector2D GetRingLocation()
 {
 	return player.GetRingLocation();
 }
-
-Vector2D GetNetLocation()
-{
-	return player.GetNetLocation();
-}
