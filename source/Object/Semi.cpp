@@ -7,7 +7,7 @@
 Vector2D Semi;
 float time3 = 0;
 float time4 = 0.0f;
-int count2 = 0;
+int count2 = 1;
 bool SemiDestroy;
 
 void SemiInit(void)
@@ -31,6 +31,8 @@ void SemiUpdate(float delta_second)
 	
 	if (GetSemiScore() == 1)
 	{
+		Semi = { -100,0 };
+		count2 = 0;
 		SemiDestroy = FALSE;
 	}
 

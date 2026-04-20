@@ -55,7 +55,7 @@ void BugHitCheck(Vector2D NetLocation)
 		if (NetLocation.x < BugLocation[i].x + 20 && NetLocation.x>BugLocation[i].x - 20 &&
 			NetLocation.y<BugLocation[i].y + 20 && NetLocation.y>BugLocation[i].y - 20)
 		{
-			getcount[i] = 1;
+			getcount[i] += 1;
 		}
 		/*else
 		{
