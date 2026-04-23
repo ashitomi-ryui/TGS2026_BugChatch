@@ -44,7 +44,7 @@ void TonboMotion(double t, int centerX, int centerY, int* x, int* y)
 void TonboUpdate(float delta_second)
 {
 
-    tonbocount = tonboscore->GetTonboScore() % 2;
+    //tonbocount = GetRand(3);
     now_tonbo = tonboscore->GetTonboScore();
     //今のスコアと昔のスコアの差が0より大きかったら入る
     if (now_tonbo - old_tonbo > 0)
@@ -61,6 +61,9 @@ void TonboUpdate(float delta_second)
             tonbo = { -1000.0f,1000.0f };
             //トンボの描画を停止
             TonboDestroy = FALSE;
+            tonborespawntime = 0.0f;
+            tonbofukkatu = 1;
+            tonbocount = GetRand(2);
             tonborespawntime = 0;  //リスポーン時間のカウントの数値を初期化
             tonbofukkatu = 1;
         }
@@ -89,10 +92,14 @@ void TonboUpdate(float delta_second)
         case 1:
             
                 TonboMotion(t, 1000, 300, &x, &y);
-                TonboRespawn = 0;
+                TonboRespawn = 2;
                 t += 0.03;
-
-            
+                break;
+        case 2:
+            TonboMotion(t, 1000, 100, &x, &y);
+            TonboRespawn = 0;
+            t += 0.03;
+            break;
         }
        
 
