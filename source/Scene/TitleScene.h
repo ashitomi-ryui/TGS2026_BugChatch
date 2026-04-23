@@ -10,8 +10,6 @@
 class Title
 {
 private:
-	int x;
-	int y;
 	int start_pressed;
 	int start_not_pressed;
 	int help_pressed;
@@ -22,8 +20,6 @@ private:
 	int pressed;
 	float time;
 	float time_rug;
-	Vector2D left;
-	Vector2D right;
 public:
 	Title();
 	~Title();
