@@ -43,7 +43,7 @@ void TonboMotion(double t, int centerX, int centerY, int* x, int* y)
 }
 void TonboUpdate(float delta_second)
 {
-<<<<<<< Updated upstream
+
     tonbocount = tonboscore->GetTonboScore() % 2;
     now_tonbo = tonboscore->GetTonboScore();
     //今のスコアと昔のスコアの差が0より大きかったら入る
@@ -102,21 +102,19 @@ void TonboUpdate(float delta_second)
    
     
 
-=======
-    TonboMotion(t, 550, 300, &x, &y);
-    t += 0.03f;
->>>>>>> Stashed changes
+
+   /* TonboMotion(t, 550, 300, &x, &y);
+    t += 0.03f;*/
+
 }
 // 描画関数（毎フレーム呼ばれる）
 void TonboDraw(void)
 {
   
   // 現在の時間tから座標を計算
-<<<<<<< Updated upstream
   
-=======
+
   //TonboMotion(t, 550, 300, &x, &y);
->>>>>>> Stashed changes
 
   if (TonboDestroy == TRUE)
   {
