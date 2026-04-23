@@ -148,6 +148,7 @@
     <ClCompile Include="source\Scene\ResultScene.cpp" />
     <ClCompile Include="source\Scene\SceneManager.cpp" />
     <ClCompile Include="source\Scene\TitleScene.cpp" />
+    <ClCompile Include="source\Utilitys\Camera.cpp" />
     <ClCompile Include="source\Utilitys\Input.cpp" />
     <ClCompile Include="source\Utilitys\Math.cpp" />
   </ItemGroup>
@@ -163,6 +164,7 @@
     <ClInclude Include="source\Scene\SceneManager.h" />
     <ClInclude Include="source\Scene\SceneType.h" />
     <ClInclude Include="source\Scene\TitleScene.h" />
+    <ClInclude Include="source\Utilitys\Camera.h" />
     <ClInclude Include="source\Utilitys\Input.h" />
     <ClInclude Include="source\Utilitys\Math.h" />
   </ItemGroup>

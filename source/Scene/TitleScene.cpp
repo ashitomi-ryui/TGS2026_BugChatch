@@ -53,74 +53,72 @@ int Title::TitleInit()
 eSceneType Title::TitleUpdate(float delta_second)
 {
 	time += delta_second;
+
 	if (pressed == 0)
 	{
 		time_rug += delta_second;
 	}
 
-	left = GetLeftStick();
-	right = GetRightStick();
-
-	if (GetKeyInputState(KEY_INPUT_SPACE) == ePressed)
+	if (GetLeftStickState(true) == ePressed)//左スティックが上に入力された場合
 	{
-		return eInGame;
-	}
-	if (GetKeyInputState(KEY_INPUT_UP) == ePressed || GetLeftStickState(true)==ePressed)
-	{
-		if (select <= 0)
+		if (select <= 0)//一番上が選択されている状態の場合
 		{
-			select = 2;
+			select = 2;//一番下へ戻す
 		}
 		else
 		{
-			select--;
+			select--;//上へ移動する
 		}
 	}
-	if (GetKeyInputState(KEY_INPUT_DOWN) == ePressed || GetLeftStickState(false) == ePressed)
+	if (GetLeftStickState(false) == ePressed)//左スティックが下に入力された場合
 	{
-		if (select >= 2)
+		if (select >= 2)//一番下が選択されている状態の場合
 		{
-			select = 0;
+			select = 0;//一番上へ戻す
 		}
 		else
 		{
-			select++;
+			select++;//下へ移動する
 		}
 	}
+	if (GetButtonState(XINPUT_BUTTON_A) == ePressed && select == 0)//スタートが選択されているかつAボタンが押された場合
+	{
+		return eInGame;//ゲーム画面へ移行
+	}
 
-	return eTitle;
+	return eTitle;//タイトル画面を維持
 }
 
 void Title::TitleDraw()const
 {
-	if (select == 0)
+	if (select == 0)//スタートが選択されている場合
 	{
-		DrawRotaGraph(640, 400, 1.2, 0.0, start_not_pressed, TRUE);
+		DrawRotaGraph(640, 400, 1.2, 0.0, start_not_pressed, TRUE);//ボタンを大きくする
 	}
 	else
 	{
-		DrawRotaGraph(640, 400, 1.0, 0.0, start_not_pressed, TRUE);
+		DrawRotaGraph(640, 400, 1.0, 0.0, start_not_pressed, TRUE);//通常サイズに戻す
 	}
 
-	if (select == 1)
+	if (select == 1)//ヘルプが選択されている場合
 	{
-		DrawRotaGraph(640, 520, 1.2, 0.0, help_not_pressed, TRUE);
+		DrawRotaGraph(640, 520, 1.2, 0.0, help_not_pressed, TRUE);//ボタンを大きくする
 	}
 	else
 	{
-		DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);
+		DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);//通常サイズに戻す
 	}
 
-	if (select == 2)
+	if (select == 2)//おわりが選択されている場合
 	{
-		DrawRotaGraph(640, 640, 1.2, 0.0, end_not_pressed, TRUE);
+		DrawRotaGraph(640, 640, 1.2, 0.0, end_not_pressed, TRUE);//ボタンを大きくする
 	}
 	else
 	{
-		DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);
+		DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);//通常サイズに戻す
 	}
 
 	SetFontSize(50);
-	DrawString(200, 200, "コントローラーで動かせるようにします", GetColor(255, 255, 255), TRUE);
+	DrawString(200, 200, "Aボタンで開始できます", GetColor(255, 255, 255), TRUE);//仮タイトル
 	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
 }
