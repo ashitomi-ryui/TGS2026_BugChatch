@@ -36,6 +36,7 @@ eSceneType InGameUpdate(float delta_second)
 	player.Update();
 	SemiUpdate(delta_second);
 	BattaUpdate(delta_second);
+	TonboUpdate(delta_second);
 	bug.BugUpdate();
 	return eInGame;
 }
