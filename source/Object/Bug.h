@@ -5,6 +5,7 @@ void BugInit(void);
 void BugUpdate(void);
 void BugDraw(void);
 void BugGet(void);
+//void BugRespawn(float delta_second,int count);
 
 void SetPlayer(class Player* p);
 void BugHitCheck(Vector2D NetLocation);
