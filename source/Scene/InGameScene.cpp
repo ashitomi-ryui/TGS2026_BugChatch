@@ -53,3 +53,8 @@ Vector2D GetRingLocation()
 {
 	return player.GetRingLocation();
 }
+
+float GetPlayerMaxSpeed()
+{
+	return player.GetMaxSpeed();
+}
