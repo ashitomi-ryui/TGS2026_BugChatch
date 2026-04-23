@@ -11,6 +11,7 @@ private:
 	// プレイヤーキャラ
 	Vector2D m_location;	// プレイヤーの座標
 	Vector2D m_moveSpeed;	// 動く速度
+	float m_maxSpeed;
 
 	// 虫網
 	float m_stickLength;	// 虫網（棒）の長さ
@@ -38,5 +39,6 @@ public:
 	void Draw() const;
 
 public:
-	Vector2D GetRingLocation();
+	Vector2D GetRingLocation() const;
+	float GetMaxSpeed() const;
 };

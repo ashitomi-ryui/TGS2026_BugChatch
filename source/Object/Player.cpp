@@ -11,6 +11,7 @@ Player::Player()
 	// プレイヤーキャラ
 	m_location = { 640.0f, 360.0f };	// プレイヤーの座標
 	m_moveSpeed = { 0.0f, 0.0f };	// 動く速度
+	m_maxSpeed = 3.0f;
 
 	// 虫網
 	m_stickLength = 150.0f;	// 虫網（棒）の長さ
@@ -42,7 +43,6 @@ void Player::Update()
 {
 	float acceleration = 0.5f;
 	float deceleration = 0.2f;
-	float maxSpeed = 3.0f;
 
 	Vector2D leftStick = GetLeftStick();
 	Vector2D m_rightStick = GetRightStick();
@@ -99,21 +99,21 @@ void Player::Update()
 	}
 
 	// 最大速度調整
-	if (m_moveSpeed.x > maxSpeed)
+	if (m_moveSpeed.x > m_maxSpeed)
 	{
-		m_moveSpeed.x = maxSpeed;
+		m_moveSpeed.x = m_maxSpeed;
 	}
-	if (m_moveSpeed.x < -maxSpeed)
+	if (m_moveSpeed.x < -m_maxSpeed)
 	{
-		m_moveSpeed.x = -maxSpeed;
+		m_moveSpeed.x = -m_maxSpeed;
 	}
-	if (m_moveSpeed.y > maxSpeed)
+	if (m_moveSpeed.y > m_maxSpeed)
 	{
-		m_moveSpeed.y = maxSpeed;
+		m_moveSpeed.y = m_maxSpeed;
 	}
-	if (m_moveSpeed.y < -maxSpeed)
+	if (m_moveSpeed.y < -m_maxSpeed)
 	{
-		m_moveSpeed.y = -maxSpeed;
+		m_moveSpeed.y = -m_maxSpeed;
 	}
 
 	m_location = Vec2Add(m_location, m_moveSpeed);
@@ -194,8 +194,13 @@ void Player::Draw() const
 	//DrawFormatString(100, 500, 0xffffff, "%.2f", ringThickness);
 }
 
-Vector2D Player::GetRingLocation()
+Vector2D Player::GetRingLocation() const
 {
 	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);
 	return ringLocation;
+}
+
+float Player::GetMaxSpeed() const
+{
+	return m_maxSpeed;
 }
