@@ -45,32 +45,14 @@ void Player::Update()
 	float deceleration = 0.2f;
 
 	Vector2D leftStick = GetLeftStick();
-	Vector2D m_rightStick = GetRightStick();
+	Vector2D rightStick = GetRightStick();
 
 	leftStick.y *= -1;
-	m_rightStick.y *= -1;
+	rightStick.y *= -1;
 
 	// 加速
 	// スティック
 	m_moveSpeed = Vec2Add(m_moveSpeed, Vec2Mult(leftStick, acceleration));
-
-	// キーボード（後で消す）
-	if (GetKeyInputState(KEY_INPUT_RIGHT) == eHeld)
-	{
-		m_moveSpeed.x += acceleration;
-	}
-	if (GetKeyInputState(KEY_INPUT_LEFT) == eHeld)
-	{
-		m_moveSpeed.x -= acceleration;
-	}
-	if (GetKeyInputState(KEY_INPUT_DOWN) == eHeld)
-	{
-		m_moveSpeed.y += acceleration;
-	}
-	if (GetKeyInputState(KEY_INPUT_UP) == eHeld)
-	{
-		m_moveSpeed.y -= acceleration;
-	}
 
 	// 減速
 	if (m_moveSpeed.x > deceleration)
@@ -116,15 +98,37 @@ void Player::Update()
 		m_moveSpeed.y = -m_maxSpeed;
 	}
 
+
 	m_location = Vec2Add(m_location, m_moveSpeed);
 
+	if (m_location.x < 25.0f)
+	{
+		m_location.x = 25.0f;
+		m_moveSpeed.x = 0.0f;
+	}
+	else if (m_location.x > 1280.0f - 25.0f)
+	{
+		m_location.x = 1280.0f - 25.0f;
+		m_moveSpeed.x = 0.0f;
+	}
+	if (m_location.y < 25.0f)
+	{
+		m_location.y = 25.0f;
+		m_moveSpeed.y = 0.0f;
+	}
+	else if (m_location.y > 720.0f - 25.0f)
+	{
+		m_location.y = 720.0f - 25.0f;
+		m_moveSpeed.y = 0.0f;
+	}
+
 	// 虫網
-	m_ringVector = Vec2Mult(m_rightStick, m_stickLength);
+	m_ringVector = Vec2Mult(rightStick, m_stickLength);
 	
 	m_oldTiltStick = m_tiltStick;
 	m_oldRotateStick = m_rotateStick;
-	m_tiltStick = sqrtf(LengthSq(Vec2Sub({ 0.0f, 0.0f }, m_rightStick)));
-	m_rotateStick = FindTheAngle({ 0.0f, 0.0f }, m_rightStick);
+	m_tiltStick = sqrtf(LengthSq(Vec2Sub({ 0.0f, 0.0f }, rightStick)));
+	m_rotateStick = FindTheAngle({ 0.0f, 0.0f }, rightStick);
 	if (m_tiltStick == 0.0f)
 	{
 		m_rotateStick = m_oldRotateStick;
