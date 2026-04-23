@@ -7,12 +7,13 @@
 int x, y;
 int TonboDestroy;
 Vector2D tonbo; // ‰~‚Ì•`‰æˆÊ’u
+Bug* tonboscore;
 double t = 0.0;
 // •s‹K‘¥‚Á‚Û‚­Œ©‚¦‚éÀ•W‚ðŒvŽZ‚·‚éŠÖ”
 void TonboMotion(double t, int centerX, int centerY, int* x, int* y)
 {
     TonboDestroy = TRUE;
-    if (GetTonboScore() == 1)
+    if (tonboscore->GetTonboScore() == 1)
     {
         TonboDestroy = FALSE;
     }
@@ -56,4 +57,9 @@ Vector2D* TonboLocation(void)
 {
     tonbo = { (float)x,(float)y };
     return &tonbo;
+}
+
+void SetTonbo(class Bug* p)
+{
+    tonboscore = p;
 }

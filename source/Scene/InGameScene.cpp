@@ -10,13 +10,17 @@
 
 Tree tree;
 Player player;
+Bug bug;
 float seigenjikann;
 
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
 	BattaInit();
 	SemiInit();
-	SetPlayer(&player);
+	bug.SetPlayer(&player);
+	SetBatta(&bug);
+	SetSemi(&bug);
+	SetTonbo(&bug);
 	return TRUE;
 }
 
@@ -30,17 +34,18 @@ eSceneType InGameUpdate(float delta_second)
 	player.Update();
 	SemiUpdate(delta_second);
 	BattaUpdate(delta_second);
-	BugUpdate();
+	bug.BugUpdate();
 	return eInGame;
 }
 
 void InGameDraw(void)
 {
 	player.Draw();
+	bug.BugDraw();
 	BattaDraw();
 	TonboDraw();
 	SemiDraw();
-	BugDraw();
+	
 	tree.TreeDraw();
 }
 

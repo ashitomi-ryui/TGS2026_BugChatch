@@ -1,14 +1,25 @@
 #pragma once
 #include"../Utilitys/Math.h"
 
-void BugInit(void);
-void BugUpdate(void);
-void BugDraw(void);
-void BugGet(void);
+class Bug
+{
+private:
+	int getcount[3];
+private:
+	void BugHitCheck(Vector2D NetLocation);
+
+public:
+	void BugInit(void);
+	void BugUpdate(void);
+	void BugDraw(void);
+	void SetPlayer(class Player* p);
+	int GetBattaScore(void);
+	int GetSemiScore(void);
+	int GetTonboScore(void);
+
+};
 //void BugRespawn(float delta_second,int count);
 
-void SetPlayer(class Player* p);
-void BugHitCheck(Vector2D NetLocation);
-int GetBattaScore(void);
-int GetSemiScore(void);
-int GetTonboScore(void);
+
+
+

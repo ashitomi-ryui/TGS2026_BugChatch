@@ -8,25 +8,25 @@
 
 #include "DxLib.h"
 
-Vector2D NetLocation;
+Vector2D NetLocation;      //ネットの座標受け取り
 Vector2D player;
-Player* target_player;
+Player* target_player;     //プレイヤー情報受け取り
 Vector2D BugLocation[3];   //虫座標受け取る用
-int getcount[3] = { 0,0,0 };
-int Bugtime = 0;
-bool rcount = 0;
+int getcount[3] = { 0,0,0 }; //各虫の座標
 
-void BugInit(void)
+void Bug::BugInit(void)
 {
 	NetLocation = { 0,0 };
 	player = { 0,0 };
 }
 
-void BugUpdate(void)
+
+void Bug::BugUpdate(void)
 {
+	//ネットの位置を取得
 	NetLocation = target_player->GetRingLocation();
 	
-	BugHitCheck(NetLocation);
+	Bug::BugHitCheck(NetLocation);
 
 	/*for (int i = 0; i < 2; i++)
 	{
@@ -37,7 +37,8 @@ void BugUpdate(void)
 	}*/
 }
 
-void BugDraw(void)
+//スコア表記予定
+void Bug::BugDraw(void)
 {
 	DrawFormatString(500, 600, GetColor(255, 255, 255), "%f,%f", NetLocation.x, NetLocation.y);
 	DrawFormatString(800, 300, GetColor(255, 255, 255), "トンボ捕獲:%d", getcount[2]);
@@ -45,19 +46,14 @@ void BugDraw(void)
 	DrawFormatString(800, 400, GetColor(255, 255, 255), "バッタ捕獲:%d", getcount[0]);
 }
 
-void BugGet(void)
-{
-
-}
-
 //プレイヤー情報受けとり
-void SetPlayer(Player* p)
+void Bug::SetPlayer(Player* p)
 {
 	target_player = p;
 }
 
 //虫全体の当たり判定
-void BugHitCheck(Vector2D NetLocation)
+void Bug::BugHitCheck(Vector2D NetLocation)
 {
 	BugLocation[0] = *BattaLocation();
 	BugLocation[1] = *SemiLocation();
@@ -77,33 +73,18 @@ void BugHitCheck(Vector2D NetLocation)
 	}
 }
 
-int GetBattaScore(void)
+
+int Bug::GetBattaScore(void)
 {
 	return getcount[0];
 }
 
-int GetSemiScore(void)
+int Bug::GetSemiScore(void)
 {
 	return getcount[1];
 }
 
-int GetTonboScore(void)
+int Bug::GetTonboScore(void)
 {
 	return getcount[2];
 }
-
-//void BugRespawn(float delta_second,int count)
-//{
-//	if (rcount == 0)
-//	{
-//		Bugtime = 0;
-//	}
-//	
-//	Bugtime += delta_second;
-//	rcount = 1;
-//	if (Bugtime >= 1)
-//	{
-//		getcount[count] = 0;
-//		rcount = 0;
-//	}
-//}
