@@ -208,3 +208,8 @@ float Player::GetMaxSpeed() const
 {
 	return m_maxSpeed;
 }
+
+Vector2D Player::GetPlayerLocation() const
+{
+	return m_location;
+}

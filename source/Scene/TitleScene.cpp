@@ -43,7 +43,7 @@ int Title::TitleInit()
 	end_not_pressed = LoadGraph("assets/Title/end_off.png");
 	end_pressed = LoadGraph("assets/Title/end_on.png");
 
-	select, pressed = 0;
+	select, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
 
@@ -54,9 +54,13 @@ eSceneType Title::TitleUpdate(float delta_second)
 {
 	time += delta_second;
 
-	if (pressed == 0)
+	if (pressed == 0)//決定ボタンが押されていない場合
 	{
 		time_rug += delta_second;
+	}
+	if (time >= time_rug)
+	{
+		return eInGame;
 	}
 
 	if (GetLeftStickState(true) == ePressed)//左スティックが上に入力された場合
@@ -81,9 +85,10 @@ eSceneType Title::TitleUpdate(float delta_second)
 			select++;//下へ移動する
 		}
 	}
-	if (GetButtonState(XINPUT_BUTTON_A) == ePressed && select == 0)//スタートが選択されているかつAボタンが押された場合
+	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 	{
-		return eInGame;//ゲーム画面へ移行
+		pressed = 1;
+		//return eInGame;//ゲーム画面へ移行
 	}
 
 	return eTitle;//タイトル画面を維持
@@ -93,7 +98,14 @@ void Title::TitleDraw()const
 {
 	if (select == 0)//スタートが選択されている場合
 	{
-		DrawRotaGraph(640, 400, 1.2, 0.0, start_not_pressed, TRUE);//ボタンを大きくする
+		if (pressed == 1)//ボタンが押されている場合
+		{
+			DrawRotaGraph(640, 400, 1.2, 0.0, start_pressed, TRUE);//ボタンを押された状態にする
+		}
+		else
+		{
+			DrawRotaGraph(640, 400, 1.2, 0.0, start_not_pressed, TRUE);//ボタンを押されていない状態にする
+		}
 	}
 	else
 	{

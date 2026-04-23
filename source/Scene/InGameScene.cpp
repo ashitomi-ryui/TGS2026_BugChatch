@@ -1,4 +1,5 @@
 #include"InGameScene.h"
+#include"SceneManager.h"
 #include"../Utilitys/Input.h"
 #include"../Object/Batta.h"
 #include"../Object/player.h"
@@ -15,6 +16,7 @@ float seigenjikann;
 
 int InGameInit(void)//各プログラムの初期化
 {
+	seigenjikann = 0;
 	BattaInit();
 	SemiInit();
 	bug.SetPlayer(&player);
@@ -29,7 +31,7 @@ eSceneType InGameUpdate(float delta_second)
 	seigenjikann += delta_second;
 	if (seigenjikann > 60)
 	{
-		return eResult;
+		return eTitle;//ゲーム終了時にタイトルに戻る（仮）
 	}
 	player.Update();
 	SemiUpdate(delta_second);
