@@ -11,7 +11,7 @@
 #include"../Object/Tree.h"
 
 Tree tree;
-Batta batta;
+Batta batta[10];
 Semi semi;
 Tonbo tonbo;
 Player player;
@@ -22,14 +22,23 @@ Camera camera(player.GetPlayerLocation());
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
 	seigenjikann = 0;
-	batta.BattaInit();
+	for (int i = 0; i < 10; i++)
+	{
+		batta[i].Init();
+	}
 	semi.SemiInit();
 	bug.SetPlayer(&player);
-	bug.SetBatta(&batta);
+	for (int i = 0; i < 10; i++)
+	{
+		bug.SetBatta(&batta[i]);
+	}
 	bug.SetSemi(&semi);
 	bug.SetTonbo(&tonbo);
 	tree.Init();
-	batta.SetBatta(&bug);
+	for (int i = 0; i < 10; i++)
+	{
+		batta[i].SetBatta(&bug);
+	}
 	semi.SetSemi(&bug);
 	tonbo.SetTonbo(&bug);
 	return TRUE;
@@ -44,7 +53,10 @@ eSceneType InGameUpdate(float delta_second)
 	}
 	player.Update();
 	semi.SemiUpdate(delta_second);
-	batta.BattaUpdate(delta_second);
+	for (int i = 0; i < 10; i++)
+	{
+		batta[i].BattaUpdate(delta_second);
+	}
 	tonbo.TonboUpdate(delta_second);
 	bug.BugUpdate();
 	camera.Update(player.GetPlayerLocation());
@@ -57,7 +69,10 @@ void InGameDraw(void)
 	tree.Draw();
 	player.Draw();
 	bug.BugDraw();
-	batta.BattaDraw();
+	for (int i = 0; i < 10; i++)
+	{
+		batta[i].BattaDraw();
+	}
 	tonbo.TonboDraw();
 	semi.SemiDraw();
 	

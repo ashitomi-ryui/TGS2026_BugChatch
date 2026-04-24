@@ -13,8 +13,8 @@ Player* target_player;     //プレイヤー情報受け取り
 Batta* battango;
 Semi* semingo;
 Tonbo* tongo;
-Vector2D BugLocation[3];   //虫座標受け取る用
-int getcount[3] = { 0,0,0 }; //各虫の座標
+Vector2D BugLocation[3][10];   //虫座標受け取る用
+int getcount[3][10] = {0,0,0}; //各虫の座標
 
 void Bug::BugInit(void)
 {
@@ -72,17 +72,37 @@ void Bug::SetTonbo(Tonbo* p)
 //虫全体の当たり判定
 void Bug::BugHitCheck(Vector2D NetLocation, float NetRadius)
 {
-	BugLocation[0] = *battango->BattaLocation();
-	BugLocation[1] = *semingo->SemiLocation();
-	BugLocation[2] = *tongo->TonboLocation();
 	for (int i = 0; i < 3; i++)
 	{
-		float len = Length(Vec2Sub(BugLocation[i], NetLocation));
-		if (len < NetRadius)
+		for (int j = 0; j < 10; j++)
 		{
-			getcount[i] += 1;
-			
+			switch (i)
+			{
+			case 0:
+				BugLocation[i][j] = *battango->BattaLocation();
+				break;
+			case 1:
+				BugLocation[i][j] = *semingo->SemiLocation();
+				break;
+			case 2:
+				BugLocation[i][j] = *tongo->TonboLocation();
+				break;
+			}
+			float len = Length(Vec2Sub(BugLocation[i][j], NetLocation));
+			if (len < NetRadius)
+			{
+				getcount[i] += 1;
+
+			}
 		}
+		
+	}
+	
+	
+	
+	for (int i = 0; i < 3; i++)
+	{
+		
 		/*else
 		{
 			getcount[i] = 0;

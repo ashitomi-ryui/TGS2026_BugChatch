@@ -4,7 +4,6 @@
 #include "DxLib.h" 
 
 
-Vector2D Batta::batta = { 100.0f,580.0f };
 Bug* battascore;
 float time = 0;
 float time1 = 0;
@@ -18,9 +17,18 @@ int battacount = 0;
 int battaspawn = 0;
 float groundyY = 0;
 
-void Batta::BattaInit(void)
+Batta::Batta()
 {
-	
+}
+
+Batta::~Batta()
+{
+}
+
+
+void Batta::Init(Vector2D location)
+{
+	batta = location;
 }
 
 void Batta::BattaUpdate(float delta_second)
