@@ -73,6 +73,10 @@ void Bug::BugHitCheck(Vector2D NetLocation)
 	}
 }
 
+int Bug::GetBugScore(void)
+{
+	return *getcount;
+}
 
 int Bug::GetBattaScore(void)
 {

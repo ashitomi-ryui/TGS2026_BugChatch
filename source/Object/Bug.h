@@ -16,6 +16,7 @@ public:
 	int GetBattaScore(void);
 	int GetSemiScore(void);
 	int GetTonboScore(void);
+	int GetBugScore(void);
 
 };
 //void BugRespawn(float delta_second,int count);
