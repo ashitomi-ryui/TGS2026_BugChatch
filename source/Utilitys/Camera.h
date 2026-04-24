@@ -14,46 +14,41 @@
 class Camera
 {
 private:
-	Vector2D location;	// カメラ座標
+	static Vector2D m_location;	// カメラ座標
 
 public:
-	Camera();
+	Camera(Vector2D location);
 	~Camera();
 
 public:
 
-	void Update();
+	void Update(Vector2D playerLocation);
 	void Draw() const;
 
 public:
+	
 	/// <summary>
 	/// ワールド座標に線を描画
 	/// </summary>
-	/// <param name="x1"></param>
-	/// <param name="y1"></param>
-	/// <param name="x2"></param>
-	/// <param name="y2"></param>
+	/// <param name="location1"></param>
+	/// <param name="location2"></param>
 	/// <param name="Color"></param>
-	void DrawLineW(int x1, int y1, int x2, int y2, unsigned int Color);
-
+	static void DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, int Thinckness);
+	
 	/// <summary>
 	/// ワールド座標に三角形を描画
 	/// </summary>
-	/// <param name="x1"></param>
-	/// <param name="y1"></param>
-	/// <param name="x2"></param>
-	/// <param name="y2"></param>
-	/// <param name="x3"></param>
-	/// <param name="y3"></param>
+	/// <param name="location1"></param>
+	/// <param name="location2"></param>
+	/// <param name="location3"></param>
 	/// <param name="Color"></param>
-	void DrawTriangleW(int x1, int y1, int x2, int y2, int x3, int y3, unsigned int Color);
-
+	static void DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D location3, unsigned int Color);
+	
 	/// <summary>
 	/// ワールド座標で円を描画
 	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="y"></param>
+	/// <param name="location"></param>
 	/// <param name="r"></param>
 	/// <param name="Color"></param>
-	void DrawCircleW(int x, int y, int r, unsigned int Color);
+	static void DrawCircleW(Vector2D location, int r, unsigned int Color);
 };

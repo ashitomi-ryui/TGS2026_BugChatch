@@ -1,6 +1,7 @@
 #include"InGameScene.h"
 #include"SceneManager.h"
 #include"../Utilitys/Input.h"
+#include"../Utilitys/Camera.h"
 #include"../Object/Batta.h"
 #include"../Object/player.h"
 #include<DxLib.h>
@@ -13,6 +14,7 @@ Tree tree;
 Player player;
 Bug bug;
 float seigenjikann;
+Camera camera(player.GetPlayerLocation());
 
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
@@ -38,6 +40,7 @@ eSceneType InGameUpdate(float delta_second)
 	BattaUpdate(delta_second);
 	TonboUpdate(delta_second);
 	bug.BugUpdate();
+	camera.Update(player.GetPlayerLocation());
 	return eInGame;
 }
 

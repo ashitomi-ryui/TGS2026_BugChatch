@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "Player.h"
+#include "../Utilitys/Camera.h"
 
 Player::Player()
 {
@@ -101,14 +102,15 @@ void Player::Update()
 
 	m_location = Vec2Add(m_location, m_moveSpeed);
 
+	// ˆÚ“®‚ÌŒÀŠE
 	if (m_location.x < 25.0f)
 	{
 		m_location.x = 25.0f;
 		m_moveSpeed.x = 0.0f;
 	}
-	else if (m_location.x > 1280.0f - 25.0f)
+	else if (m_location.x > D_STAGE_WIDTH - 25.0f)
 	{
-		m_location.x = 1280.0f - 25.0f;
+		m_location.x = D_STAGE_WIDTH - 25.0f;
 		m_moveSpeed.x = 0.0f;
 	}
 	if (m_location.y < 25.0f)
@@ -116,9 +118,9 @@ void Player::Update()
 		m_location.y = 25.0f;
 		m_moveSpeed.y = 0.0f;
 	}
-	else if (m_location.y > 720.0f - 25.0f)
+	else if (m_location.y > D_STAGE_HEIGHT - 25.0f)
 	{
-		m_location.y = 720.0f - 25.0f;
+		m_location.y = D_STAGE_HEIGHT - 25.0f;
 		m_moveSpeed.y = 0.0f;
 	}
 
@@ -166,12 +168,12 @@ void Player::Update()
 
 void Player::Draw() const
 {
-	DrawCircle(m_location.x, m_location.y, 25, 0x00ffff, true);
+	Camera::DrawCircleW(m_location, 25, 0x00ffff);
 	
 	Vector2D point[4];
 	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);
 
-	DrawLine(m_location.x, m_location.y, ringLocation.x, ringLocation.y, 0x00ff00, 5);
+	Camera::DrawLineW(m_location, ringLocation, 0x00ff00, 5);
 
 	point[0].x = ringLocation.x + sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f);
 	point[0].y = ringLocation.y + cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f);
@@ -185,17 +187,10 @@ void Player::Draw() const
 	point[3].x = ringLocation.x - sinf(m_rotateStick + 1.0f) * (m_ringThickness + 10.0f);
 	point[3].y = ringLocation.y - cosf(m_rotateStick + 1.0f) * (m_ringThickness + 10.0f);
 
-	DrawTriangle(point[0].x, point[0].y, point[2].x, point[2].y, m_netLocation.x, m_netLocation.y, 0xffffff, true);
-	DrawTriangle(point[1].x, point[1].y, point[3].x, point[3].y, m_netLocation.x, m_netLocation.y, 0xffffff, true);
-	DrawTriangle(point[2].x, point[2].y, point[1].x, point[1].y, m_netLocation.x, m_netLocation.y, 0xffffff, true);
-	DrawTriangle(point[3].x, point[3].y, point[0].x, point[0].y, m_netLocation.x, m_netLocation.y, 0xffffff, true);
-	//DrawCircle(point[0].x, point[0].y, 5, 0xffffff, true);
-	//DrawCircle(point[1].x, point[1].y, 5, 0xffffff, true);
-	//DrawCircle(point[2].x, point[2].y, 5, 0xffffff, true);
-	//DrawCircle(point[3].x, point[3].y, 5, 0xffffff, true);
-	//DrawFormatString(100, 400, 0xffffff, "%.2f %.2f ", tiltStick, rotateStick);
-	//DrawFormatString(100, 450, 0xffffff, "%.2f %.2f ", tiltStick, rotateStick);
-	//DrawFormatString(100, 500, 0xffffff, "%.2f", ringThickness);
+	Camera::DrawTriangleW(point[0], point[2], m_netLocation, 0xffffff);
+	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
+	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
+	Camera::DrawTriangleW(point[3], point[0], m_netLocation, 0xffffff);
 }
 
 Vector2D Player::GetRingLocation() const

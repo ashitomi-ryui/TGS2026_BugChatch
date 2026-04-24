@@ -2,10 +2,12 @@
 #include "Camera.h"
 #include <cmath>
 
+Vector2D Camera::m_location = { 0.0f, 0.0f };
+
 // コンストラクタ
-Camera::Camera()
+Camera::Camera(Vector2D location)
 {
-	location = { 0.0f, 0.0f };
+	m_location = location;
 }
 
 // デストラクタ
@@ -14,27 +16,59 @@ Camera::~Camera()
 }
 
 // 更新処理
-void Camera::Update()
+void Camera::Update(Vector2D playerLocation)
 {
+	m_location = playerLocation;
+	if (playerLocation.x < D_WIN_WIDTH / 2)
+	{
+		m_location.x = D_WIN_WIDTH / 2;
+	}
+	if (playerLocation.x > D_STAGE_WIDTH - D_WIN_WIDTH / 2)
+	{
+		m_location.x = D_STAGE_WIDTH - D_WIN_WIDTH / 2;
+	}
+	if (playerLocation.y < D_WIN_HEIGHT / 2)
+	{
+		m_location.y = D_WIN_HEIGHT / 2;
+	}
+	if (playerLocation.y > D_STAGE_HEIGHT - D_WIN_HEIGHT / 2)
+	{
+		m_location.y = D_STAGE_HEIGHT - D_WIN_HEIGHT / 2;
+	}
 
 }
 
 void Camera::Draw() const
 {
+
 }
 
-void Camera::DrawLineW(int x1, int y1, int x2, int y2, unsigned int Color)
+void Camera::DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, int Thinckness = 1)
 {
-	DrawLine(x1, y1, x2, y2, Color, true);
+	location1.x += -m_location.x + D_WIN_WIDTH / 2;
+	location1.y += -m_location.y + D_WIN_HEIGHT / 2;
+	location2.x += -m_location.x + D_WIN_WIDTH / 2;
+	location2.y += -m_location.y + D_WIN_HEIGHT / 2;
+
+	DrawLine(location1.x, location1.y, location2.x, location2.y, Color, Thinckness);
 }
 
-void Camera::DrawTriangleW(int x1, int y1, int x2, int y2, int x3, int y3, unsigned int Color)
+void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D location3, unsigned int Color)
 {
-	DrawTriangle(x1, y1, x2, y2, x3, y3, Color, true);
+	location1.x += -m_location.x + D_WIN_WIDTH / 2;
+	location1.y += -m_location.y + D_WIN_HEIGHT / 2;
+	location2.x += -m_location.x + D_WIN_WIDTH / 2;
+	location2.y += -m_location.y + D_WIN_HEIGHT / 2;
+	location3.x += -m_location.x + D_WIN_WIDTH / 2;
+	location3.y += -m_location.y + D_WIN_HEIGHT / 2;
+
+	DrawTriangle(location1.x, location1.y, location2.x, location2.y, location3.x, location3.y, Color, true);
 }
 
-void Camera::DrawCircleW(int x, int y, int r, unsigned int Color)
+void Camera::DrawCircleW(Vector2D location, int r, unsigned int Color)
 {
-	
-	DrawCircle(x, y, r, Color, true);
+	location.x += -m_location.x + D_WIN_WIDTH / 2;
+	location.y += -m_location.y + D_WIN_HEIGHT / 2;
+
+	DrawCircle(location.x, location.y, r, Color, true);
 }

@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include"Object/player.h"
 #include"Utilitys/Input.h"
+#include"Utilitys/Camera.h"
 #include"Scene/SceneManager.h"
 
 
@@ -11,7 +12,7 @@ float GetDeltaSecond();
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	ChangeWindowMode(TRUE);
-	SetGraphMode(1280, 720, 32);
+	SetGraphMode(D_WIN_WIDTH, D_WIN_HEIGHT, 32);
 	if (DxLib_Init() == -1)
 	{
 		return -1;
