@@ -43,7 +43,7 @@ void Camera::Draw() const
 
 }
 
-void Camera::DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, int Thinckness = 1)
+void Camera::DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, int Thinckness)
 {
 	location1.x += -m_location.x + D_WIN_WIDTH / 2;
 	location1.y += -m_location.y + D_WIN_HEIGHT / 2;
@@ -65,10 +65,28 @@ void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D loca
 	DrawTriangle(location1.x, location1.y, location2.x, location2.y, location3.x, location3.y, Color, true);
 }
 
-void Camera::DrawCircleW(Vector2D location, int r, unsigned int Color)
+void Camera::DrawCircleW(Vector2D location, int radius, unsigned int Color)
 {
 	location.x += -m_location.x + D_WIN_WIDTH / 2;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2;
 
-	DrawCircle(location.x, location.y, r, Color, true);
+	DrawCircle(location.x, location.y, radius, Color, true);
+}
+
+void Camera::DrawBoxW(Vector2D location1, Vector2D location2, unsigned int Color)
+{
+	location1.x += -m_location.x + D_WIN_WIDTH / 2;
+	location1.y += -m_location.y + D_WIN_HEIGHT / 2;
+	location2.x += -m_location.x + D_WIN_WIDTH / 2;
+	location2.y += -m_location.y + D_WIN_HEIGHT / 2;
+
+	DrawBox(location1.x, location1.y, location2.x, location2.y, Color, true);
+}
+
+void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, int ReverseXFlag, int ReverseYFlage)
+{
+	location.x += -m_location.x + D_WIN_WIDTH / 2;
+	location.y += -m_location.y + D_WIN_HEIGHT / 2;
+
+	DrawRotaGraphF(location.x, location.y, ExRate, Angle, true, ReverseXFlag, ReverseYFlage);
 }
