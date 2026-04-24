@@ -17,7 +17,7 @@ int old_tonbo = 0;
 double t = 0.0;
 int tonbofukkatu = 0;
 // 不規則っぽく見える座標を計算する関数
-void TonboMotion(double t, int centerX, int centerY, int* x, int* y)
+void Tonbo::TonboMotion(double t, int centerX, int centerY, int* x, int* y)
 {
     TonboDestroy = TRUE;
    /* if (tonboscore->GetTonboScore() == 1)
@@ -42,7 +42,7 @@ void TonboMotion(double t, int centerX, int centerY, int* x, int* y)
    
     
 }
-void TonboUpdate(float delta_second)
+void Tonbo::TonboUpdate(float delta_second)
 {
 
     //tonbocount = GetRand(3);
@@ -116,7 +116,7 @@ void TonboUpdate(float delta_second)
 
 }
 // 描画関数（毎フレーム呼ばれる）
-void TonboDraw(void)
+void Tonbo::TonboDraw(void)
 {
   
   // 現在の時間tから座標を計算
@@ -135,13 +135,13 @@ void TonboDraw(void)
   //t += 0.03;
 }
 
-Vector2D* TonboLocation(void)
+Vector2D* Tonbo::TonboLocation(void)
 {
     tonbo = { (float)x,(float)y };
     return &tonbo;
 }
 
-void SetTonbo(class Bug* p)
+void Tonbo::SetTonbo(class Bug* p)
 {
     tonboscore = p;
 }

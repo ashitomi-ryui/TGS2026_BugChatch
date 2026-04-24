@@ -12,6 +12,7 @@
 
 Tree tree;
 Batta batta;
+Tonbo tonbo;
 Player player;
 Bug bug;
 float seigenjikann;
@@ -25,8 +26,9 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 	bug.SetPlayer(&player);
 	bug.SetBatta(&batta);
 	batta.SetBatta(&bug);
+	bug.SetTonbo(&tonbo);
 	SetSemi(&bug);
-	SetTonbo(&bug);
+	tonbo.SetTonbo(&bug);
 	return TRUE;
 }
 
@@ -40,7 +42,7 @@ eSceneType InGameUpdate(float delta_second)
 	player.Update();
 	SemiUpdate(delta_second);
 	batta.BattaUpdate(delta_second);
-	TonboUpdate(delta_second);
+	tonbo.TonboUpdate(delta_second);
 	bug.BugUpdate();
 	camera.Update(player.GetPlayerLocation());
 	return eInGame;
@@ -51,7 +53,7 @@ void InGameDraw(void)
 	player.Draw();
 	bug.BugDraw();
 	batta.BattaDraw();
-	TonboDraw();
+	tonbo.TonboDraw();
 	SemiDraw();
 	
 	tree.TreeDraw();

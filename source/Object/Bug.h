@@ -14,6 +14,8 @@ public:
 	void BugDraw(void);
 	void SetPlayer(class Player* p);
 	void SetBatta(class Batta* p);
+	void SetTonbo(class Tonbo* p);
+
 	int GetBattaScore(void);
 	int GetSemiScore(void);
 	int GetTonboScore(void);
