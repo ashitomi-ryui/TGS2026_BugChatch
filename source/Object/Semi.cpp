@@ -5,7 +5,7 @@
 #include "../Utilitys/Camera.h"
 #include "DxLib.h" 
 
-Vector2D Semi;
+Vector2D semi;
 Bug* semiscore;
 float time3 = 0;
 float time4 = 0.0f;
@@ -17,14 +17,14 @@ static int semicount = 0;
 int now_semi = 0;
 int old_semi = 0;
 
-void SemiInit(void)
+void Semi::SemiInit(void)
 {
-	Semi.x = 20.0f;
-	Semi.y = 500.0f;
+	semi.x = 20.0f;
+	semi.y = 500.0f;
 	SemiDestroy = TRUE;
 }
 
-void SemiUpdate(float delta_second)
+void Semi::SemiUpdate(float delta_second)
 {
 	static int i = 1;
 	static int j = 1;
@@ -45,7 +45,7 @@ void SemiUpdate(float delta_second)
 	if (now_semi - old_semi > 0)
 	{
 		//座標を画面外へ移動
-		Semi = { -100.0f,100.0f };
+		semi = { -100.0f,100.0f };
 		if (fukkatu == 0)
 		{
 			//セミの描画を停止
@@ -84,20 +84,20 @@ void SemiUpdate(float delta_second)
 			if (Respawn == 0)
 			{
 				//リスポーン座標設定
-				Semi = { 20.0f,500.0f };
+				semi = { 20.0f,500.0f };
 				Respawn = 1;
 			}
-			Semi.x += Reverse * speed * delta_second;
-			if (Semi.x >= 677)
+			semi.x += Reverse * speed * delta_second;
+			if (semi.x >= 677)
 			{
-				Semi.x = 677;
+				semi.x = 677;
 				isStop = true;
 				StopTimer = 0.0f;
 			}
 
-			if (Semi.x <= 20)
+			if (semi.x <= 20)
 			{
-				Semi.x = 20;
+				semi.x = 20;
 				isStop = true;
 				StopTimer = 0.0f;
 				i = 1;
@@ -107,20 +107,20 @@ void SemiUpdate(float delta_second)
 			if (Respawn == 1)
 			{
 				//リスポーン座標設定
-				Semi = { 600.0f,200.0f };
+				semi = { 600.0f,200.0f };
 				Respawn = 0;
 			}
-			Semi.x += Reverse * speed * delta_second;
-			if (Semi.x >= 1200)
+			semi.x += Reverse * speed * delta_second;
+			if (semi.x >= 1200)
 			{
-				Semi.x = 1200;
+				semi.x = 1200;
 				isStop = true;
 				StopTimer = 0.0f;
 			}
 
-			if (Semi.x <= 600)
+			if (semi.x <= 600)
 			{
-				Semi.x = 600;
+				semi.x = 600;
 				isStop = true;
 				StopTimer = 0.0f;
 				i = 1;
@@ -131,11 +131,11 @@ void SemiUpdate(float delta_second)
 	
 }
 
-void SemiDraw(void)
+void Semi::SemiDraw(void)
 {
 	if (SemiDestroy == TRUE)
 	{
-		Camera::DrawCircleW(Semi,20, GetColor(0, 0, 255));
+		Camera::DrawCircleW(semi,20, GetColor(0, 0, 255));
 	}
 	
 	/*DrawFormatString(200, 700, GetColor(255, 255, 255), "%f", time3);
@@ -144,12 +144,12 @@ void SemiDraw(void)
 	DrawFormatString(200, 400, GetColor(255, 255, 255), "%f,%f", Semi.x,Semi.y);*/
 }
 
-Vector2D* SemiLocation(void)
+Vector2D* Semi::SemiLocation(void)
 {
-	return &Semi;
+	return &semi;
 }
 
-void SetSemi(class Bug* p)
+void Semi::SetSemi(class Bug* p)
 {
 	semiscore = p;
 }

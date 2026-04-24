@@ -12,6 +12,7 @@
 
 Tree tree;
 Batta batta;
+Semi semi;
 Tonbo tonbo;
 Player player;
 Bug bug;
@@ -22,12 +23,14 @@ int InGameInit(void)//各プログラムの初期化
 {
 	seigenjikann = 0;
 	batta.BattaInit();
-	SemiInit();
+	semi.SemiInit();
 	bug.SetPlayer(&player);
 	bug.SetBatta(&batta);
-	batta.SetBatta(&bug);
+	bug.SetSemi(&semi);
 	bug.SetTonbo(&tonbo);
-	SetSemi(&bug);
+
+	batta.SetBatta(&bug);
+	semi.SetSemi(&bug);
 	tonbo.SetTonbo(&bug);
 	return TRUE;
 }
@@ -40,7 +43,7 @@ eSceneType InGameUpdate(float delta_second)
 		return eTitle;//ゲーム終了時にタイトルに戻る（仮）
 	}
 	player.Update();
-	SemiUpdate(delta_second);
+	semi.SemiUpdate(delta_second);
 	batta.BattaUpdate(delta_second);
 	tonbo.TonboUpdate(delta_second);
 	bug.BugUpdate();
@@ -54,7 +57,7 @@ void InGameDraw(void)
 	bug.BugDraw();
 	batta.BattaDraw();
 	tonbo.TonboDraw();
-	SemiDraw();
+	semi.SemiDraw();
 	
 	tree.TreeDraw();
 }
