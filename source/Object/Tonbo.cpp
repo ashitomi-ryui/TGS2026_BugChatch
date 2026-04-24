@@ -3,6 +3,7 @@
 #include "Bug.h"
 #include <math.h>
 #include"../Scene/InGameScene.h"
+#include"../Utilitys/Camera.h"
 
 int x, y;
 int TonboDestroy;
@@ -126,7 +127,7 @@ void TonboDraw(void)
   if (TonboDestroy == TRUE)
   {
       // â~Çï`âÊÅiê‘Ç¡Ç€Ç¢êFÅj
-      DrawCircle(x, y, 20, GetColor(255, 200, 100), TRUE);
+      Camera::DrawCircleW({ (float)x, (float)y }, 20, GetColor(255, 200, 100));
   }
 
 
