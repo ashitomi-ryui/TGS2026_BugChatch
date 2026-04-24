@@ -2,6 +2,11 @@
 
 #include"../Utilitys/Math.h"
 
+//class Batta
+//{
+//private:
+//	Vector2D Batta;
+//};
 
 void BattaInit(void);
 void BattaUpdate(float delta_second);

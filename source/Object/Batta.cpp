@@ -1,6 +1,7 @@
 #include "Batta.h"
 #include "bug.h"
 #include "Math.h"
+#include "../Utilitys/Camera.h"
 #include "DxLib.h" 
 
 Vector2D Batta;
@@ -383,7 +384,7 @@ void BattaDraw(void)
 {
 	if (BattaDestroy == TRUE)
 	{
-		DrawCircle((int)Batta.x, (int)Batta.y, 20, GetColor(255, 0, 255), TRUE);
+		Camera::DrawCircleW(Batta, 20, GetColor(255, 0, 255));
 		DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);
 	}
 }
