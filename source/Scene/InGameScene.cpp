@@ -53,13 +53,13 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
+	tree.Draw();
 	player.Draw();
 	bug.BugDraw();
 	batta.BattaDraw();
 	tonbo.TonboDraw();
 	semi.SemiDraw();
 	
-	tree.Draw();
 }
 
 Vector2D GetRingLocation()
