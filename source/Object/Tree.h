@@ -5,6 +5,7 @@ class Tree
 private:
 	int x;
 	int y;
+    int tree;
 public:
 	Tree();
 	~Tree();

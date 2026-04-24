@@ -170,6 +170,9 @@
     <ClInclude Include="source\Utilitys\Input.h" />
     <ClInclude Include="source\Utilitys\Math.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="images\tree.PNG" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

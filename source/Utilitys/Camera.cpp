@@ -88,5 +88,7 @@ void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHa
 	location.x += -m_location.x + D_WIN_WIDTH / 2;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2;
 
-	DrawRotaGraphF(location.x, location.y, ExRate, Angle, true, ReverseXFlag, ReverseYFlage);
+	DrawRotaGraphF(location.x, location.y, ExRate, Angle, GrHandle, true, ReverseXFlag, ReverseYFlage);
+	DrawCircle((int)location.x, (int)location.y, 10, 0xffffff, true);
+
 }
