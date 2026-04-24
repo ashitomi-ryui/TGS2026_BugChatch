@@ -2,6 +2,7 @@
 #include"Semi.h"
 #include "Bug.h"
 #include "Math.h"
+#include "../Utilitys/Camera.h"
 #include "DxLib.h" 
 
 Vector2D Semi;
@@ -134,7 +135,7 @@ void SemiDraw(void)
 {
 	if (SemiDestroy == TRUE)
 	{
-		DrawCircle(Semi.x, Semi.y, 20, GetColor(0, 0, 255), TRUE);
+		Camera::DrawCircleW(Semi,20, GetColor(0, 0, 255));
 	}
 	
 	/*DrawFormatString(200, 700, GetColor(255, 255, 255), "%f", time3);
