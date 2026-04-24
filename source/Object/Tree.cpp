@@ -10,12 +10,23 @@
 
 Tree::Tree()
 {
-	tree = LoadGraph("images/tree.PNG");
+	
 }
 
 Tree::~Tree()
 {
 
+}
+
+int Tree::TreeInit()
+{
+	tree = LoadGraph("images/tree.PNG");
+
+	if (tree == -1)
+	{
+		return FALSE;
+	}
+	return TRUE;
 }
 
 int Tree::TreeUpdate()
@@ -27,5 +38,5 @@ void Tree::TreeDraw()const
 {
 	//Camera::DrawBoxW({ 200.0f, 100.0f }, { 300.0f, 300.0f }, GetColor(210, 160, 100));
 	//Camera::DrawBoxW({ 700.0f, 400.0f }, { 800.0f, 800.0f }, GetColor(210, 160, 100));
-	Camera::DrawGraphW({ 200.0f,100.0f }, 1.0, 0.0, tree);
+	Camera::DrawGraphW({ 200.0f,500.0f }, 0.25, 0.0, tree);
 }

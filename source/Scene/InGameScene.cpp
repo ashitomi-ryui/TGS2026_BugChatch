@@ -28,7 +28,7 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 	bug.SetBatta(&batta);
 	bug.SetSemi(&semi);
 	bug.SetTonbo(&tonbo);
-
+	tree.TreeInit();
 	batta.SetBatta(&bug);
 	semi.SetSemi(&bug);
 	tonbo.SetTonbo(&bug);
