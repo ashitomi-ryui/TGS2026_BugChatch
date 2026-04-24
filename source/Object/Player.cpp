@@ -199,6 +199,11 @@ Vector2D Player::GetRingLocation() const
 	return ringLocation;
 }
 
+float Player::GetRingRadius() const
+{
+	return m_ringRadius;
+}
+
 float Player::GetMaxSpeed() const
 {
 	return m_maxSpeed;

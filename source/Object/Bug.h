@@ -6,13 +6,14 @@ class Bug
 private:
 	int getcount[3];
 private:
-	void BugHitCheck(Vector2D NetLocation);
+	void BugHitCheck(Vector2D NetLocation, float NetRadius);
 
 public:
 	void BugInit(void);
 	void BugUpdate(void);
 	void BugDraw(void);
 	void SetPlayer(class Player* p);
+	void SetBatta(class Batta* p);
 	int GetBattaScore(void);
 	int GetSemiScore(void);
 	int GetTonboScore(void);

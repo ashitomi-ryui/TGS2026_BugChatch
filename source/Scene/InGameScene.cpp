@@ -11,6 +11,7 @@
 #include"../Object/Tree.h"
 
 Tree tree;
+Batta batta;
 Player player;
 Bug bug;
 float seigenjikann;
@@ -19,10 +20,11 @@ Camera camera(player.GetPlayerLocation());
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
 	seigenjikann = 0;
-	BattaInit();
+	batta.BattaInit();
 	SemiInit();
 	bug.SetPlayer(&player);
-	SetBatta(&bug);
+	bug.SetBatta(&batta);
+	batta.SetBatta(&bug);
 	SetSemi(&bug);
 	SetTonbo(&bug);
 	return TRUE;
@@ -37,7 +39,7 @@ eSceneType InGameUpdate(float delta_second)
 	}
 	player.Update();
 	SemiUpdate(delta_second);
-	BattaUpdate(delta_second);
+	batta.BattaUpdate(delta_second);
 	TonboUpdate(delta_second);
 	bug.BugUpdate();
 	camera.Update(player.GetPlayerLocation());
@@ -48,7 +50,7 @@ void InGameDraw(void)
 {
 	player.Draw();
 	bug.BugDraw();
-	BattaDraw();
+	batta.BattaDraw();
 	TonboDraw();
 	SemiDraw();
 	

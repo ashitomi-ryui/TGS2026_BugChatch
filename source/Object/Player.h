@@ -40,6 +40,7 @@ public:
 
 public:
 	Vector2D GetRingLocation() const;
+	float GetRingRadius() const;
 	float GetMaxSpeed() const;
 	Vector2D GetPlayerLocation() const;
 };
