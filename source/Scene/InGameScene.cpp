@@ -48,6 +48,7 @@ eSceneType InGameUpdate(float delta_second)
 	tonbo.TonboUpdate(delta_second);
 	bug.BugUpdate();
 	camera.Update(player.GetPlayerLocation());
+	tree.Update();
 	return eInGame;
 }
 
@@ -70,4 +71,14 @@ Vector2D GetRingLocation()
 float GetPlayerMaxSpeed()
 {
 	return player.GetMaxSpeed();
+}
+
+Vector2D GetPlayerLocation()
+{
+	return player.GetPlayerLocation();
+}
+
+void PlayerLocationMove(Vector2D vector)
+{
+	player.PlayerLocationMove(vector);
 }

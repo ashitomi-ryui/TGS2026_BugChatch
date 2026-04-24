@@ -2,6 +2,9 @@
 
 #include"../Utilitys/Math.h"
 
+#define D_TREE_WIDTH	(70)
+#define D_TREE_HEIGHT	(150)
+
 class Tree
 {
 private:

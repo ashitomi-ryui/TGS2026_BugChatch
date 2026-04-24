@@ -43,4 +43,10 @@ public:
 	float GetRingRadius() const;
 	float GetMaxSpeed() const;
 	Vector2D GetPlayerLocation() const;
+
+	/// <summary>
+	/// ƒvƒŒƒCƒ„[‚ğˆÚ“®‚³‚¹‚é
+	/// </summary>
+	/// <param name="vector"></param>
+	void PlayerLocationMove(Vector2D vector);
 };

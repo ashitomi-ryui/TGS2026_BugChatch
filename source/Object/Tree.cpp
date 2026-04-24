@@ -1,6 +1,7 @@
 #include<DxLib.h>
 #include"Tree.h"
 #include"../Utilitys/Camera.h"
+#include"../Scene/InGameScene.h"
 
 //void DrawTree(void)
 //{
@@ -36,6 +37,55 @@ int Tree::Init()
 
 int Tree::Update()
 {
+	Vector2D playerLocation = GetPlayerLocation();
+
+	// プレイヤーに最も近い点
+	Vector2D closest;
+
+	for (int i = 0; i < 10; i++)
+	{
+		// X座標の最も近い点を求める
+		if (playerLocation.x > location[i].x + D_TREE_WIDTH)
+		{
+			closest.x = location[i].x + D_TREE_WIDTH;
+		}
+		else if (playerLocation.x < location[i].x - D_TREE_WIDTH)
+		{
+			closest.x = location[i].x - D_TREE_WIDTH;
+		}
+		else
+		{
+			closest.x = playerLocation.x;
+		}
+
+		// Y座標の最も近い点を求める
+		if (playerLocation.y > location[i].y + D_TREE_HEIGHT)
+		{
+			closest.y = location[i].y + D_TREE_HEIGHT;
+		}
+		else if (playerLocation.y < location[i].y - D_TREE_HEIGHT)
+		{
+			closest.y = location[i].y - D_TREE_HEIGHT;
+		}
+		else
+		{
+			closest.y = playerLocation.y;
+		}
+
+		float len = Length(Vec2Sub(closest, playerLocation));
+		if (len < 25.0f)
+		{
+			Vector2D playerMove;
+
+			float angle = FindTheAngle(closest, playerLocation);
+
+			playerMove.x = sinf(angle) * (25.0f - len);
+			playerMove.y = cosf(angle) * (25.0f - len);
+
+			PlayerLocationMove(playerMove);
+		}
+	}
+
 	return TRUE;
 }
 

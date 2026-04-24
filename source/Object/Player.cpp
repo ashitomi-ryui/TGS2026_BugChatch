@@ -1,6 +1,4 @@
 #include "DxLib.h"
-#include <math.h>
-#include <stdlib.h>
 
 #include "Player.h"
 #include "../Utilitys/Camera.h"
@@ -129,7 +127,7 @@ void Player::Update()
 	
 	m_oldTiltStick = m_tiltStick;
 	m_oldRotateStick = m_rotateStick;
-	m_tiltStick = sqrtf(LengthSq(Vec2Sub({ 0.0f, 0.0f }, rightStick)));
+	m_tiltStick = Length(Vec2Sub({ 0.0f, 0.0f }, rightStick));
 	m_rotateStick = FindTheAngle({ 0.0f, 0.0f }, rightStick);
 	if (m_tiltStick == 0.0f)
 	{
@@ -156,7 +154,7 @@ void Player::Update()
 	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);	// ƒŠƒ“ƒO‚ÌˆÊ’u
 	float netDistance;	// ƒŠƒ“ƒO‚Æ–Ô‚Ì‹——£
 	float netAngle;
-	netDistance = sqrtf(LengthSq(Vec2Sub(m_netLocation, ringLocation)));
+	netDistance = Length(Vec2Sub(m_netLocation, ringLocation));
 	if (netDistance > m_netLength)
 	{
 		netAngle = FindTheAngle(m_netLocation, ringLocation);
@@ -212,4 +210,9 @@ float Player::GetMaxSpeed() const
 Vector2D Player::GetPlayerLocation() const
 {
 	return m_location;
+}
+
+void Player::PlayerLocationMove(Vector2D vector)
+{
+	m_location = Vec2Add(m_location, vector);
 }
