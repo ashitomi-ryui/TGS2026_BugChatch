@@ -36,12 +36,12 @@ Title::~Title()
 
 int Title::TitleInit()
 {
-	start_not_pressed = LoadGraph("assets/Title/start_off.png");
-	start_pressed = LoadGraph("assets/Title/start_on.png");
-	help_not_pressed = LoadGraph("assets/Title/help_off.png");
-	help_pressed = LoadGraph("assets/Title/help_on.png");
-	end_not_pressed = LoadGraph("assets/Title/end_off.png");
-	end_pressed = LoadGraph("assets/Title/end_on.png");
+	start_not_pressed = LoadGraph("assets/images/Title/start_off.png");
+	start_pressed = LoadGraph("assets/images/Title/start_on.png");
+	help_not_pressed = LoadGraph("assets/images/Title/help_off.png");
+	help_pressed = LoadGraph("assets/images/Title/help_on.png");
+	end_not_pressed = LoadGraph("assets/images/Title/end_off.png");
+	end_pressed = LoadGraph("assets/images/Title/end_on.png");
 
 	select, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;

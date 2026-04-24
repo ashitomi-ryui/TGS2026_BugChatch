@@ -21,7 +21,7 @@ Tree::~Tree()
 
 int Tree::Init()
 {
-	tree = LoadGraph("images/tree.PNG");
+	tree = LoadGraph("assets/images/tree.PNG");
 
 	if (tree == -1)
 	{
