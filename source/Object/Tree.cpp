@@ -1,5 +1,6 @@
 #include<DxLib.h>
 #include"Tree.h"
+#include"../Utilitys/Camera.h"
 
 //void DrawTree(void)
 //{
@@ -24,6 +25,6 @@ int Tree::TreeUpdate()
 
 void Tree::TreeDraw()const
 {
-	DrawBox(200, 100, 300, 300, GetColor(210, 160, 100), TRUE);
-	DrawBox(700, 400, 800, 800, GetColor(210, 160, 100), TRUE);
+	Camera::DrawBoxW({ 200.0f, 100.0f }, { 300.0f, 300.0f }, GetColor(210, 160, 100));
+	Camera::DrawBoxW({ 700.0f, 400.0f }, { 800.0f, 800.0f }, GetColor(210, 160, 100));
 }

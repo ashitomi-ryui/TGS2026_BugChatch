@@ -11,6 +11,6 @@ public:
 	~Leaf();
 public:
 	int LeafInit();
-	void LeafDraw()const;
 	int LeafUpdate(float delta_second);
+	void LeafDraw()const;
 };
