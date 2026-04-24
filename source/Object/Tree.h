@@ -1,16 +1,17 @@
 #pragma once
 
+#include"../Utilitys/Math.h"
+
 class Tree
 {
 private:
-	int x;
-	int y;
+	Vector2D location[10];
     int tree;
 public:
 	Tree();
 	~Tree();
 public:
-	int TreeInit();
-	void TreeDraw()const;
-	int TreeUpdate();
+	int Init();
+	void Draw()const;
+	int Update();
 };
