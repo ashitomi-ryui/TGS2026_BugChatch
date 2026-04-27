@@ -14,7 +14,7 @@ Player::Player()
 
 	// 虫網
 	m_stickLength = 150.0f;	// 虫網（棒）の長さ
-	m_netLength = 40.0f;		// 網の終点までの長さ
+	m_netLength = 60.0f;		// 網の終点までの長さ
 
 	m_ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
 	m_netLocation = { 640.0f, 360.0f + m_netLength};	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
