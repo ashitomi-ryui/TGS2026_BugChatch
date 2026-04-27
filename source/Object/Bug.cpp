@@ -14,7 +14,6 @@ Batta* battango;
 Semi* semingo;
 Tonbo* tongo;
 Vector2D BugLocation[3][10];   //虫座標受け取る用
-int getcount[3][10] = {0,0,0}; //各虫の座標
 
 void Bug::BugInit(void)
 {
@@ -27,7 +26,7 @@ void Bug::BugUpdate(void)
 	//ネットの位置を取得
 	Vector2D NetLocation = target_player->GetRingLocation();
 	float NetRadius = target_player->GetRingRadius();
-	
+
 	Bug::BugHitCheck(NetLocation, NetRadius);
 
 	/*for (int i = 0; i < 2; i++)
@@ -42,10 +41,25 @@ void Bug::BugUpdate(void)
 //スコア表記予定
 void Bug::BugDraw(void)
 {
-	
-	DrawFormatString(800, 300, GetColor(255, 255, 255), "トンボ捕獲:%d", getcount[2]);
-	DrawFormatString(800, 350, GetColor(255, 255, 255), "セミ捕獲:%d", getcount[1]);
-	DrawFormatString(800, 400, GetColor(255, 255, 255), "バッタ捕獲:%d", getcount[0]);
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			switch (i)
+			{
+			case 0:
+				DrawFormatString(500, 200 + j * 50, GetColor(255, 255, 255), "%d", getcount[i][j]);
+				break;
+			case 1:
+				DrawFormatString(700, 200 + j * 50, GetColor(255, 255, 255), "%d", getcount[i][j]);
+				break;
+			case 2:
+				DrawFormatString(800, 200 + j * 50, GetColor(255, 255, 255), "%d", getcount[i][j]);
+				break;
+			}
+		}
+
+	}
 }
 
 //プレイヤー情報受けとり
@@ -91,18 +105,17 @@ void Bug::BugHitCheck(Vector2D NetLocation, float NetRadius)
 			float len = Length(Vec2Sub(BugLocation[i][j], NetLocation));
 			if (len < NetRadius)
 			{
-				getcount[i] += 1;
-
+				getcount[i][j] += 1;
 			}
 		}
-		
+
 	}
-	
-	
-	
+
+
+
 	for (int i = 0; i < 3; i++)
 	{
-		
+
 		/*else
 		{
 			getcount[i] = 0;
@@ -110,22 +123,21 @@ void Bug::BugHitCheck(Vector2D NetLocation, float NetRadius)
 	}
 }
 
-int Bug::GetBugScore(void)
+//int Bug::GetBugScore(void)
+//{
+//	return *getcount;
+//}
+int Bug::GetBattaScore(int index)
 {
-	return *getcount;
+	return getcount[0][index];
 }
 
-int Bug::GetBattaScore(void)
+int Bug::GetSemiScore(int index)
 {
-	return getcount[0];
+	return getcount[1][index];
 }
 
-int Bug::GetSemiScore(void)
+int Bug::GetTonboScore(int index)
 {
-	return getcount[1];
-}
-
-int Bug::GetTonboScore(void)
-{
-	return getcount[2];
+	return getcount[2][index];
 }
