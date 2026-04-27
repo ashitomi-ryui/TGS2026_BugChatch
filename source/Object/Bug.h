@@ -4,7 +4,7 @@
 class Bug
 {
 private:
-	int getcount[3];
+	int getcount[3][10];
 private:
 	void BugHitCheck(Vector2D NetLocation, float NetRadius);
 
@@ -17,10 +17,10 @@ public:
 	void SetSemi(class Semi* p);
 	void SetTonbo(class Tonbo* p);
 
-	int GetBattaScore(void);
-	int GetSemiScore(void);
-	int GetTonboScore(void);
-	int GetBugScore(void);
+	int GetBattaScore(int index);
+	int GetSemiScore(int index);
+	int GetTonboScore(int index);
+	/*int GetBugScore(void);*/
 
 };
 //void BugRespawn(float delta_second,int count);

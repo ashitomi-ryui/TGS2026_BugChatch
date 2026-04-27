@@ -10,8 +10,8 @@ private:
 	float time1;
 	int count;
 	bool BattaDestroy;
-	int now_batta;
-	int old_batta;
+	int now_batta[10];
+	int old_batta[10];
 	int battacount;
 	int battaspawn;
 	float groundyY;
