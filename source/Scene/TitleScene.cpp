@@ -60,37 +60,52 @@ eSceneType Title::TitleUpdate(float delta_second)
 	}
 	if (time >= time_rug)
 	{
-		return eInGame;
+		switch (select)
+		{
+		case 0:
+			return eInGame;
+			break;
+		case 1:
+			break;
+		case 2:
+			return eEnd;
+			break;
+		}
+	
+		
 	}
 
-	if (GetLeftStickState(true) == ePressed)//左スティックが上に入力された場合
+	if (pressed == 0)
 	{
-		if (select <= 0)//一番上が選択されている状態の場合
+		if (GetLeftStickState(true) == ePressed || GetButtonState(XINPUT_BUTTON_DPAD_UP) == ePressed)//左スティックが上に入力された場合
 		{
-			select = 2;//一番下へ戻す
+			if (select <= 0)//一番上が選択されている状態の場合
+			{
+				select = 2;//一番下へ戻す
+			}
+			else
+			{
+				select--;//上へ移動する
+			}
 		}
-		else
+		if (GetLeftStickState(false) == ePressed || GetButtonState(XINPUT_BUTTON_DPAD_DOWN) == ePressed)//左スティックが下に入力された場合
 		{
-			select--;//上へ移動する
+			if (select >= 2)//一番下が選択されている状態の場合
+			{
+				select = 0;//一番上へ戻す
+			}
+			else
+			{
+				select++;//下へ移動する
+			}
+		}
+		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
+		{
+			pressed = 1;
+			//return eInGame;//ゲーム画面へ移行
 		}
 	}
-	if (GetLeftStickState(false) == ePressed)//左スティックが下に入力された場合
-	{
-		if (select >= 2)//一番下が選択されている状態の場合
-		{
-			select = 0;//一番上へ戻す
-		}
-		else
-		{
-			select++;//下へ移動する
-		}
-	}
-	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
-	{
-		pressed = 1;
-		//return eInGame;//ゲーム画面へ移行
-	}
-
+	
 	return eTitle;//タイトル画面を維持
 }
 
@@ -114,7 +129,14 @@ void Title::TitleDraw()const
 
 	if (select == 1)//ヘルプが選択されている場合
 	{
-		DrawRotaGraph(640, 520, 1.2, 0.0, help_not_pressed, TRUE);//ボタンを大きくする
+		if (pressed == 1)
+		{
+			DrawRotaGraph(640, 520, 1.2, 0.0, help_pressed, TRUE);//ボタンを大きくする
+		}
+		else
+		{
+			DrawRotaGraph(640, 520, 1.2, 0.0, help_not_pressed, TRUE);//ボタンを大きくする
+		}
 	}
 	else
 	{
@@ -123,6 +145,11 @@ void Title::TitleDraw()const
 
 	if (select == 2)//おわりが選択されている場合
 	{
+		if (pressed == 1)
+		{
+			DrawRotaGraph(640, 640, 1.2, 0.0, end_pressed, TRUE);//ボタンを大きくする
+		}
+
 		DrawRotaGraph(640, 640, 1.2, 0.0, end_not_pressed, TRUE);//ボタンを大きくする
 	}
 	else
@@ -132,5 +159,6 @@ void Title::TitleDraw()const
 
 	SetFontSize(50);
 	DrawString(200, 200, "Aボタンで開始できます", GetColor(255, 255, 255), TRUE);//仮タイトル
+	DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", select);
 	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
 }
