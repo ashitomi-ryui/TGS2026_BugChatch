@@ -36,6 +36,8 @@ int SceneUpdate(float delta_second)
 	case eResult:
 		next_type = ResultUpdate(delta_second);
 		break;
+	case eRanking:
+		break;
 	case eEnd:
 	default:
 		break;
@@ -66,6 +68,8 @@ void SceneDraw(void)
 	case eResult:
 		ResultDraw();
 		break;
+	case eRanking:
+		break;
 	default:
 		DrawString(0, 10, "こいつはくせぇ", 0xFFFFFF);//デフォルト描画
 		break;
@@ -87,6 +91,8 @@ int ChangeScene(eSceneType new_scene_type)
 		break;
 	case eResult:
 		result = ResultInit();
+		break;
+	case eRanking:
 		break;
 	}
 	current_type = new_scene_type;//現在シーンの更新

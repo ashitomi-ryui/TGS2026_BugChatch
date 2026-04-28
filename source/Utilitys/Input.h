@@ -18,11 +18,18 @@ void InputUpdate(void);					// 入力バッファ更新
 eInputState GetKeyInputState(int key);	// キーの状態取得
 
 /// <summary>
-/// 左スティックの入力状態を取得
+/// 左スティックの上下入力状態を取得
 /// </summary>
 /// <param name="direction">true:上, false:下</param>
 /// <returns></returns>
-eInputState GetLeftStickState(bool direction);
+eInputState GetLeftStickState_Y(bool direction);
+
+/// <summary>
+/// 左スティックの左右入力状態を取得
+/// </summary>
+/// <param name="direction">true:多分右, false:多分左</param>
+/// <returns></returns>
+eInputState GetLeftStickState_X(bool direction);
 
 eInputState GetButtonState(int button);	// ボタンの状態取得
 

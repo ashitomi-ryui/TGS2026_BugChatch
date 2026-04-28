@@ -5,12 +5,12 @@
 class Leaf
 {
 private:
-	Vector2D location;
+	Vector2D location[10];
 public:
 	Leaf();
 	~Leaf();
 public:
-	int LeafInit();
-	int LeafUpdate(float delta_second);
-	void LeafDraw()const;
+	int Init();
+	int Update(float delta_second);
+	void Draw()const;
 };

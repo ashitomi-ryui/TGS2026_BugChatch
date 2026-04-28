@@ -6,5 +6,6 @@ enum eSceneType
 	eInGame,
 	eEnd,
 	eResult,
-	eRestart
+	eRestart,
+	eRanking
 };

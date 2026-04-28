@@ -84,7 +84,7 @@ eInputState GetKeyInputState(int key)
 	return eNone;										// ”ñ“ü—Í
 }
 
-eInputState GetLeftStickState(bool direction)
+eInputState GetLeftStickState_X(bool direction)
 {
 	int n;
 	if (direction)
@@ -96,9 +96,9 @@ eInputState GetLeftStickState(bool direction)
 		n = -1;
 	}
 
-	if (n * old_stick_left.y > 0.0f)
+	if (n * old_stick_left.x > 0.5f)
 	{
-		if (n * left_stick.y > 0.0f)
+		if (n * left_stick.x > 0.5f)
 		{
 			return eHeld;							// ‰Ÿ‚µ‚Á‚Ï‚È‚µ
 		}
@@ -109,7 +109,40 @@ eInputState GetLeftStickState(bool direction)
 	}
 	else
 	{
-		if (n * left_stick.y > 0.0f)
+		if (n * left_stick.x > 0.5f)
+		{
+			return ePressed;						// ‰Ÿ‚³‚ê‚½uŠÔ
+		}
+	}
+	return eNone;
+}
+
+eInputState GetLeftStickState_Y(bool direction)
+{
+	int n;
+	if (direction)
+	{
+		n = 1;
+	}
+	else
+	{
+		n = -1;
+	}
+
+	if (n * old_stick_left.y > 0.5f)
+	{
+		if (n * left_stick.y > 0.5f)
+		{
+			return eHeld;							// ‰Ÿ‚µ‚Á‚Ï‚È‚µ
+		}
+		else
+		{
+			return eReleased;						// —£‚³‚ê‚½uŠÔ
+		}
+	}
+	else
+	{
+		if (n * left_stick.y > 0.5f)
 		{
 			return ePressed;						// ‰Ÿ‚³‚ê‚½uŠÔ
 		}

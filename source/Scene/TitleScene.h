@@ -16,7 +16,10 @@ private:
 	int help_not_pressed;
 	int end_pressed;
 	int end_not_pressed;
-	int select;
+	int ranking_pressed;
+	int ranking_not_pressed;
+	int select_x;
+	int select_y;
 	int pressed;
 	float time;
 	float time_rug;
