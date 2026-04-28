@@ -145,6 +145,7 @@
     <ClCompile Include="source\Object\Semi.cpp" />
     <ClCompile Include="source\Object\Tonbo.cpp" />
     <ClCompile Include="source\Object\Tree.cpp" />
+    <ClCompile Include="source\Scene\HelpScene.cpp" />
     <ClCompile Include="source\Scene\InGameScene.cpp" />
     <ClCompile Include="source\Scene\ResultScene.cpp" />
     <ClCompile Include="source\Scene\SceneManager.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="source\Object\Semi.h" />
     <ClInclude Include="source\Object\Tonbo.h" />
     <ClInclude Include="source\Object\Tree.h" />
+    <ClInclude Include="source\Scene\HelpSceneh.h" />
     <ClInclude Include="source\Scene\InGameScene.h" />
     <ClInclude Include="source\Scene\ResultScene.h" />
     <ClInclude Include="source\Scene\SceneManager.h" />
@@ -171,6 +173,7 @@
     <ClInclude Include="source\Utilitys\Math.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\Title\end_on.png" />
     <Image Include="images\tree.PNG" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
