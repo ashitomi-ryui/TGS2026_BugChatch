@@ -24,7 +24,7 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 	seigenjikann = 0;
 	for (int i = 0; i < 10; i++)
 	{
-		batta[i].Init();
+		batta[i].Init(i);
 	}
 	semi.SemiInit();
 	bug.SetPlayer(&player);
