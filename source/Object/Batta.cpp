@@ -3,59 +3,42 @@
 #include "../Utilitys/Camera.h"
 #include "DxLib.h" 
 
+Batta battakun[10];
 
 Bug* battascore;
-float time = 0;
-float time1 = 0;
 
-int count = 0;
-bool BattaDestroy;
-
-int now_batta[10];
-int old_batta[10];
-int battacount;
-int battaspawn = 0;
-float groundyY = 0;
-
-Batta::Batta()
+void Batta::Init(int index)
 {
-}
+	location.x = 0;
+	location.y = 0;
+	float vx = 0.0f;
+	float vy = 0.0f;
+	float Watitime = 0.0f;
 
-Batta::~Batta()
-{
-}
+	bool Groundy = TRUE;
+	bool UpMove = FALSE;     // è„è∏íÜÇ©Ç«Ç§Ç©
+	float JumpTopY;    // ç°âÒÇÃÉWÉÉÉìÉvÇ≈é~Ç‹ÇÈYç¿ïW
 
-
-void Batta::Init(Vector2D location)
-{
-	batta = location;
+	bool TopStop = FALSE;     // í∏ì_Ç≈í‚é~íÜ
+	float TopStopTimer = 0.0f;
 }
 
 void Batta::BattaUpdate(float delta_second)
 {
-	BattaDestroy = TRUE;
-
-	static float vx = 0.0f;
-	static float vy = 0.0f;
-	static float Watitime = 0.0f;
-
-	static bool Groundy = TRUE;
-	static bool UpMove = FALSE;      // è„è∏íÜÇ©Ç«Ç§Ç©
-	static float JumpTopY = 0.0f;    // ç°âÒÇÃÉWÉÉÉìÉvÇ≈é~Ç‹ÇÈYç¿ïW
-
-	static bool TopStop = FALSE;     // í∏ì_Ç≈í‚é~íÜ
-	static float TopStopTimer = 0.0f;
+		
 
 	time += delta_second;
 	for (int i = 0; i < 10; i++)
 	{
+		BattaDestroy = TRUE;
+
 		battacount = battascore->GetBattaScore(i) % 2;
 
 		now_batta[i] = battascore->GetBattaScore(i);
 
 		if (now_batta[i] - old_batta[i] > 0)
 		{
-			batta = { -100.0f, 100.0f };
+			location = { -100.0f, 100.0f };
 
 			vx = 0.0f;
 			vy = 0.0f;
@@ -90,13 +73,13 @@ void Batta::BattaUpdate(float delta_second)
 
 				if (battaspawn == 0)
 				{
-					batta = { 100.0f, 580.0f };
+					location = { 100.0f, 580.0f };
 					battaspawn = 1;
 				}
 
 				if (Groundy == TRUE)
 				{
-					batta.y = groundyY;
+					location.y = groundyY;
 					vy = 0.0f;
 					vx = 0.0f;
 
@@ -131,15 +114,15 @@ void Batta::BattaUpdate(float delta_second)
 					// è„è∏íÜ
 					if (UpMove == TRUE)
 					{
-						batta.x += vx;
-						batta.y += vy;
+						location.x += vx;
+						location.y += vy;
 
 						// è„Ç…å¸Ç©Ç¡ÇƒÇ¢ÇÈéû
 						if (vy < 0.0f)
 						{
-							if (batta.y <= JumpTopY)
+							if (location.y <= JumpTopY)
 							{
-								batta.y = JumpTopY;
+								location.y = JumpTopY;
 								UpMove = FALSE;
 								TopStop = TRUE;
 								TopStopTimer = 0.0f;
@@ -150,9 +133,9 @@ void Batta::BattaUpdate(float delta_second)
 						// â∫Ç…å¸Ç©Ç¡ÇƒÇ¢ÇÈéû
 						else if (vy > 0.0f)
 						{
-							if (batta.y >= JumpTopY)
+							if (location.y >= JumpTopY)
 							{
-								batta.y = JumpTopY;
+								location.y = JumpTopY;
 								UpMove = FALSE;
 								TopStop = TRUE;
 								TopStopTimer = 0.0f;
@@ -169,7 +152,7 @@ void Batta::BattaUpdate(float delta_second)
 						TopStopTimer += delta_second;
 
 
-						batta.y = JumpTopY;   // å≈íË
+						location.y = JumpTopY;   // å≈íË
 
 						if (TopStopTimer >= 1.5f)
 						{
@@ -189,11 +172,11 @@ void Batta::BattaUpdate(float delta_second)
 							// ÇΩÇ‹Ç…â∫Ç™ÇÈ
 							if (rand() % 2 == 0)   // 2âÒÇ…1âÒÇ≠ÇÁÇ¢â∫Ç™ÇÈ
 							{
-								JumpTopY = batta.y + (70 + rand() % 90);   // 70Å`159â∫Ç™ÇÈ
+								JumpTopY = location.y + (70 + rand() % 90);   // 70Å`159â∫Ç™ÇÈ
 							}
 							else
 							{
-								JumpTopY = batta.y - (70 + rand() % 90);   // 70Å`159è„Ç™ÇÈ
+								JumpTopY = location.y - (70 + rand() % 90);   // 70Å`159è„Ç™ÇÈ
 							}
 
 							// è„Ç…çsÇ´Ç∑Ç¨ñhé~
@@ -208,7 +191,7 @@ void Batta::BattaUpdate(float delta_second)
 								JumpTopY = 650.0f;
 							}
 							// ñ⁄ïWÇ™ç°ÇÊÇËâ∫Ç»ÇÁóéÇøÇÈÅAè„Ç»ÇÁÉWÉÉÉìÉv
-							if (JumpTopY > batta.y)
+							if (JumpTopY > location.y)
 							{
 								vy = 15.0f;    // â∫Ç÷
 							}
@@ -221,13 +204,13 @@ void Batta::BattaUpdate(float delta_second)
 					vx *= 0.995f;
 				}
 
-				if (batta.x < 20.0f)
+				if (location.x < 20.0f)
 				{
-					batta.x = 20.0f;
+					location.x = 20.0f;
 				}
-				if (batta.x > 650.0f)
+				if (location.x > 650.0f)
 				{
-					batta.x = 650.0f;
+					location.x = 650.0f;
 				}
 				break;
 
@@ -236,13 +219,13 @@ void Batta::BattaUpdate(float delta_second)
 
 				if (battaspawn == 1)
 				{
-					batta = { 350.0f, 200.0f };
+					location = { 350.0f, 200.0f };
 					battaspawn = 0;
 				}
 
 				if (Groundy == TRUE)
 				{
-					batta.y = groundyY;
+					location.y = groundyY;
 					vy = 0.0f;
 					vx = 0.0f;
 
@@ -278,15 +261,15 @@ void Batta::BattaUpdate(float delta_second)
 					// è„è∏íÜ
 					if (UpMove == TRUE)
 					{
-						batta.x += vx;
-						batta.y += vy;
+						location.x += vx;
+						location.y += vy;
 
 						// è„Ç…å¸Ç©Ç¡ÇƒÇ¢ÇÈéû
 						if (vy < 0.0f)
 						{
-							if (batta.y <= JumpTopY)
+							if (location.y <= JumpTopY)
 							{
-								batta.y = JumpTopY;
+								location.y = JumpTopY;
 								UpMove = FALSE;
 								TopStop = TRUE;
 								TopStopTimer = 0.0f;
@@ -297,9 +280,9 @@ void Batta::BattaUpdate(float delta_second)
 						// â∫Ç…å¸Ç©Ç¡ÇƒÇ¢ÇÈéû
 						else if (vy > 0.0f)
 						{
-							if (batta.y >= JumpTopY)
+							if (location.y >= JumpTopY)
 							{
-								batta.y = JumpTopY;
+								location.y = JumpTopY;
 								UpMove = FALSE;
 								TopStop = TRUE;
 								TopStopTimer = 0.0f;
@@ -314,7 +297,7 @@ void Batta::BattaUpdate(float delta_second)
 						vx = 0.0f;
 						TopStopTimer += delta_second;
 
-						batta.y = JumpTopY;   // ÇªÇÃèÍÇ≈å≈íË
+						location.y = JumpTopY;   // ÇªÇÃèÍÇ≈å≈íË
 						if (TopStopTimer >= 1.3f)
 						{
 							TopStop = FALSE;
@@ -333,11 +316,11 @@ void Batta::BattaUpdate(float delta_second)
 							// ÇΩÇ‹Ç…â∫Ç™ÇÈ
 							if (rand() % 3 == 0)   // 3âÒÇ…1âÒÇ≠ÇÁÇ¢â∫Ç™ÇÈ
 							{
-								JumpTopY = batta.y + (100 + rand() % 40);   // 100Å`139â∫Ç™ÇÈ
+								JumpTopY = location.y + (100 + rand() % 40);   // 100Å`139â∫Ç™ÇÈ
 							}
 							else
 							{
-								JumpTopY = batta.y - (40 + rand() % 40);   // 40Å`79è„Ç™ÇÈ
+								JumpTopY = location.y - (40 + rand() % 40);   // 40Å`79è„Ç™ÇÈ
 							}
 
 							// è„Ç…çsÇ´Ç∑Ç¨ñhé~
@@ -352,7 +335,7 @@ void Batta::BattaUpdate(float delta_second)
 								JumpTopY = 650.0f;
 							}
 							// ñ⁄ïWÇ™ç°ÇÊÇËâ∫Ç»ÇÁóéÇøÇÈÅAè„Ç»ÇÁÉWÉÉÉìÉv
-							if (JumpTopY > batta.y)
+							if (JumpTopY > location.y)
 							{
 								vy = 15.0f;    // â∫Ç÷
 							}
@@ -376,13 +359,13 @@ void Batta::BattaUpdate(float delta_second)
 
 				}
 
-				if (batta.x < 330.0f)
+				if (location.x < 330.0f)
 				{
-					batta.x = 330.0f;
+					location.x = 330.0f;
 				}
-				if (batta.x > 1200.0f)
+				if (location.x > 1200.0f)
 				{
-					batta.x = 1200.0f;
+					location.x = 1200.0f;
 				}
 				break;
 			}
@@ -395,14 +378,14 @@ void Batta::BattaDraw(void)
 {
 	if (BattaDestroy == TRUE)
 	{
-		Camera::DrawCircleW(batta, 20, GetColor(255, 0, 255));
-		DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);
+		Camera::DrawCircleW(location, 20, GetColor(255, 0, 255));
+		/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
 	}
 }
 
 Vector2D* Batta::BattaLocation(void)
 {
-	return &batta;
+	return &location;
 }
 
 void Batta::SetBatta(class Bug* p)

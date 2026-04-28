@@ -48,4 +48,4 @@ float GetDeltaSecond()
 	old_time = current_time;//前フレーム時刻を更新
 
 	return result;//1フレームにかかった時間を返す
-}nnn
+}
