@@ -92,9 +92,13 @@ eSceneType Title::TitleUpdate(float delta_second)
 
 	if (pressed == 0)
 	{
-		if (GetLeftStickState_Y(true) == ePressed || GetButtonState(XINPUT_BUTTON_DPAD_UP) == ePressed)//左スティックが上に入力された場合
+		if (GetLeftStickState_Y(true) == ePressed)//左スティックが上に入力された場合
 		{
-			if (select_y <= 0)//一番上が選択されている状態の場合
+			if (select_x == 1)
+			{
+				select_x = 0;
+			}
+			if (select_y == 0)//一番上が選択されている状態の場合
 			{
 				select_y = 2;//一番下へ戻す
 			}
@@ -103,9 +107,13 @@ eSceneType Title::TitleUpdate(float delta_second)
 				select_y--;//上へ移動する
 			}
 		}
-		if (GetLeftStickState_Y(false) == ePressed || GetButtonState(XINPUT_BUTTON_DPAD_DOWN) == ePressed)//左スティックが下に入力された場合
+		if (GetLeftStickState_Y(false) == ePressed)//左スティックが下に入力された場合
 		{
-			if (select_y >= 2)//一番下が選択されている状態の場合
+			if (select_x == 1)
+			{
+				select_x = 0;
+			}
+			if (select_y == 2)//一番下が選択されている状態の場合
 			{
 				select_y = 0;//一番上へ戻す
 			}
@@ -114,26 +122,30 @@ eSceneType Title::TitleUpdate(float delta_second)
 				select_y++;//下へ移動する
 			}
 		}
-		if (GetLeftStickState_X(true) == ePressed)
+		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
-			if (select_x == 1)
+			if (select_y == 0 || select_y == 2)
 			{
-				select_x = 0;
+				select_y = 1;
+			}
+			if (select_x == 1)//一番右が選択されている状態の場合
+			{
+				select_x = 0;//左へ戻す
 			}
 			else
 			{
-				select_x++;
+				select_x++;//右へ移動する
 			}
 		}
-		if (GetLeftStickState_X(false) == ePressed)
+		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
 		{
-			if (select_x == 0)
+			if (select_x == 0)//一番左が選択されている場合
 			{
-				select_x = 1;
+				select_x = 1;//右へ戻す
 			}
 			else
 			{
-				select_x--;
+				select_x--;//左へ移動する
 			}
 		}
 	
@@ -182,7 +194,7 @@ void Title::TitleDraw()const
 		DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);//通常サイズに戻す
 	}
 
-	if (select_y == 1 && select_x == 1)//ヘルプが選択されている場合
+	if (select_y == 1 && select_x == 1)//ランキングが選択されている場合
 	{
 		if (pressed == 1)
 		{
