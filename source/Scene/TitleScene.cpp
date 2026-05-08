@@ -45,17 +45,24 @@ int Title::TitleInit()
 	ranking_not_pressed = LoadGraph("assets/images/Title/ranking_off.png");
 	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
 
+	bgm = LoadSoundMem("assets/Audio/Title.wav");
+	if (bgm == -1)
+	{
+		return FALSE;
+	}
 	select, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
-
+PlaySoundMem(bgm, DX_PLAYTYPE_BACK);
 	return TRUE;
 }
 
 eSceneType Title::TitleUpdate(float delta_second)
 {
+	
 	time += delta_second;
 
+	
 	if (pressed == 0)//決定ボタンが押されていない場合
 	{
 		time_rug += delta_second;
@@ -64,6 +71,7 @@ eSceneType Title::TitleUpdate(float delta_second)
 	{
 		if (select_x == 0)
 		{
+
 			switch (select_y)
 			{
 			case 0:
@@ -132,6 +140,7 @@ eSceneType Title::TitleUpdate(float delta_second)
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 		{
 			pressed = 1;
+			StopSoundMem(bgm);
 			//return eInGame;//ゲーム画面へ移行
 		}
 	}

@@ -10,6 +10,7 @@
 class Title
 {
 private:
+	int bgm;
 	int start_pressed;
 	int start_not_pressed;
 	int help_pressed;
