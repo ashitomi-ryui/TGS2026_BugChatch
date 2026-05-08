@@ -177,7 +177,7 @@
     <Image Include="images\tree.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Media Include="assets\Audio\Title.wav" />
+    <Media Include="assets\Audio\Result.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

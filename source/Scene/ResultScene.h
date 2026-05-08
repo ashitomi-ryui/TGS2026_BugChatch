@@ -6,7 +6,7 @@
 class Result
 {
 private:
-
+	
 };
 
 int ResultInit(void);
