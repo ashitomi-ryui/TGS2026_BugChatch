@@ -44,6 +44,7 @@ int Title::TitleInit()
 	end_pressed = LoadGraph("assets/images/Title/end_on.png");
 	ranking_not_pressed = LoadGraph("assets/images/Title/ranking_off.png");
 	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
+	back_ground = LoadGraph("assets/images/Title/mori.jpg");
 
 	select, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
@@ -153,6 +154,8 @@ eSceneType Title::TitleUpdate(float delta_second)
 
 void Title::TitleDraw()const
 {
+	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
+
 	if (select_y == 0)//スタートが選択されている場合
 	{
 		if (pressed == 1)//ボタンが押されている場合
