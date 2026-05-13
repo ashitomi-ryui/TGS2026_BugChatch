@@ -18,7 +18,7 @@ Player player;
 Cicada cicada[D_CICADA_MAX];
 //Dragonfly dragonfly[D_DRAGONFLY_MAX];
 //Grasshopper grasshopper[D_GRASSHOPPER_MAX];
-float seigenjikann;
+float timer;
 Camera camera(player.GetPlayerLocation());
 
 int num = 0;
@@ -33,7 +33,7 @@ int InGameInit(void)//各プログラムの初期化
 		tree[id].Set({ 100.0f + id * 200.0f, 100.0f + (float)(id % 3) * 400.0f });
 	}
 
-	seigenjikann = 0;
+	timer = 0;
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		// スポーン
@@ -53,8 +53,8 @@ int InGameInit(void)//各プログラムの初期化
 
 eSceneType InGameUpdate(float delta_second)
 {
-	seigenjikann += delta_second;
-	if (seigenjikann > 60)
+	timer += delta_second;
+	if (timer > 60)
 	{
 		return eTitle;//ゲーム終了時にタイトルに戻る（仮）
 	}
