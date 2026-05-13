@@ -6,7 +6,8 @@
 class Result
 {
 private:
-	
+	int title_not_pressed;
+	int title_pressed;
 public:
 	Result();
 	~Result();
