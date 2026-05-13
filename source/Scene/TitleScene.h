@@ -10,6 +10,7 @@
 class Title
 {
 private:
+	int bgm;
 	int start_pressed;
 	int start_not_pressed;
 	int help_pressed;
@@ -18,6 +19,7 @@ private:
 	int end_not_pressed;
 	int ranking_pressed;
 	int ranking_not_pressed;
+	int back_ground;
 	int select_x;
 	int select_y;
 	int pressed;
@@ -27,7 +29,7 @@ public:
 	Title();
 	~Title();
 public:
-	int TitleInit();
-	void TitleDraw()const;
-	eSceneType TitleUpdate(float delta_second);
+	int Init();
+	void Draw()const;
+	eSceneType Update(float delta_second);
 };

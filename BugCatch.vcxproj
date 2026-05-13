@@ -145,6 +145,7 @@
     <ClCompile Include="source\Object\Tree.cpp" />
     <ClCompile Include="source\Scene\HelpScene.cpp" />
     <ClCompile Include="source\Scene\InGameScene.cpp" />
+    <ClCompile Include="source\Scene\RankingScene.cpp" />
     <ClCompile Include="source\Scene\ResultScene.cpp" />
     <ClCompile Include="source\Scene\SceneManager.cpp" />
     <ClCompile Include="source\Scene\TitleScene.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="source\Object\Tree.h" />
     <ClInclude Include="source\Scene\HelpSceneh.h" />
     <ClInclude Include="source\Scene\InGameScene.h" />
+    <ClInclude Include="source\Scene\RankingScene.h" />
     <ClInclude Include="source\Scene\ResultScene.h" />
     <ClInclude Include="source\Scene\SceneManager.h" />
     <ClInclude Include="source\Scene\SceneType.h" />
@@ -174,6 +176,9 @@
     <Image Include="assets\images\tree.PNG" />
     <Image Include="assets\Title\end_on.png" />
     <Image Include="images\tree.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="assets\Audio\Result.wav" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

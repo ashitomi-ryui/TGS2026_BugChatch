@@ -8,7 +8,8 @@
 
 eSceneType current_type;
 
-Title title;
+Title t;
+Result r;
 
 int ChangeScene(eSceneType new_scene_type);
 
@@ -28,13 +29,13 @@ int SceneUpdate(float delta_second)
 	switch (current_type)//現在シーンに応じた更新処理
 	{
 	case eTitle:
-		next_type = title.TitleUpdate(delta_second);
+		next_type = t.Update(delta_second);
 		break;
 	case eInGame:
 		next_type = InGameUpdate(delta_second);
 		break;
 	case eResult:
-		next_type = ResultUpdate(delta_second);
+		next_type = r.Update(delta_second);
 		break;
 	case eRanking:
 		break;
@@ -60,13 +61,13 @@ void SceneDraw(void)
 	switch (current_type)//現在シーンに応じて描画
 	{
 	case eTitle:
-		title.TitleDraw();
+		t.Draw();
 		break;
 	case eInGame:
 		InGameDraw();
 		break;
 	case eResult:
-		ResultDraw();
+		r.Draw();
 		break;
 	case eRanking:
 		break;
@@ -82,7 +83,7 @@ int ChangeScene(eSceneType new_scene_type)
 	switch (new_scene_type)//遷移先シーン種別に応じた初期化
 	{
 	case eTitle:
-		result = title.TitleInit();
+		result = t.Init();
 		break;
 	case eRestart:
 		new_scene_type = eInGame;
@@ -90,7 +91,7 @@ int ChangeScene(eSceneType new_scene_type)
 		result = InGameInit();
 		break;
 	case eResult:
-		result = ResultInit();
+		result = r.Init();
 		break;
 	case eRanking:
 		break;

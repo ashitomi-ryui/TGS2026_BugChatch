@@ -96,9 +96,9 @@ eInputState GetLeftStickState_X(bool direction)
 		n = -1;
 	}
 
-	if (n * old_stick_left.x > 0.5f)
+	if (n * old_stick_left.x > 0.8f)
 	{
-		if (n * left_stick.x > 0.5f)
+		if (n * left_stick.x > 0.8f)
 		{
 			return eHeld;							// ‰Ÿ‚µ‚Á‚Ï‚È‚µ
 		}
@@ -109,7 +109,7 @@ eInputState GetLeftStickState_X(bool direction)
 	}
 	else
 	{
-		if (n * left_stick.x > 0.5f)
+		if (n * left_stick.x > 0.8f)
 		{
 			return ePressed;						// ‰Ÿ‚³‚ê‚½uŠÔ
 		}

@@ -1,18 +1,28 @@
 #include"ResultScene.h"
-#include<DxLib.h>
 #include"../Utilitys/Input.h"
+#include<DxLib.h>
 
-int ResultInit(void)//リザルト初期化
+Result::Result()
+{
+
+}
+
+Result::~Result()
+{
+
+}
+
+int Result::Init()
 {
 	return TRUE;
 }
 
-eSceneType ResultUpdate(float delta_second)//リザルト画面更新処理
+eSceneType Result::Update(float delta_second)
 {
 	return eResult;
 }
 
-void ResultDraw(void)//リザルト画面表示
+void Result::Draw()const
 {
-	
+
 }

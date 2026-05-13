@@ -34,7 +34,7 @@ Title::~Title()
 
 }
 
-int Title::TitleInit()
+int Title::Init()
 {
 	start_not_pressed = LoadGraph("assets/images/Title/start_off.png");
 	start_pressed = LoadGraph("assets/images/Title/start_on.png");
@@ -44,18 +44,26 @@ int Title::TitleInit()
 	end_pressed = LoadGraph("assets/images/Title/end_on.png");
 	ranking_not_pressed = LoadGraph("assets/images/Title/ranking_off.png");
 	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
+	back_ground = LoadGraph("assets/images/Title/mori.jpg");
 
+	bgm = LoadSoundMem("assets/Audio/Title.wav");
+	if (bgm == -1)
+	{
+		return FALSE;
+	}
 	select, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
-
+PlaySoundMem(bgm, DX_PLAYTYPE_BACK);
 	return TRUE;
 }
 
-eSceneType Title::TitleUpdate(float delta_second)
+eSceneType Title::Update(float delta_second)
 {
+	
 	time += delta_second;
 
+	
 	if (pressed == 0)//決定ボタンが押されていない場合
 	{
 		time_rug += delta_second;
@@ -64,6 +72,7 @@ eSceneType Title::TitleUpdate(float delta_second)
 	{
 		if (select_x == 0)
 		{
+
 			switch (select_y)
 			{
 			case 0:
@@ -84,9 +93,13 @@ eSceneType Title::TitleUpdate(float delta_second)
 
 	if (pressed == 0)
 	{
-		if (GetLeftStickState_Y(true) == ePressed || GetButtonState(XINPUT_BUTTON_DPAD_UP) == ePressed)//左スティックが上に入力された場合
+		if (GetLeftStickState_Y(true) == ePressed)//左スティックが上に入力された場合
 		{
-			if (select_y <= 0)//一番上が選択されている状態の場合
+			if (select_x == 1)
+			{
+				select_x = 0;
+			}
+			if (select_y == 0)//一番上が選択されている状態の場合
 			{
 				select_y = 2;//一番下へ戻す
 			}
@@ -95,9 +108,13 @@ eSceneType Title::TitleUpdate(float delta_second)
 				select_y--;//上へ移動する
 			}
 		}
-		if (GetLeftStickState_Y(false) == ePressed || GetButtonState(XINPUT_BUTTON_DPAD_DOWN) == ePressed)//左スティックが下に入力された場合
+		if (GetLeftStickState_Y(false) == ePressed)//左スティックが下に入力された場合
 		{
-			if (select_y >= 2)//一番下が選択されている状態の場合
+			if (select_x == 1)
+			{
+				select_x = 0;
+			}
+			if (select_y == 2)//一番下が選択されている状態の場合
 			{
 				select_y = 0;//一番上へ戻す
 			}
@@ -106,32 +123,37 @@ eSceneType Title::TitleUpdate(float delta_second)
 				select_y++;//下へ移動する
 			}
 		}
-		if (GetLeftStickState_X(true) == ePressed)
+		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
-			if (select_x == 1)
+			if (select_y == 0 || select_y == 2)
 			{
-				select_x = 0;
+				select_y = 1;
+			}
+			if (select_x == 1)//一番右が選択されている状態の場合
+			{
+				select_x = 0;//左へ戻す
 			}
 			else
 			{
-				select_x++;
+				select_x++;//右へ移動する
 			}
 		}
-		if (GetLeftStickState_X(false) == ePressed)
+		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
 		{
-			if (select_x == 0)
+			if (select_x == 0)//一番左が選択されている場合
 			{
-				select_x = 1;
+				select_x = 1;//右へ戻す
 			}
 			else
 			{
-				select_x--;
+				select_x--;//左へ移動する
 			}
 		}
 	
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 		{
 			pressed = 1;
+			StopSoundMem(bgm);
 			//return eInGame;//ゲーム画面へ移行
 		}
 	}
@@ -139,8 +161,10 @@ eSceneType Title::TitleUpdate(float delta_second)
 	return eTitle;//タイトル画面を維持
 }
 
-void Title::TitleDraw()const
+void Title::Draw()const
 {
+	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
+
 	if (select_y == 0)//スタートが選択されている場合
 	{
 		if (pressed == 1)//ボタンが押されている場合
@@ -173,7 +197,7 @@ void Title::TitleDraw()const
 		DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);//通常サイズに戻す
 	}
 
-	if (select_y == 1 && select_x == 1)//ヘルプが選択されている場合
+	if (select_y == 1 && select_x == 1)//ランキングが選択されている場合
 	{
 		if (pressed == 1)
 		{
