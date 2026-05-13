@@ -34,7 +34,7 @@ Title::~Title()
 
 }
 
-int Title::TitleInit()
+int Title::Init()
 {
 	start_not_pressed = LoadGraph("assets/images/Title/start_off.png");
 	start_pressed = LoadGraph("assets/images/Title/start_on.png");
@@ -58,7 +58,7 @@ PlaySoundMem(bgm, DX_PLAYTYPE_BACK);
 	return TRUE;
 }
 
-eSceneType Title::TitleUpdate(float delta_second)
+eSceneType Title::Update(float delta_second)
 {
 	
 	time += delta_second;
@@ -161,7 +161,7 @@ eSceneType Title::TitleUpdate(float delta_second)
 	return eTitle;//ƒ^ƒCƒgƒ‹‰æ–Ê‚ğˆÛ
 }
 
-void Title::TitleDraw()const
+void Title::Draw()const
 {
 	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
 

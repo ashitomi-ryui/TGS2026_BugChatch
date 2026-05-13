@@ -29,7 +29,7 @@ public:
 	Title();
 	~Title();
 public:
-	int TitleInit();
-	void TitleDraw()const;
-	eSceneType TitleUpdate(float delta_second);
+	int Init();
+	void Draw()const;
+	eSceneType Update(float delta_second);
 };

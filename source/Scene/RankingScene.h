@@ -3,17 +3,15 @@
 #include"SceneType.h"
 #include"../Utilitys/Input.h"
 
-class Result
+class Ranking
 {
 private:
-	
+
 public:
-	Result();
-	~Result();
+	Ranking();
+	~Ranking();
 public:
 	int Init();
 	eSceneType Update(float delta_second);
 	void Draw()const;
 };
-
-
