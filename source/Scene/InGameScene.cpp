@@ -7,7 +7,6 @@
 
 #include"../Object/player.h"
 
-//#include"../Object/Bug/Bug.h"
 #include"../Object/Bug/Cicada.h"
 //#include"../Object/Bug/Dragonfly.h"
 //#include"../Object/Bug/Grasshopper.h"
@@ -16,7 +15,6 @@
 
 Tree tree[D_TREE_MAX];
 Player player;
-//Bug bug;
 Cicada cicada[D_CICADA_MAX];
 //Dragonfly dragonfly[D_DRAGONFLY_MAX];
 //Grasshopper grasshopper[D_GRASSHOPPER_MAX];

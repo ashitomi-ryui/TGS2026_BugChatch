@@ -14,12 +14,12 @@ Ranking::~Ranking()
 
 int Ranking::Init()
 {
-
+	return true;
 }
 
 eSceneType Ranking::Update(float delta_second)
 {
-
+	return eRanking;
 }
 
 void Ranking::Draw()const
