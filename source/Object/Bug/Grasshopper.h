@@ -1,12 +1,20 @@
 #pragma once
 
-#include"../Utilitys/Math.h"
+#include"../../Utilitys/Math.h"
 
-class Batta
+class Grasshopper
 {
 private:
-	Vector2D location;
-	bool flag;
+	Vector2D m_location;	// 座標
+	bool m_isAppearance;	// 出現フラグ
+
+public:
+	Grasshopper();
+	~Grasshopper();
+
+public:
+	void Set(Vector2D location);
+
 private:
 	/*Vector2D batta;*/
 	float time;
@@ -28,7 +36,7 @@ private:
 
 	bool TopStop;     // 頂点で停止中
 	float TopStopTimer = 0.0f;
-public:
+
 	void Init(int index);
 	void BattaUpdate(float delta_second);
 	void BattaDraw(void);

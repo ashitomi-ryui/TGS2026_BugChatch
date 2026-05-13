@@ -3,6 +3,7 @@
 #include"Utilitys/Input.h"
 #include"Utilitys/Camera.h"
 #include"Scene/SceneManager.h"
+#include"Utilitys/Random.h"
 
 float GetDeltaSecond();
 
@@ -44,6 +45,10 @@ float GetDeltaSecond()
 	static LONGLONG old_time = GetNowHiPerformanceCount();//前フレーム時刻を保持
 
 	LONGLONG current_time = GetNowHiPerformanceCount();//現在時刻取得
+	if (Random::seed == 0)
+	{
+		Random::SetSeed((float)current_time);
+	}
 	float result = (float)(current_time - old_time) * 1.0e-6f;//経過時間μs→秒に変換
 	old_time = current_time;//前フレーム時刻を更新
 

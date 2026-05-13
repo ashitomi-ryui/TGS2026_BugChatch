@@ -6,7 +6,10 @@
 int InGameInit(void);
 eSceneType InGameUpdate(float delta_second);
 void InGameDraw(void);
-Vector2D GetRingLocation();
-float GetPlayerMaxSpeed();
-Vector2D GetPlayerLocation();
-void PlayerLocationMove(Vector2D vector);
+
+/// <summary>
+/// Å‚à‹ß‚¢–Ø‚ÌÀ•W‚ğæ“¾‚·‚é
+/// </summary>
+/// <param name="location">À•W</param>
+/// <returns>Å‚à‹ß‚¢–Ø‚ÌÀ•W</returns>
+Vector2D FindNearestTree(Vector2D location);

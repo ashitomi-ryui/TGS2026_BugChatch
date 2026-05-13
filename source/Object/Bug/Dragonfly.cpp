@@ -1,9 +1,9 @@
 #include "DxLib.h"
-#include "Tonbo.h"
+#include "Dragonfly.h"
 #include "Bug.h"
 #include <math.h>
-#include"../Scene/InGameScene.h"
-#include"../Utilitys/Camera.h"
+#include"../../Scene/InGameScene.h"
+#include"../../Utilitys/Camera.h"
 
 int x, y;
 int TonboDestroy;
@@ -146,4 +146,18 @@ Vector2D* Tonbo::TonboLocation(void)
 void Tonbo::SetTonbo(class Bug* p)
 {
     tonboscore = p;
+}
+
+Dragonfly::Dragonfly()
+{
+}
+
+Dragonfly::~Dragonfly()
+{
+}
+
+void Dragonfly::Set(Vector2D location)
+{
+    m_location = location;
+    m_isAppearance = true;
 }

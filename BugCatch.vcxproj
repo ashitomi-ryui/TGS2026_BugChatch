@@ -138,12 +138,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\AppMain.cpp" />
-    <ClCompile Include="source\Object\Batta.cpp" />
-    <ClCompile Include="source\Object\Bug.cpp" />
+    <ClCompile Include="source\Object\Bug\Bug.cpp" />
     <ClCompile Include="source\Object\Leaf.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
-    <ClCompile Include="source\Object\Semi.cpp" />
-    <ClCompile Include="source\Object\Tonbo.cpp" />
+    <ClCompile Include="source\Object\Bug\Cicada.cpp" />
     <ClCompile Include="source\Object\Tree.cpp" />
     <ClCompile Include="source\Scene\HelpScene.cpp" />
     <ClCompile Include="source\Scene\InGameScene.cpp" />
@@ -153,14 +151,13 @@
     <ClCompile Include="source\Utilitys\Camera.cpp" />
     <ClCompile Include="source\Utilitys\Input.cpp" />
     <ClCompile Include="source\Utilitys\Math.cpp" />
+    <ClCompile Include="source\Utilitys\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Object\Batta.h" />
-    <ClInclude Include="source\Object\Bug.h" />
+    <ClInclude Include="source\Object\Bug\Bug.h" />
     <ClInclude Include="source\Object\Leaf.h" />
     <ClInclude Include="source\Object\Player.h" />
-    <ClInclude Include="source\Object\Semi.h" />
-    <ClInclude Include="source\Object\Tonbo.h" />
+    <ClInclude Include="source\Object\Bug\Cicada.h" />
     <ClInclude Include="source\Object\Tree.h" />
     <ClInclude Include="source\Scene\HelpSceneh.h" />
     <ClInclude Include="source\Scene\InGameScene.h" />
@@ -171,8 +168,10 @@
     <ClInclude Include="source\Utilitys\Camera.h" />
     <ClInclude Include="source\Utilitys\Input.h" />
     <ClInclude Include="source\Utilitys\Math.h" />
+    <ClInclude Include="source\Utilitys\Random.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\images\tree.PNG" />
     <Image Include="assets\Title\end_on.png" />
     <Image Include="images\tree.PNG" />
   </ItemGroup>

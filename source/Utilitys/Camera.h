@@ -70,4 +70,12 @@ public:
 	/// <param name="ReverseXFlag">‰¡”½“]</param>
 	/// <param name="ReverseYFlage">c”½“]</param>
 	static void DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, int ReverseXFlag = 0, int ReverseYFlage = 0);
+
+	/// <summary>
+	/// ‰æ–Ê“à‚©’²‚×‚é
+	/// </summary>
+	/// <param name="location">’²‚×‚½‚¢À•W</param>
+	/// <param name="radius">’²‚×‚½‚¢•¨‚Ì”¼Œa</param>
+	/// <returns>‰æ–Ê“à‚È‚çtrue</returns>
+	static bool CheckItsOnTheScreen(Vector2D location, float radius = 0.0f);
 };

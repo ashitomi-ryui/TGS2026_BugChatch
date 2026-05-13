@@ -1,13 +1,25 @@
-#include "Batta.h"
-#include "bug.h"
-#include "../Utilitys/Camera.h"
+#include "Grasshopper.h"
+#include "Bug.h"
+#include "../../Utilitys/Camera.h"
 #include "DxLib.h" 
-
-Batta battakun[10];
 
 Bug* battascore;
 
-void Batta::Init(int index)
+Grasshopper::Grasshopper()
+{
+}
+
+Grasshopper::~Grasshopper()
+{
+}
+
+void Grasshopper::Set(Vector2D location)
+{
+	m_location = location;
+	m_isAppearance = true;
+}
+
+void Grasshopper::Init(int index)
 {
 	location.x = 0;
 	location.y = 0;

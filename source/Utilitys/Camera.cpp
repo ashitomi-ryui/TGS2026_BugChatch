@@ -91,3 +91,39 @@ void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHa
 	DrawRotaGraphF(location.x, location.y, ExRate, Angle, GrHandle, true, ReverseXFlag, ReverseYFlage);
 
 }
+
+bool Camera::CheckItsOnTheScreen(Vector2D location, float radius)
+{
+	// カメラ座標に直す
+	location.x += -m_location.x + D_WIN_WIDTH / 2;
+	location.y += -m_location.y + D_WIN_HEIGHT / 2;
+
+	// X座標が画面右外なら
+	if (location.x + radius < 0)
+	{
+		// 画面外
+		return false;
+	}
+	// X座標が画面左外なら
+	else if (location.x - radius > D_WIN_WIDTH)
+	{
+		// 画面外
+		return false;
+	}
+
+	// Y座標が画面右外なら
+	if (location.y + radius < 0)
+	{
+		// 画面外
+		return false;
+	}
+	// Y座標が画面右外なら
+	else if (location.y - radius > D_WIN_HEIGHT)
+	{
+		// 画面外
+		return false;
+	}
+
+	// 画面内
+	return true;
+}

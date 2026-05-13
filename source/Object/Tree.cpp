@@ -3,98 +3,83 @@
 #include"../Utilitys/Camera.h"
 #include"../Scene/InGameScene.h"
 
-//void DrawTree(void)
-//{
-//	DrawBox(100, 100, 200, 300, GetColor(210, 160, 100), TRUE);
-//	DrawBox(700, 400, 800, 800, GetColor(210, 160, 100), TRUE);
-//}
+Player* targetPlayer;     //プレイヤー情報
 
 Tree::Tree()
 {
-	
 }
 
 Tree::~Tree()
 {
-
 }
 
-int Tree::Init()
+void Tree::Set(Vector2D location)
 {
-	tree = LoadGraph("assets/images/tree.PNG");
-
-	if (tree == -1)
-	{
-		return FALSE;
-	}
-
-	for (int i = 0; i < 10; i++)
-	{
-		location[i] = { 100.0f + i * 200.0f, 100.0f + (float)(i % 3) * 400.0f };
-	}
-	return TRUE;
+	image = LoadGraph("assets/images/tree.PNG");
+	m_location = location;
 }
 
-int Tree::Update()
+void Tree::Update()
 {
-	Vector2D playerLocation = GetPlayerLocation();
+	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 
 	// プレイヤーに最も近い点
 	Vector2D closest;
 
-	for (int i = 0; i < 10; i++)
+	// X座標の最も近い点を求める
+	if (playerLocation.x > m_location.x + D_TREE_WIDTH)
 	{
-		// X座標の最も近い点を求める
-		if (playerLocation.x > location[i].x + D_TREE_WIDTH)
-		{
-			closest.x = location[i].x + D_TREE_WIDTH;
-		}
-		else if (playerLocation.x < location[i].x - D_TREE_WIDTH)
-		{
-			closest.x = location[i].x - D_TREE_WIDTH;
-		}
-		else
-		{
-			closest.x = playerLocation.x;
-		}
-
-		// Y座標の最も近い点を求める
-		if (playerLocation.y > location[i].y + D_TREE_HEIGHT)
-		{
-			closest.y = location[i].y + D_TREE_HEIGHT;
-		}
-		else if (playerLocation.y < location[i].y - D_TREE_HEIGHT)
-		{
-			closest.y = location[i].y - D_TREE_HEIGHT;
-		}
-		else
-		{
-			closest.y = playerLocation.y;
-		}
-
-		float len = Length(Vec2Sub(closest, playerLocation));
-		if (len < 25.0f)
-		{
-			Vector2D playerMove;
-
-			float angle = FindTheAngle(closest, playerLocation);
-
-			playerMove.x = sinf(angle) * (25.0f - len);
-			playerMove.y = cosf(angle) * (25.0f - len);
-
-			PlayerLocationMove(playerMove);
-		}
+		closest.x = m_location.x + D_TREE_WIDTH;
+	}
+	else if (playerLocation.x < m_location.x - D_TREE_WIDTH)
+	{
+		closest.x = m_location.x - D_TREE_WIDTH;
+	}
+	else
+	{
+		closest.x = playerLocation.x;
 	}
 
-	return TRUE;
+	// Y座標の最も近い点を求める
+	if (playerLocation.y > m_location.y + D_TREE_HEIGHT)
+	{
+		closest.y = m_location.y + D_TREE_HEIGHT;
+	}
+	else if (playerLocation.y < m_location.y - D_TREE_HEIGHT)
+	{
+		closest.y = m_location.y - D_TREE_HEIGHT;
+	}
+	else
+	{
+		closest.y = playerLocation.y;
+	}
+
+	float len = Length(Vec2Sub(closest, playerLocation));
+	if (len < 25.0f)
+	{
+		Vector2D playerMove;
+
+		float angle = FindTheAngle(closest, playerLocation);
+
+		playerMove.x = sinf(angle) * (25.0f - len);
+		playerMove.y = cosf(angle) * (25.0f - len);
+
+		targetPlayer->PlayerLocationMove(playerMove);
+	}
+
 }
 
-void Tree::Draw()const
+void Tree::Draw(int id)const
 {
-	//Camera::DrawBoxW({ 200.0f, 100.0f }, { 300.0f, 300.0f }, GetColor(210, 160, 100));
-	//Camera::DrawBoxW({ 700.0f, 400.0f }, { 800.0f, 800.0f }, GetColor(210, 160, 100));
-	for (int i = 0; i < 10; i++)
-	{
-		Camera::DrawGraphW(location[i], 0.25, 0.0, tree);
-	}
+	Camera::DrawGraphW(m_location, 0.25f, 0.0f, image);
+}
+
+void Tree::SetPlayer(Player* p)
+{
+	targetPlayer = p;
+}
+
+Vector2D Tree::GetLocation() const
+{
+	return m_location;
 }

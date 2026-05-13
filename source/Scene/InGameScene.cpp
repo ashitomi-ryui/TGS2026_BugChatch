@@ -2,45 +2,54 @@
 #include"SceneManager.h"
 #include"../Utilitys/Input.h"
 #include"../Utilitys/Camera.h"
-#include"../Object/Batta.h"
-#include"../Object/player.h"
+#include"../Utilitys/Random.h"
 #include<DxLib.h>
-#include"../Object/Tonbo.h"
-#include"../Object/Bug.h"
-#include"../Object/Semi.h"
+
+#include"../Object/player.h"
+
+//#include"../Object/Bug/Bug.h"
+#include"../Object/Bug/Cicada.h"
+//#include"../Object/Bug/Dragonfly.h"
+//#include"../Object/Bug/Grasshopper.h"
+
 #include"../Object/Tree.h"
 
-Tree tree;
-Batta batta[10];
-Semi semi;
-Tonbo tonbo;
+Tree tree[D_TREE_MAX];
 Player player;
-Bug bug;
+//Bug bug;
+Cicada cicada[D_CICADA_MAX];
+//Dragonfly dragonfly[D_DRAGONFLY_MAX];
+//Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float seigenjikann;
 Camera camera(player.GetPlayerLocation());
 
+int num = 0;
+
 int InGameInit(void)//各プログラムの初期化
 {
+	Bug::SetPlayer(&player);
+	Tree::SetPlayer(&player);
+
+	for (int id = 0; id < D_TREE_MAX; id++)
+	{
+		tree[id].Set({ 100.0f + id * 200.0f, 100.0f + (float)(id % 3) * 400.0f });
+	}
+
 	seigenjikann = 0;
-	for (int i = 0; i < 10; i++)
+	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
-		batta[i].Init(i);
+		// スポーン
+		cicada[id].Spawn();
 	}
-	semi.SemiInit();
-	bug.SetPlayer(&player);
-	for (int i = 0; i < 10; i++)
-	{
-		bug.SetBatta(&batta[i]);
-	}
-	bug.SetSemi(&semi);
-	bug.SetTonbo(&tonbo);
-	tree.Init();
-	for (int i = 0; i < 10; i++)
-	{
-		batta[i].SetBatta(&bug);
-	}
-	semi.SetSemi(&bug);
-	tonbo.SetTonbo(&bug);
+	//for (int id = 0; id < D_DRAGONFLY_MAX; id++)
+	//{
+	//	dragonfly[id].Spawn();
+	//}
+	//for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	//{
+	//	grasshopper[id].Spawn();
+	//}
+
 	return TRUE;
 }
 
@@ -51,31 +60,51 @@ eSceneType InGameUpdate(float delta_second)
 	{
 		return eTitle;//ゲーム終了時にタイトルに戻る（仮）
 	}
-	player.Update();
-	semi.SemiUpdate(delta_second);
-	for (int i = 0; i < 10; i++)
+
+	player.Update();	// プレイヤーの更新
+
+	for (int id = 0;id < D_CICADA_MAX;id++)
 	{
-		batta[i].BattaUpdate(delta_second);
+		cicada[id].Update(delta_second);	// セミの更新
 	}
-	tonbo.TonboUpdate(delta_second);
-	bug.BugUpdate();
-	camera.Update(player.GetPlayerLocation());
-	tree.Update();
+	//for (int id = 0;id < D_DRAGONFLY_MAX;id++)
+	//{
+	//	dragonfly[id].Uptate(delta_second);	// トンボの更新
+	//}
+	//for (int id = 0; id < 10; id++)
+	//{
+	//	grasshopper[id].Update(delta_second);	// バッタの更新
+	//}
+
+	camera.Update(player.GetPlayerLocation());	// 
+	for (int id = 0;id < D_TREE_MAX;id++)
+	{
+		tree[id].Update();
+	}
+
+	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)
+	{
+		num = Random::GetRand() % 10;
+	}
+
 	return eInGame;
 }
 
 void InGameDraw(void)
 {
-	tree.Draw();
-	player.Draw();
-	bug.BugDraw();
-	for (int i = 0; i < 10; i++)
+	for (int id = 0;id < D_TREE_MAX;id++)
 	{
-		batta[i].BattaDraw();
+		tree[id].Draw(id);
 	}
-	tonbo.TonboDraw();
-	semi.SemiDraw();
+
+	player.Draw();
+
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		cicada[id].Draw();
+	}
 	
+	DrawFormatString(10, 10, 0xffffff, "%d", num);
 }
 
 Vector2D GetRingLocation()
@@ -96,4 +125,26 @@ Vector2D GetPlayerLocation()
 void PlayerLocationMove(Vector2D vector)
 {
 	player.PlayerLocationMove(vector);
+}
+
+Vector2D FindNearestTree(Vector2D location)
+{
+	int nearestId = -1;	// 最も近い木のID
+	float nearestLen;	// 最も近い木の距離
+	Vector2D treeLocation;	// 木の座標
+	float len;	// 距離
+
+	for (int id = 0;id < D_TREE_MAX;id++)
+	{
+		treeLocation = tree[id].GetLocation();
+		len = Length(Vec2Sub(location, treeLocation));
+
+		if (nearestId == -1 || len < nearestLen)
+		{
+			nearestId = id;
+			nearestLen = len;
+		}
+	}
+
+	return tree[nearestId].GetLocation();
 }
