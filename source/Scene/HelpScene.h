@@ -6,7 +6,15 @@
 class Help
 {
 private:
-
+	int back_ground;
+	int start_pressed;
+	int start_not_pressed;
+	int title_pressed;
+	int title_not_pressed;
+	int select_y;
+	int pressed;
+	float time;
+	float time_rug;
 public:
 	Help();
 	~Help();

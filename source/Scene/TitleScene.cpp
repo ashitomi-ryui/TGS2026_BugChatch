@@ -51,7 +51,7 @@ int Title::Init()
 	{
 		return FALSE;
 	}
-	select, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
+	select_x, select_y, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
 PlaySoundMem(bgm, DX_PLAYTYPE_BACK);
@@ -63,7 +63,6 @@ eSceneType Title::Update(float delta_second)
 	
 	time += delta_second;
 
-	
 	if (pressed == 0)//決定ボタンが押されていない場合
 	{
 		time_rug += delta_second;
@@ -154,7 +153,6 @@ eSceneType Title::Update(float delta_second)
 		{
 			pressed = 1;
 			StopSoundMem(bgm);
-			//return eInGame;//ゲーム画面へ移行
 		}
 	}
 	
@@ -231,6 +229,6 @@ void Title::Draw()const
 
 	SetFontSize(50);
 	DrawString(200, 200, "Aボタンで開始できます", GetColor(255, 255, 255), TRUE);//仮タイトル
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", select_y);
+	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", select_y);*/
 	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
 }
