@@ -28,10 +28,10 @@ Player::Player()
 
 	// スティックの倒しこみ（ 1 ～ -1 ）
 	m_tiltStick = 0.0f;
-	m_oldTiltStick;
+	m_oldTiltStick = 0.0f;
 	// スティックの角度（90°= 1）
 	m_rotateStick = 0.0f;
-	m_oldRotateStick;
+	m_oldRotateStick = 0.0f;
 }
 
 Player::Player::~Player()

@@ -5,44 +5,43 @@
 #include "../../Utilitys/Math.h"
 #define D_CICADA_MAX	(10)
 
-class Cicada
+class Cicada : public Bug
 {
 private:
-	Bug cicada;
 
 public:
 	Cicada();
 	~Cicada();
 
 public:
-	void Update(float delta);
-	void Draw();
+	virtual void Update(float delta) override;
+	virtual void Draw() const override;
 
 	/// <summary>
 	/// 出現
 	/// </summary>
-	void Spawn();
+	virtual void Spawn() override;
 
 	/// <summary>
 	/// 再出現
 	/// </summary>
-	void ReSpawn();
+	virtual void ReSpawn() override;
 
 	/// <summary>
 	/// 逃げる処理
 	/// </summary>
-	void Escape(float delta);
+	virtual void Escape(float delta) override;
 
 	/// <summary>
 	/// 目的地の設定
 	/// </summary>
 	/// <param name="location">移動したい場所</param>
-	void SetDestination(Vector2D location);
+	virtual void SetDestination(Vector2D location) override;
 
 	/// <summary>
 	/// 巡回
 	/// </summary>
-	void Patrol(float delta);
+	virtual void Patrol(float delta) override;
 
 
 };

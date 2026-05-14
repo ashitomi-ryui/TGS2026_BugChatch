@@ -2,17 +2,26 @@
 
 #include "Bug.h"
 
-#include "Cicada.h"
-
-#include "../../Scene/InGameScene.h"
 #include "../../Utilitys/Camera.h"
 #include "../../Utilitys/Random.h"
 
 
 Player* Bug::targetPlayer;
 
+int Bug::getCount = 0;
+
 Bug::Bug()
 {
+	m_isAppearance = false;
+	m_isEscape = false;
+	m_isPerched = true;
+	m_isBack = false;
+	m_location = { 0.0f, 0.0f };
+	m_direction = 0.0f;
+	m_maxSpeed = 0.0f;
+	m_moveSpeed = { 0.0f, 0.0f };
+	m_destination = { 0.0f, 0.0f };
+	m_detectionRange = 0.0f;
 }
 Bug::~Bug()
 {
@@ -47,7 +56,7 @@ void Bug::Update(float delta)
 	Bug::HitCheck(netLocation, netRadius);
 }
 
-void Bug::Draw()
+void Bug::Draw() const
 {
 }
 
@@ -63,6 +72,15 @@ Vector2D Bug::RandomLocationOnTheScreen()
 	location.x = (float)(Random::GetRand() % D_STAGE_WIDTH);
 	location.y = (float)(Random::GetRand() % D_STAGE_HEIGHT);
 	return location;
+}
+
+void Bug::HitCheck(Vector2D netLocation, float netRadius)
+{
+	float len = Length(Vec2Sub(m_location, netLocation));
+	if (len < netRadius)
+	{
+
+	}
 }
 
 void Bug::Deceleration(float deceleration, float delta)
@@ -96,11 +114,22 @@ void Bug::Deceleration(float deceleration, float delta)
 	}
 }
 
-void Bug::HitCheck(Vector2D netLocation, float netRadius)
+void Bug::Spawn()
 {
-	float len = Length(Vec2Sub(m_location, netLocation));
-	if (len < netRadius)
-	{
+}
 
-	}
+void Bug::ReSpawn()
+{
+}
+
+void Bug::Escape(float delta)
+{
+}
+
+void Bug::SetDestination(Vector2D location)
+{
+}
+
+void Bug::Patrol(float delta)
+{
 }
