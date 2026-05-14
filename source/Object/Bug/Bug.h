@@ -8,8 +8,10 @@
 
 class Bug
 {
-public:
+protected:
 	static Player* targetPlayer;	// プレイヤー情報
+
+	static int getCount;
 
 	bool m_isAppearance;	// 出現しているか
 	bool m_isEscape;		// 逃げているか
@@ -29,9 +31,9 @@ public:
 	~Bug();
 
 public:
-	void Set(Vector2D location);
-	void Update(float delta);
-	void Draw();
+	virtual void Set(Vector2D location);
+	virtual void Update(float delta);
+	virtual void Draw() const;
 
 public:
 	/// <summary>
@@ -40,6 +42,7 @@ public:
 	/// <param name="p">ポインタ</param>
 	static void SetPlayer(class Player* p);
 
+protected:
 	/// <summary>
 	/// 画面内のランダムな位置
 	/// </summary>
@@ -59,6 +62,33 @@ public:
 	/// <param name="deceleration">減速度</param>
 	/// <param name="delta"></param>
 	void Deceleration(float deceleration, float delta);
+
+protected:
+	/// <summary>
+	/// 出現
+	/// </summary>
+	virtual void Spawn();
+
+	/// <summary>
+	/// 再出現
+	/// </summary>
+	virtual void ReSpawn();
+
+	/// <summary>
+	/// 逃げる処理
+	/// </summary>
+	virtual void Escape(float delta);
+
+	/// <summary>
+	/// 目的地の設定
+	/// </summary>
+	/// <param name="location">移動したい場所</param>
+	virtual void SetDestination(Vector2D location);
+
+	/// <summary>
+	/// 巡回
+	/// </summary>
+	virtual void Patrol(float delta);
 };
 
 

@@ -7,6 +7,8 @@ Player* targetPlayer;     //ƒvƒŒƒCƒ„[î•ñ
 
 Tree::Tree()
 {
+	image = NULL;
+	m_location = { 0.0f,0.0f };
 }
 
 Tree::~Tree()
