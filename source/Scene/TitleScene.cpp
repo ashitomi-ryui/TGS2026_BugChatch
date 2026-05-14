@@ -79,7 +79,7 @@ eSceneType Title::Update(float delta_second)
 				return eInGame;
 				break;
 			case 1:
-				break;
+				return eHelp;
 			case 2:
 				return eEnd;
 				break;

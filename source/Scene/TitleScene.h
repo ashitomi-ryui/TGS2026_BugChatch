@@ -3,10 +3,6 @@
 #include"SceneType.h"
 #include"../Utilitys/Input.h"
 
-//int TitleInit(void);
-//eSceneType TitleUpdate(float delta_second);
-//void TitleDraw(void);
-
 class Title
 {
 private:

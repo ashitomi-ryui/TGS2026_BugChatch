@@ -160,7 +160,7 @@
     <ClInclude Include="source\Object\Player.h" />
     <ClInclude Include="source\Object\Bug\Cicada.h" />
     <ClInclude Include="source\Object\Tree.h" />
-    <ClInclude Include="source\Scene\HelpSceneh.h" />
+    <ClInclude Include="source\Scene\HelpScene.h" />
     <ClInclude Include="source\Scene\InGameScene.h" />
     <ClInclude Include="source\Scene\RankingScene.h" />
     <ClInclude Include="source\Scene\ResultScene.h" />

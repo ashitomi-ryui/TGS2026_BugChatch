@@ -5,11 +5,13 @@
 #include"TitleScene.h"
 #include"InGameScene.h"
 #include"ResultScene.h"
+#include"HelpScene.h"
 
 eSceneType current_type;
 
 Title t;
 Result r;
+Help h;
 
 int ChangeScene(eSceneType new_scene_type);
 
@@ -36,6 +38,9 @@ int SceneUpdate(float delta_second)
 		break;
 	case eResult:
 		next_type = r.Update(delta_second);
+		break;
+	case eHelp:
+		next_type = h.Update(delta_second);
 		break;
 	case eRanking:
 		break;
@@ -69,6 +74,9 @@ void SceneDraw(void)
 	case eResult:
 		r.Draw();
 		break;
+	case eHelp:
+		h.Draw();
+		break;
 	case eRanking:
 		break;
 	default:
@@ -93,6 +101,8 @@ int ChangeScene(eSceneType new_scene_type)
 	case eResult:
 		result = r.Init();
 		break;
+	case eHelp:
+		result = h.Init();
 	case eRanking:
 		break;
 	}

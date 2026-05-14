@@ -7,5 +7,6 @@ enum eSceneType
 	eEnd,
 	eResult,
 	eRestart,
-	eRanking
+	eRanking,
+	eHelp
 };
