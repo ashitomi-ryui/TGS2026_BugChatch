@@ -19,6 +19,7 @@ int Help::Init()
 	title_not_pressed = LoadGraph("assets/images/Help/title_off.png");
 	title_pressed = LoadGraph("assets/images/Help/title_on.png");
 	back_ground = LoadGraph("assets/images/Help/teacher.jpg");
+	controller = LoadGraph("assets/images/Help/controller.jpg");
 
 	select_y, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
@@ -85,6 +86,14 @@ eSceneType Help::Update(float delta_second)
 void Help::Draw()const
 {
 	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
+
+	DrawRotaGraph(943, 210, 0.8, 0.0, controller, TRUE);
+
+	SetFontSize(58);
+	DrawFormatString(200, 150, GetColor(255, 255, 255), "左手・移動");
+	DrawFormatString(200, 230, GetColor(255, 255, 255), "右手・乱獲");
+	SetFontSize(35);
+	DrawFormatString(850, 360, GetColor(255, 255, 255), "持ち方の例");
 
 	if (select_y == 0)
 	{

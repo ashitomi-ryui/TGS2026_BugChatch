@@ -11,6 +11,7 @@ private:
 	int start_not_pressed;
 	int title_pressed;
 	int title_not_pressed;
+	int controller;
 	int select_y;
 	int pressed;
 	float time;
