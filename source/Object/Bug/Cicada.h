@@ -3,7 +3,6 @@
 #include "Bug.h"
 
 #include "../../Utilitys/Math.h"
-#define D_CICADA_MAX	(10)
 
 class Cicada : public Bug
 {
@@ -15,33 +14,67 @@ public:
 
 public:
 	virtual void Update(float delta) override;
+	virtual void DrawOnTheBack() const override;
 	virtual void Draw() const override;
 
 	/// <summary>
 	/// 出現
 	/// </summary>
-	virtual void Spawn() override;
+	void Spawn();
 
 	/// <summary>
 	/// 再出現
 	/// </summary>
-	virtual void ReSpawn() override;
-
-	/// <summary>
-	/// 逃げる処理
-	/// </summary>
-	virtual void Escape(float delta) override;
+	void ReSpawn(float delta);
 
 	/// <summary>
 	/// 目的地の設定
 	/// </summary>
 	/// <param name="location">移動したい場所</param>
-	virtual void SetDestination(Vector2D location) override;
+	void SetDestination(Vector2D location);
+
+
+	/// <summary>
+	/// アニメーション
+	/// </summary>
+	/// <param name="delta"></param>
+	virtual void Animation(float delta) override;
+
+	/// <summary>
+	/// 逃げる処理
+	/// </summary>
+	void Escape(float delta);
+
+	/// <summary>
+	/// 待機
+	/// </summary>
+	/// <param name="delta"></param>
+	void Stand(float delta);
 
 	/// <summary>
 	/// 巡回
 	/// </summary>
-	virtual void Patrol(float delta) override;
+	void Patrol(float delta);
 
+	/// <summary>
+	/// パニック
+	/// </summary>
+	/// <param name="delta"></param>
+	void Panic(float delta);
 
+	/// <summary>
+	/// 察知判定
+	/// </summary>
+	/// <param name="delta"></param>
+	void PerceptionJudgment();
+
+	/// <summary>
+	/// 逃げ状態への遷移
+	/// </summary>
+	void TransitionToEscape();
+
+	/// <summary>
+	/// 前面に置く
+	/// </summary>
+	void PutInFront();
 };

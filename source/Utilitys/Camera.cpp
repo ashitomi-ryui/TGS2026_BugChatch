@@ -62,7 +62,7 @@ void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D loca
 	location3.x += -m_location.x + D_WIN_WIDTH / 2;
 	location3.y += -m_location.y + D_WIN_HEIGHT / 2;
 
-	DrawTriangle((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, location3.x, location3.y, Color, true);
+	DrawTriangle((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, (int)location3.x, (int)location3.y, Color, true);
 }
 
 void Camera::DrawCircleW(Vector2D location, int radius, unsigned int Color)
@@ -98,27 +98,10 @@ bool Camera::CheckItsOnTheScreen(Vector2D location, float radius)
 	location.x += -m_location.x + D_WIN_WIDTH / 2;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2;
 
-	// X座標が画面右外なら
-	if (location.x + radius < 0)
-	{
-		// 画面外
-		return false;
-	}
-	// X座標が画面左外なら
-	else if (location.x - radius > D_WIN_WIDTH)
-	{
-		// 画面外
-		return false;
-	}
-
-	// Y座標が画面右外なら
-	if (location.y + radius < 0)
-	{
-		// 画面外
-		return false;
-	}
-	// Y座標が画面右外なら
-	else if (location.y - radius > D_WIN_HEIGHT)
+	if (location.x + radius < 0 ||
+		location.x - radius > D_WIN_WIDTH ||
+		location.y + radius < 0 ||
+		location.y - radius > D_WIN_HEIGHT)
 	{
 		// 画面外
 		return false;

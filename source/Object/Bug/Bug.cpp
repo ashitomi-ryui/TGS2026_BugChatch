@@ -14,14 +14,17 @@ Bug::Bug()
 {
 	m_isAppearance = false;
 	m_isEscape = false;
-	m_isPerched = true;
+	m_state = eStand;
 	m_isBack = false;
 	m_location = { 0.0f, 0.0f };
 	m_direction = 0.0f;
-	m_maxSpeed = 0.0f;
 	m_moveSpeed = { 0.0f, 0.0f };
 	m_destination = { 0.0f, 0.0f };
 	m_detectionRange = 0.0f;
+	m_detectionTime = 0.0f;
+	m_transitionTime = 0.0f;
+	m_animTime = 0.0f;
+	m_animCount = 0;
 }
 Bug::~Bug()
 {
@@ -33,9 +36,9 @@ void Bug::Set(Vector2D location)
 	m_isAppearance = true;
 	// 逃げていない
 	m_isEscape = false;
-	// 止まっている
-	m_isPerched = true;
-	// 裏側に表示しない
+	// 待機
+	m_state = eStand;
+	// 背面に描画するか
 	m_isBack = false;
 	// 座標
 	m_location = location;
@@ -45,15 +48,47 @@ void Bug::Set(Vector2D location)
 	m_moveSpeed = { 0.0f, 0.0f };
 	// 目的地
 	m_destination = { 0.0f, 0.0f };
+	// 察知時間
+	m_detectionTime = 0.0f;
+	// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
+	int r = Random::GetRand() % 200;
+	m_transitionTime = (float)r / 10.0f + 10.0f;
+	// アニメーション
+	m_animTime = 0.0f;
+	m_animCount = 0;
 }
 
 void Bug::Update(float delta)
 {
+	if (m_direction >= 0)
+	{
+		m_direction -= (float)((int)(m_direction / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
+	}
+	else
+	{
+		m_direction -= (float)((int)(m_direction / (2.0f * DX_PI_F)) - 1) * (2.0f * DX_PI_F);
+	}
+
+	// 移動
+	m_location = Vec2Add(m_location, m_moveSpeed);
+
 	//ネットの位置を取得
 	Vector2D netLocation = targetPlayer->GetRingLocation();
 	float netRadius = targetPlayer->GetRingRadius();
 
 	Bug::HitCheck(netLocation, netRadius);
+
+	if (m_location.x + 300.0f < 0.0f || m_location.x - 300.0f > D_STAGE_WIDTH ||
+		m_location.y + 300.0f < 0.0f || m_location.y - 300.0f > D_STAGE_HEIGHT)
+	{
+		m_isAppearance = false;
+		// 遷移時間を1.0f秒にする
+		m_transitionTime = 1.0f;
+	}
+}
+
+void Bug::DrawOnTheBack() const
+{
 }
 
 void Bug::Draw() const
@@ -69,8 +104,8 @@ Vector2D Bug::RandomLocationOnTheScreen()
 {
 	Vector2D location;	// 位置
 	// 位置を画面内のランダムな位置に設定する
-	location.x = (float)(Random::GetRand() % D_STAGE_WIDTH);
-	location.y = (float)(Random::GetRand() % D_STAGE_HEIGHT);
+	location.x = (float)(Random::GetRand() % (int)D_STAGE_WIDTH);
+	location.y = (float)(Random::GetRand() % (int)D_STAGE_HEIGHT);
 	return location;
 }
 
@@ -79,7 +114,23 @@ void Bug::HitCheck(Vector2D netLocation, float netRadius)
 	float len = Length(Vec2Sub(m_location, netLocation));
 	if (len < netRadius)
 	{
+		getCount += 1;
+		m_isAppearance = false;
+		// 遷移時間を1.0f秒にする
+		m_transitionTime = 1.0f;
+	}
+}
 
+void Bug::Acceleration(float acceleration, float maxSpeed, float direction, float delta)
+{
+	m_moveSpeed.x += cosf(direction) * acceleration * delta;
+	m_moveSpeed.y -= sinf(direction) * acceleration * delta;
+
+	if (Length(m_moveSpeed) > maxSpeed * delta)
+	{
+		float moveDirection = FindTheAngle({ 0.0f, 0.0f }, m_moveSpeed);
+		m_moveSpeed.x = cosf(moveDirection) * maxSpeed * delta;
+		m_moveSpeed.y = -sinf(moveDirection) * maxSpeed * delta;
 	}
 }
 
@@ -114,22 +165,9 @@ void Bug::Deceleration(float deceleration, float delta)
 	}
 }
 
-void Bug::Spawn()
+void Bug::Animation(float delta)
 {
-}
-
-void Bug::ReSpawn()
-{
-}
-
-void Bug::Escape(float delta)
-{
-}
-
-void Bug::SetDestination(Vector2D location)
-{
-}
-
-void Bug::Patrol(float delta)
-{
+	m_detectionTime -= delta;
+	m_transitionTime -= delta;
+	m_animTime += delta;
 }

@@ -3,6 +3,7 @@
 // 概要: 数学ユーティリティ関数の実装
 //==========================================================
 #include "Math.h"
+#include "DxLib.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 
@@ -96,25 +97,87 @@ Vector2D Reflect(Vector2D v, Vector2D n)
 
 float FindTheAngle(Vector2D a, Vector2D b)
 {
-	if (a.x < b.x)
+	if(a.x < b.x)
 	{
-		return atanf(-(a.y - b.y) / (a.x - b.x)) + 1.5;
-	}
-	if (a.x > b.x)
-	{
-		if (a.y < b.y)
+		if (a.y > b.y)
 		{
-			return atanf(-(a.y - b.y) / (a.x - b.x)) - 1.5;
+			return atanf(-(a.y - b.y) / (a.x - b.x));
 		}
 		else
 		{
-			return atanf(-(a.y - b.y) / (a.x - b.x)) + 4.5;
+			return atanf(-(a.y - b.y) / (a.x - b.x)) + DX_PI_F * 2.0f;
 		}
+	}
+	if (a.x > b.x)
+	{
+		return atanf(-(a.y - b.y) / (a.x - b.x)) + DX_PI_F;
 	}
 	if (a.y > b.y)
 
 	{
-		return 2.5f;
+		return 0.5f * DX_PI_F;
 	}
-	return 0.5f;
+	return 1.5f * DX_PI_F;
+}
+
+int FindTheSignOfTheAngle(float oldAngle, float nowAngle)
+{
+	if (oldAngle >= 0)
+	{
+		oldAngle -= (float)((int)(oldAngle / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
+	}
+	else
+	{
+		oldAngle -= (float)((int)(oldAngle / (2.0f * DX_PI_F)) + 1) * (2.0f * DX_PI_F);
+	}
+	
+	if (nowAngle >= 0)
+	{
+		nowAngle -= (float)((int)(nowAngle / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
+	}
+	else
+	{
+		nowAngle -= (float)((int)(nowAngle / (2.0f * DX_PI_F)) - 1) * (2.0f * DX_PI_F);
+	}
+
+	if (nowAngle == oldAngle)
+	{
+		return 1;
+	}
+	if (oldAngle < DX_PI_F)
+	{
+		if (nowAngle > oldAngle)
+		{
+			if (nowAngle > oldAngle + 1.0f * DX_PI_F)
+			{
+				return -1;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		if (nowAngle < oldAngle)
+		{
+			if (nowAngle < oldAngle - 1.0f * DX_PI_F)
+			{
+				return 1;
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		else
+		{
+			return 1;
+		}
+	}
 }

@@ -5,11 +5,11 @@
 // マクロ定義
 //==========================================================
 
-#define D_WIN_WIDTH		(1280)	// スクリーンの横幅
-#define D_WIN_HEIGHT	(720)	// スクリーンの縦幅
+#define D_WIN_WIDTH		(1280.0f)	// スクリーンの横幅
+#define D_WIN_HEIGHT	(720.0f)	// スクリーンの縦幅
 
-#define D_STAGE_WIDTH	(D_WIN_WIDTH * 2)		// ステージ横幅
-#define D_STAGE_HEIGHT	(D_WIN_HEIGHT * 2)// ステージ縦幅
+#define D_STAGE_WIDTH	(D_WIN_WIDTH * 2.0f)		// ステージ横幅
+#define D_STAGE_HEIGHT	(D_WIN_HEIGHT * 2.0f)// ステージ縦幅
 
 class Camera
 {

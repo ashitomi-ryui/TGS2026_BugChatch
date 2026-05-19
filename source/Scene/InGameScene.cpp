@@ -90,6 +90,11 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		cicada[id].DrawOnTheBack();
+	}
+
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
 		tree[id].Draw(id);

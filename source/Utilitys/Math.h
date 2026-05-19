@@ -42,7 +42,13 @@ float Dot(Vector2D va, Vector2D vb);
 // 反射ベクトルを求める
 Vector2D Reflect(Vector2D v, Vector2D n);
 
-float Lerp(float a, float b, float t);
-
 // 角度を求める
 float FindTheAngle(Vector2D a, Vector2D b);
+
+/// <summary>
+/// 角度の移動の符号を求める
+/// </summary>
+/// <param name="oldAngle">前の角度</param>
+/// <param name="nowAngle">今の角度</param>
+/// <returns>+なら1、-なら-1</returns>
+int FindTheSignOfTheAngle(float oldAngle, float nowAngle);

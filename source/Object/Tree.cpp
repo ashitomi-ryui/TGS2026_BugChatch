@@ -63,8 +63,8 @@ void Tree::Update()
 
 		float angle = FindTheAngle(closest, playerLocation);
 
-		playerMove.x = sinf(angle) * (25.0f - len);
-		playerMove.y = cosf(angle) * (25.0f - len);
+		playerMove.x = cosf(angle) * (25.0f - len);
+		playerMove.y = -sinf(angle) * (25.0f - len);
 
 		targetPlayer->PlayerLocationMove(playerMove);
 	}

@@ -15,16 +15,30 @@ protected:
 
 	bool m_isAppearance;	// 出現しているか
 	bool m_isEscape;		// 逃げているか
-	bool m_isPerched;		// 止まっているか
-	bool m_isBack;			// 裏側に表示するか
+
+	enum State
+	{
+		eStand,		// 待機状態
+		ePatrol,	// 巡回状態
+		ePanic,		// パニック状態
+	};
+
+	State m_state;
+
+	bool m_isBack;			// 背面に描画するか
 
 	Vector2D m_location;	// 座標
 	float m_direction;	// 向き
 	Vector2D m_moveSpeed;	// 動き
-	float m_maxSpeed;	// 最大速度
-	Vector2D m_destination;	// 目的地（NULLは{ 0.0f, 0.0f }）
+	Vector2D m_destination;	// 目的地
 
 	float m_detectionRange;	// 察知範囲（半径）
+
+	float m_detectionTime;	// 察知時間
+	float m_transitionTime;	// 遷移時間
+
+	float m_animTime;	// アニメーション時間
+	int m_animCount;	// アニメーションカウント
 
 public:
 	Bug();
@@ -33,6 +47,7 @@ public:
 public:
 	virtual void Set(Vector2D location);
 	virtual void Update(float delta);
+	virtual void DrawOnTheBack() const;
 	virtual void Draw() const;
 
 public:
@@ -57,6 +72,15 @@ protected:
 	void HitCheck(Vector2D netLocation, float netRadius);
 
 	/// <summary>
+	/// 加速
+	/// </summary>
+	/// <param name="acceleration">加速度</param>
+	/// <param name="maxSpeed">最大速度</param>
+	/// <param name="direction">角度</param>
+	/// <param name="delta"></param>
+	void Acceleration(float acceleration, float maxSpeed, float direction, float delta);
+
+	/// <summary>
 	/// 減速
 	/// </summary>
 	/// <param name="deceleration">減速度</param>
@@ -65,30 +89,10 @@ protected:
 
 protected:
 	/// <summary>
-	/// 出現
+	/// アニメーション
 	/// </summary>
-	virtual void Spawn();
-
-	/// <summary>
-	/// 再出現
-	/// </summary>
-	virtual void ReSpawn();
-
-	/// <summary>
-	/// 逃げる処理
-	/// </summary>
-	virtual void Escape(float delta);
-
-	/// <summary>
-	/// 目的地の設定
-	/// </summary>
-	/// <param name="location">移動したい場所</param>
-	virtual void SetDestination(Vector2D location);
-
-	/// <summary>
-	/// 巡回
-	/// </summary>
-	virtual void Patrol(float delta);
+	/// <param name="delta"></param>
+	virtual void Animation(float delta);
 };
 
 
