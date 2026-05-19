@@ -54,7 +54,7 @@ int InGameInit(void)//各プログラムの初期化
 eSceneType InGameUpdate(float delta_second)
 {
 	timer += delta_second;
-	if (timer > 1)
+	if (timer > 60.0f * 3.0f)
 	{
 		return eResult;//ゲーム終了時にタイトルに戻る（仮）
 	}
