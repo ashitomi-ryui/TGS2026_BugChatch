@@ -6,12 +6,14 @@
 #include"InGameScene.h"
 #include"ResultScene.h"
 #include"HelpScene.h"
+#include"RankingScene.h"
 
 eSceneType current_type;
 
 Title t;
 Result r;
 Help h;
+Ranking rank;
 
 int ChangeScene(eSceneType new_scene_type);
 
@@ -43,6 +45,7 @@ int SceneUpdate(float delta_second)
 		next_type = h.Update(delta_second);
 		break;
 	case eRanking:
+		next_type = rank.Update(delta_second);
 		break;
 	case eEnd:
 	default:
@@ -78,6 +81,7 @@ void SceneDraw(void)
 		h.Draw();
 		break;
 	case eRanking:
+		rank.Draw();
 		break;
 	default:
 		DrawString(0, 10, "こいつはくせぇ", 0xFFFFFF);//デフォルト描画
@@ -104,6 +108,7 @@ int ChangeScene(eSceneType new_scene_type)
 	case eHelp:
 		result = h.Init();
 	case eRanking:
+		result = rank.Init();
 		break;
 	}
 	current_type = new_scene_type;//現在シーンの更新

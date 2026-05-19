@@ -16,8 +16,9 @@ int Result::Init()
 {
 	title_not_pressed = LoadGraph("assets/images/Result/title_off.png");
 	title_pressed = LoadGraph("assets/images/Result/title_on.png");
-	ranking_not_pressed = LoadGraph("assets/images/Title/ranking_off.png");
-	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
+	ranking_not_pressed = LoadGraph("assets/images/Result/ranking_off.png");
+	ranking_pressed = LoadGraph("assets/images/Result/ranking_on.png");
+	result = LoadGraph("assets/images/Result/result.png");
 
 	select_x, pressed = 0;
 	time = 0.0f;
@@ -82,36 +83,39 @@ eSceneType Result::Update(float delta_second)
 
 void Result::Draw()const
 {
+
+	DrawRotaGraph(640, 400, 1.0, 0.0, result, TRUE);
+
 	if (select_x == 0)
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(300, 550, 1.2, 0.0, title_pressed, TRUE);
+			DrawRotaGraph(300, 600, 1.2, 0.0, title_pressed, TRUE);
 		}
 		else
 		{
-			DrawRotaGraph(300, 550, 1.2, 0.0, title_not_pressed, TRUE);
+			DrawRotaGraph(300, 600, 1.2, 0.0, title_not_pressed, TRUE);
 		}
 	}
 	else
 	{
-		DrawRotaGraph(300, 550, 1.0, 0.0, title_not_pressed, TRUE);
+		DrawRotaGraph(300, 600, 1.0, 0.0, title_not_pressed, TRUE);
 	}
 
 	if (select_x == 1)
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(1200, 550, 1.2, 0.0, ranking_pressed, TRUE);
+			DrawRotaGraph(1000, 600, 1.2, 0.0, ranking_pressed, TRUE);
 		}
 		else
 		{
-			DrawRotaGraph(1200, 550, 1.2, 0.0, ranking_not_pressed, TRUE);
+			DrawRotaGraph(1000, 600, 1.2, 0.0, ranking_not_pressed, TRUE);
 		}
 	}
 	else
 	{
-		DrawRotaGraph(1200, 550, 1.0, 0.0, ranking_not_pressed, TRUE);
+		DrawRotaGraph(1000, 600, 1.0, 0.0, ranking_not_pressed, TRUE);
 	}
 
 	
