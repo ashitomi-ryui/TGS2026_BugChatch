@@ -54,9 +54,9 @@ int InGameInit(void)//各プログラムの初期化
 eSceneType InGameUpdate(float delta_second)
 {
 	timer += delta_second;
-	if (timer > 60)
+	if (timer > 1)
 	{
-		return eTitle;//ゲーム終了時にタイトルに戻る（仮）
+		return eResult;//ゲーム終了時にタイトルに戻る（仮）
 	}
 
 	player.Update();	// プレイヤーの更新

@@ -10,6 +10,7 @@ private:
 	int title_pressed;
 	int ranking_not_pressed;
 	int ranking_pressed;
+	int result;
 	int select_x;
 	int pressed;
 	float time;
