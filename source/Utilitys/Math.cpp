@@ -120,63 +120,84 @@ float FindTheAngle(Vector2D a, Vector2D b)
 	return 1.5f * DX_PI_F;
 }
 
-int FindTheSignOfTheAngle(float oldAngle, float nowAngle)
+int AngleComparison(float Angle1, float Angle2, float tolerance)
 {
-	if (oldAngle >= 0)
+	if (Angle1 >= 0)
 	{
-		oldAngle -= (float)((int)(oldAngle / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
+		Angle1 -= (float)((int)(Angle1 / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
 	}
 	else
 	{
-		oldAngle -= (float)((int)(oldAngle / (2.0f * DX_PI_F)) + 1) * (2.0f * DX_PI_F);
+		Angle1 -= (float)((int)(Angle1 / (2.0f * DX_PI_F)) + 1) * (2.0f * DX_PI_F);
 	}
 	
-	if (nowAngle >= 0)
+	if (Angle2 >= 0)
 	{
-		nowAngle -= (float)((int)(nowAngle / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
+		Angle2 -= (float)((int)(Angle2 / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
 	}
 	else
 	{
-		nowAngle -= (float)((int)(nowAngle / (2.0f * DX_PI_F)) - 1) * (2.0f * DX_PI_F);
+		Angle2 -= (float)((int)(Angle2 / (2.0f * DX_PI_F)) - 1) * (2.0f * DX_PI_F);
 	}
 
-	if (nowAngle == oldAngle)
+	// ·‚ª‹–—e”ÍˆÍ‚æ‚è¬‚³‚¢‚È‚ç
+	if (fabsf(Angle2 - Angle1) <= tolerance || 
+		fabsf((Angle2 + 2.0f * DX_PI_F) - Angle1) <= tolerance ||
+		fabsf(Angle2 - (Angle1 + 2.0f * DX_PI_F)) <= tolerance)
 	{
-		return 1;
+		// Angle1 = Angle2
+		return 0;
 	}
-	if (oldAngle < DX_PI_F)
+
+	// Angle1‚ªƒÎ‚æ‚è¬‚³‚¢‚Æ‚«
+	if (Angle1 < DX_PI_F)
 	{
-		if (nowAngle > oldAngle)
+		// Angle2‚ªAngle1‚æ‚è‚à‘å‚«‚¢‚Æ‚«
+		if (Angle2 > Angle1)
 		{
-			if (nowAngle > oldAngle + 1.0f * DX_PI_F)
+			// Angle2‚ªAngle1‚Ì”½‘Î‘¤‚æ‚è‘å‚«‚¢‚È‚ç
+			if (Angle2 > Angle1 + 1.0f * DX_PI_F)
 			{
+				// Angle1 > Angle2
 				return -1;
 			}
+			// Angle2‚ªAngle1‚Ì”½‘Î‘¤‚æ‚è¬‚³‚¢‚È‚ç
 			else
 			{
+				// Angle1 < Angle2
 				return 1;
 			}
 		}
+		// Angle2‚ªAngle1‚æ‚è‚à¬‚³‚¢‚È‚ç
 		else
 		{
+			// Angle1 > Angle2
 			return -1;
 		}
 	}
+	// Angle1‚ªƒÎ‚æ‚è‘å‚«‚¢‚Æ‚«
 	else
 	{
-		if (nowAngle < oldAngle)
+		// Angle2‚ªAngle1‚æ‚è‚à¬‚³‚¢‚Æ‚«
+		if (Angle2 < Angle1)
 		{
-			if (nowAngle < oldAngle - 1.0f * DX_PI_F)
+			// Angle2‚ªAngle1‚Ì”½‘Î‘¤‚æ‚è¬‚³‚¢‚È‚ç
+			if (Angle2 < Angle1 - 1.0f * DX_PI_F)
 			{
+				// Angle1 < Angle2
 				return 1;
 			}
+			// Angle2‚ªAngle1‚Ì”½‘Î‘¤‚æ‚è‘å‚«‚¢‚È‚ç
 			else
 			{
+				// Angle1 > Angle2
 				return -1;
 			}
 		}
+		// Angle2‚ªAngle1‚æ‚è‚à‘å‚«‚¢‚È‚ç
 		else
 		{
+			// Angle1 < Angle2
 			return 1;
 		}
 	}

@@ -44,11 +44,12 @@ Vector2D Reflect(Vector2D v, Vector2D n);
 
 // 角度を求める
 float FindTheAngle(Vector2D a, Vector2D b);
-
+ 
 /// <summary>
-/// 角度の移動の符号を求める
+/// 角度を比較する
 /// </summary>
-/// <param name="oldAngle">前の角度</param>
-/// <param name="nowAngle">今の角度</param>
-/// <returns>+なら1、-なら-1</returns>
-int FindTheSignOfTheAngle(float oldAngle, float nowAngle);
+/// <param name="Angle1">前の角度</param>
+/// <param name="Angle2">今の角度</param>
+/// <param name="tolerance">「=」判定になる許容範囲</param>
+/// <returns>「＜」なら「1」、「＞」なら「-1」、「＝」なら「0」</returns>
+int AngleComparison(float Angle1, float Angle2, float tolerance = 0.0f);
