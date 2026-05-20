@@ -189,8 +189,6 @@ void Player::Draw() const
 	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[3], point[0], m_netLocation, 0xffffff);
-
-	DrawFormatString(10, 50, 0xffffff, "%.2f", m_rotateStick);
 }
 
 Vector2D Player::GetRingLocation() const

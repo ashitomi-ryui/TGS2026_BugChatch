@@ -71,14 +71,6 @@ void Bug::Update(float delta)
 	float netRadius = targetPlayer->GetRingRadius();
 
 	Bug::HitCheck(netLocation, netRadius);
-
-	if (m_location.x + 300.0f < 0.0f || m_location.x - 300.0f > D_STAGE_WIDTH ||
-		m_location.y + 300.0f < 0.0f || m_location.y - 300.0f > D_STAGE_HEIGHT)
-	{
-		m_isAppearance = false;
-		// ‘JˆÚŽžŠÔ‚ð1.0f•b‚É‚·‚é
-		m_transitionTime = 1.0f;
-	}
 }
 
 void Bug::DrawOnTheBack() const

@@ -134,8 +134,10 @@ void Cicada::Animation(float delta)
 
 void Cicada::Escape(float delta)
 {
+	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+
 	// 向きをプレイヤーから虫への向きに
-	m_direction = FindTheAngle(targetPlayer->GetPlayerLocation(), m_location);
+	m_direction = FindTheAngle(playerLocation, m_location);
 	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
 	int r = Random::GetRand() % 50;
 	m_direction += ((float)r / 100.0f - 0.25f) * DX_PI_F;
@@ -154,11 +156,12 @@ void Cicada::Escape(float delta)
 
 	// 逃げる状態からパニック状態へ
 	// プレイヤーの座標
-	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
-	float len = Length(Vec2Sub(m_location, playerLocation));
+	Vector2D ringLocation = targetPlayer->GetRingLocation();
+	float playerLen = Length(Vec2Sub(m_location, playerLocation));
+	float ringLen = Length(Vec2Sub(m_location, ringLocation));
 	// プレイヤー察知
 	// 察知範囲から出た時
-	if (len > m_detectionRange)
+	if (playerLen > m_detectionRange || ringLen > m_detectionRange)
 	{
 		// 察知時間が0以下なら
 		if (m_detectionTime <= 0.0f)
@@ -266,14 +269,16 @@ void Cicada::Panic(float delta)
 void Cicada::PerceptionJudgment()
 {
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
-	float len = Length(Vec2Sub(m_location, playerLocation));
+	Vector2D ringLocation = targetPlayer->GetRingLocation();
+	float playerLen = Length(Vec2Sub(m_location, playerLocation));
+	float ringLen = Length(Vec2Sub(m_location, ringLocation));
 
 	// プレイヤー察知
 	// 察知範囲に入った時
-	if (len < m_detectionRange)
+	if (playerLen < m_detectionRange || ringLen < m_detectionRange)
 	{
 		// 察知班にの1/2に入った時
-		if (len < m_detectionRange / 2.0f)
+		if (playerLen < m_detectionRange / 2.0f || ringLen < m_detectionRange / 2.0f)
 		{
 			// 逃げ状態へ
 			TransitionToEscape();
