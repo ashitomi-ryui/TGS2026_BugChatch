@@ -19,7 +19,7 @@ protected:
 	enum State
 	{
 		eStand,		// 待機状態
-		ePatrol,	// 巡回状態
+		eMove,		// 移動状態
 		ePanic,		// パニック状態
 	};
 

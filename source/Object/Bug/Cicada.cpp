@@ -47,7 +47,7 @@ void Cicada::Update(float delta)
 				Stand(delta);
 
 				break;
-			case ePatrol:
+			case eMove:
 				Patrol(delta);
 
 				break;
@@ -183,7 +183,7 @@ void Cicada::Stand(float delta)
 	if (m_transitionTime <= 0.0f)
 	{
 		// „‰ñó‘Ô‚Ö
-		m_state = ePatrol;
+		m_state = eMove;
 		// Œü‚«‚ð0.25ƒÎ‚²‚Æ‚É‹æØ‚Á‚½ƒ‰ƒ“ƒ_ƒ€‚ÈŒü‚«‚É
 		int r = Random::GetRand() % 8;
 		m_direction = (float)r / 4.0f * DX_PI_F;
@@ -245,7 +245,7 @@ void Cicada::Panic(float delta)
 	if (m_transitionTime <= 0.0f)
 	{
 		// „‰ñó‘Ô‚Ö
-		m_state = ePatrol;
+		m_state = eMove;
 		// ‹ß‚­‚Ì–Ø‚ð–Ú“I’n‚ÉÝ’è
 		SetDestination(m_location);
 	}

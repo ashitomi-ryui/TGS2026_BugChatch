@@ -10,7 +10,7 @@ float GetDeltaSecond();
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	ChangeWindowMode(TRUE);
-	SetGraphMode(D_WIN_WIDTH, D_WIN_HEIGHT, 32);
+	SetGraphMode((int)D_WIN_WIDTH, (int)D_WIN_HEIGHT, 32);
 	if (DxLib_Init() == -1)
 	{
 		return -1;
