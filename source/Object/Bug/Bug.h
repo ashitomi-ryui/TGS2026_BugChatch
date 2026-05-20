@@ -11,7 +11,9 @@ class Bug
 protected:
 	static Player* targetPlayer;	// プレイヤー情報
 
-	static int getCount;
+	static int cicadaGetCount;
+	static int dragonflyGetCount;
+	static int grasshopperGetCount;
 
 	bool m_isAppearance;	// 出現しているか
 	bool m_isEscape;		// 逃げているか
@@ -66,13 +68,6 @@ protected:
 	static Vector2D RandomLocationOnTheScreen();
 
 	/// <summary>
-	/// 当たり判定
-	/// </summary>
-	/// <param name="netLocation">虫網の座標</param>
-	/// <param name="netRadius">虫網の半径</param>
-	void HitCheck(Vector2D netLocation, float netRadius);
-
-	/// <summary>
 	/// 加速
 	/// </summary>
 	/// <param name="acceleration">加速度</param>
@@ -94,6 +89,17 @@ protected:
 	/// </summary>
 	/// <param name="delta"></param>
 	virtual void Animation(float delta);
+
+	/// <summary>
+	/// 当たり判定
+	/// </summary>
+	/// <returns>当たったならtrue</returns>
+	virtual bool HitCheck();
+
+public:
+	int GetCicadaCount() const;
+	int GetDragonflyCount() const;
+	int GetGrasshopperCount() const;
 };
 
 

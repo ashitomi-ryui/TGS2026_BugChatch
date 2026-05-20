@@ -8,7 +8,9 @@
 
 Player* Bug::targetPlayer;
 
-int Bug::getCount = 0;
+int Bug::cicadaGetCount = 0;
+int Bug::dragonflyGetCount = 0;
+int Bug::grasshopperGetCount = 0;
 
 Bug::Bug()
 {
@@ -65,12 +67,6 @@ void Bug::Update(float delta)
 {
 	// 移動
 	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
-
-	//ネットの位置を取得
-	Vector2D netLocation = targetPlayer->GetRingLocation();
-	float netRadius = targetPlayer->GetRingRadius();
-
-	Bug::HitCheck(netLocation, netRadius);
 }
 
 void Bug::DrawOnTheBack() const
@@ -93,18 +89,6 @@ Vector2D Bug::RandomLocationOnTheScreen()
 	location.x = (float)(Random::GetRand() % (int)D_STAGE_WIDTH);
 	location.y = (float)(Random::GetRand() % (int)D_STAGE_HEIGHT);
 	return location;
-}
-
-void Bug::HitCheck(Vector2D netLocation, float netRadius)
-{
-	float len = Length(Vec2Sub(m_location, netLocation));
-	if (len < netRadius)
-	{
-		getCount += 1;
-		m_isAppearance = false;
-		// 遷移時間を1.0f秒にする
-		m_transitionTime = 1.0f;
-	}
 }
 
 void Bug::Acceleration(float acceleration, float maxSpeed, float direction, float delta)
@@ -156,4 +140,34 @@ void Bug::Animation(float delta)
 	m_detectionTime -= delta;
 	m_transitionTime -= delta;
 	m_animTime += delta;
+}
+
+bool Bug::HitCheck()
+{
+	//ネットの位置を取得
+	Vector2D netLocation = targetPlayer->GetRingLocation();
+	float netRadius = targetPlayer->GetRingRadius();
+
+	float len = Length(Vec2Sub(m_location, netLocation));
+	if (len < netRadius)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+int Bug::GetCicadaCount() const
+{
+	return cicadaGetCount;
+}
+
+int Bug::GetDragonflyCount() const
+{
+	return dragonflyGetCount;
+}
+
+int Bug::GetGrasshopperCount() const
+{
+	return grasshopperGetCount;
 }
