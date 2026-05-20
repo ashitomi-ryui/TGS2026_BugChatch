@@ -65,12 +65,12 @@ void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D loca
 	DrawTriangle((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, (int)location3.x, (int)location3.y, Color, true);
 }
 
-void Camera::DrawCircleW(Vector2D location, int radius, unsigned int Color)
+void Camera::DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag)
 {
 	location.x += -m_location.x + D_WIN_WIDTH / 2;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2;
 
-	DrawCircle((int)location.x, (int)location.y, radius, Color, true);
+	DrawCircle((int)location.x, (int)location.y, (int)radius, Color, FillFlag);
 }
 
 void Camera::DrawBoxW(Vector2D location1, Vector2D location2, unsigned int Color)

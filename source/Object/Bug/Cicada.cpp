@@ -15,7 +15,7 @@ Cicada::Cicada() : Bug()
 {
 
 	// 察知範囲
-	m_detectionRange = 200.0f;
+	m_detectionRange = 300.0f;
 }
 Cicada::~Cicada()
 {
@@ -48,7 +48,7 @@ void Cicada::Update(float delta)
 
 				break;
 			case eMove:
-				Patrol(delta);
+				Move(delta);
 
 				break;
 			case ePanic:
@@ -76,7 +76,7 @@ void Cicada::DrawOnTheBack() const
 	// 出現しているかつ、背面なら
 	if (m_isAppearance && m_isBack)
 	{
-		Camera::DrawCircleW(m_location, 20, GetColor(0, 0, 255));
+		Camera::DrawCircleW(m_location, m_radius, GetColor(0, 0, 255));
 	}
 }
 
@@ -85,7 +85,7 @@ void Cicada::Draw() const
 	// 出現しているかつ、背面ではないならなら
 	if (m_isAppearance && !m_isBack)
 	{
-		Camera::DrawCircleW(m_location, 20, GetColor(0, 0, 255));
+		Camera::DrawCircleW(m_location, m_radius, GetColor(0, 0, 255));
 	}
 }
 
@@ -109,7 +109,7 @@ void Cicada::ReSpawn(float delta)
 	Spawn();
 
 	// 画面内なら木の裏に
-	if (Camera::CheckItsOnTheScreen(m_location, 20.0f))
+	if (Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
 		m_isBack = true;
 	}
@@ -136,13 +136,16 @@ void Cicada::Escape(float delta)
 {
 	// 向きをプレイヤーから虫への向きに
 	m_direction = FindTheAngle(targetPlayer->GetPlayerLocation(), m_location);
+	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
+	int r = Random::GetRand() % 50;
+	m_direction += ((float)r / 100.0f - 0.25f) * DX_PI_F;
 
 	// 加速度
-	float acceleration = 200.0f;
+	float acceleration = 2000.0f;
 	// 最大速度
-	float maxSpeed = 800.0f;
+	float maxSpeed = 600.0f;
 	// 減速度
-	float deceleration = 100.0f;
+	float deceleration = 400.0f;
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);
@@ -164,9 +167,9 @@ void Cicada::Escape(float delta)
 			m_isEscape = false;
 			m_state = ePanic;
 
-			// 遷移時間を0.1fごとに区切った1.0f~5.0fにする
-			int r = Random::GetRand() % 40;
-			m_transitionTime = (float)r / 10.0f + 1.0f;
+			// 遷移時間を0.1fごとに区切った2.0f~5.0fにする
+			int r = Random::GetRand() % 30;
+			m_transitionTime = (float)r / 10.0f + 2.0f;
 		}
 	}
 	else
@@ -193,27 +196,36 @@ void Cicada::Stand(float delta)
 	}
 }
 
-void Cicada::Patrol(float delta)
+void Cicada::Move(float delta)
 {
 	// 加速度
-	float acceleration = 100.0f;
+	float acceleration = 1000.0f;
 	// 最大速度
-	float maxSpeed = 500.0f;
+	float maxSpeed = 400.0f;
 	// 減速度
-	float deceleration = 50.0f;
+	float deceleration = 200.0f;
 
-	// 目的地に向ける
-	m_direction = FindTheAngle(m_location, m_destination);
+	// 徐々に目的地に向ける
+	float destinationDirection = FindTheAngle(m_location, m_destination);
+	m_direction += AngleComparison(m_direction, destinationDirection) * 2.0f * DX_PI_F * delta;
+	if (AngleComparison(m_direction, destinationDirection, 0.125 * DX_PI_F) == 0)
+	{
+		m_direction = destinationDirection;
+	}
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);
 	// 減速
 	Deceleration(deceleration, delta);
 
-	if (Length(Vec2Sub(m_location, m_destination)) < 1.0f)
+	Vector2D treeLocation = FindNearestTree(m_location);
+	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f &&
+		m_location.x > treeLocation.x - D_TREE_WIDTH &&
+		m_location.x < treeLocation.x + D_TREE_WIDTH &&
+		m_location.y > treeLocation.y - D_TREE_HEIGHT &&
+		m_location.y < treeLocation.y + D_TREE_HEIGHT)
 	{
 		// 目的地についたら待機状態へ
-		m_location = m_destination;
 		m_moveSpeed = { 0.0f, 0.0f };
 		m_state = eStand;
 
@@ -225,16 +237,16 @@ void Cicada::Patrol(float delta)
 
 void Cicada::Panic(float delta)
 {
-	// 向きを0.125fπごとに区切った-3.0fπ~3.0fπずらす
-	int r = Random::GetRand() % 48;
-	m_direction += ((float)r / 8.0f - 3.0f) * DX_PI_F * delta;
+	// 向きを0.125fπごとに区切った-2.0fπ~2.0fπずらす
+	int r = Random::GetRand() % 32;
+	m_direction += ((float)r / 8.0f - 2.0f) * DX_PI_F * delta;
 
 	// 加速度
-	float acceleration = 200.0f;
+	float acceleration = 2000.0f;
 	// 最大速度
-	float maxSpeed = 800.0f;
+	float maxSpeed = 600.0f;
 	// 減速度
-	float deceleration = 100.0f;
+	float deceleration = 400.0f;
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);
@@ -296,10 +308,10 @@ void Cicada::PutInFront()
 	Vector2D treeLocation = FindNearestTree(m_location);
 
 	// その木から離れたら、前面に置く
-	if (m_location.x + 20 < treeLocation.x - D_TREE_WIDTH ||
-		m_location.x - 20 > treeLocation.x + D_TREE_WIDTH ||
-		m_location.y + 20 < treeLocation.y - D_TREE_HEIGHT ||
-		m_location.y - 20 > treeLocation.y + D_TREE_HEIGHT)
+	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
+		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
+		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
+		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
 	{
 		m_isBack = false;
 	}

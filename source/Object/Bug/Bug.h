@@ -28,7 +28,8 @@ protected:
 	bool m_isBack;			// ”w–Ê‚É•`‰æ‚·‚é‚©
 
 	Vector2D m_location;	// À•W
-	float m_direction;	// Œü‚«
+	float m_radius;			// ”¼Œa
+	float m_direction;		// Œü‚«
 	Vector2D m_moveSpeed;	// “®‚«
 	Vector2D m_destination;	// –Ú“I’n
 

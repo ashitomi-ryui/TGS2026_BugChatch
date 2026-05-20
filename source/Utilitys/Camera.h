@@ -50,7 +50,7 @@ public:
 	/// <param name="location">座標</param>
 	/// <param name="radius">半径</param>
 	/// <param name="Color">色</param>
-	static void DrawCircleW(Vector2D location, int radius, unsigned int Color);
+	static void DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag = true);
 
 	/// <summary>
 	/// ワールド座標で四角を描画

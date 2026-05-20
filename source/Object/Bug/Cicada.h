@@ -52,9 +52,9 @@ public:
 	void Stand(float delta);
 
 	/// <summary>
-	/// 巡回
+	/// 移動
 	/// </summary>
-	void Patrol(float delta);
+	void Move(float delta);
 
 	/// <summary>
 	/// パニック

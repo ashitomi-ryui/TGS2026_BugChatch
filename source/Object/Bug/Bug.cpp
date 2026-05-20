@@ -17,6 +17,7 @@ Bug::Bug()
 	m_state = eStand;
 	m_isBack = false;
 	m_location = { 0.0f, 0.0f };
+	m_radius = 0.0f;
 	m_direction = 0.0f;
 	m_moveSpeed = { 0.0f, 0.0f };
 	m_destination = { 0.0f, 0.0f };
@@ -42,6 +43,8 @@ void Bug::Set(Vector2D location)
 	m_isBack = false;
 	// 座標
 	m_location = location;
+	// 半径
+	m_radius = 20.0f;
 	// 向き
 	m_direction = 0.0f;
 	// 動き
@@ -60,17 +63,8 @@ void Bug::Set(Vector2D location)
 
 void Bug::Update(float delta)
 {
-	if (m_direction >= 0)
-	{
-		m_direction -= (float)((int)(m_direction / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
-	}
-	else
-	{
-		m_direction -= (float)((int)(m_direction / (2.0f * DX_PI_F)) - 1) * (2.0f * DX_PI_F);
-	}
-
 	// 移動
-	m_location = Vec2Add(m_location, m_moveSpeed);
+	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
 
 	//ネットの位置を取得
 	Vector2D netLocation = targetPlayer->GetRingLocation();
@@ -126,11 +120,11 @@ void Bug::Acceleration(float acceleration, float maxSpeed, float direction, floa
 	m_moveSpeed.x += cosf(direction) * acceleration * delta;
 	m_moveSpeed.y -= sinf(direction) * acceleration * delta;
 
-	if (Length(m_moveSpeed) > maxSpeed * delta)
+	if (Length(m_moveSpeed) > maxSpeed)
 	{
 		float moveDirection = FindTheAngle({ 0.0f, 0.0f }, m_moveSpeed);
-		m_moveSpeed.x = cosf(moveDirection) * maxSpeed * delta;
-		m_moveSpeed.y = -sinf(moveDirection) * maxSpeed * delta;
+		m_moveSpeed.x = cosf(moveDirection) * maxSpeed;
+		m_moveSpeed.y = -sinf(moveDirection) * maxSpeed;
 	}
 }
 

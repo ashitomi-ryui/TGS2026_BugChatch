@@ -122,22 +122,22 @@ float FindTheAngle(Vector2D a, Vector2D b)
 
 int AngleComparison(float Angle1, float Angle2, float tolerance)
 {
-	if (Angle1 >= 0)
+	if (Angle1 >= 0.0f)
 	{
 		Angle1 -= (float)((int)(Angle1 / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
 	}
 	else
 	{
-		Angle1 -= (float)((int)(Angle1 / (2.0f * DX_PI_F)) + 1) * (2.0f * DX_PI_F);
+		Angle1 -= (float)((int)(Angle1 / (2.0f * DX_PI_F)) - 1.0f) * (2.0f * DX_PI_F);
 	}
 	
-	if (Angle2 >= 0)
+	if (Angle2 >= 0.0f)
 	{
 		Angle2 -= (float)((int)(Angle2 / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
 	}
 	else
 	{
-		Angle2 -= (float)((int)(Angle2 / (2.0f * DX_PI_F)) - 1) * (2.0f * DX_PI_F);
+		Angle2 -= (float)((int)(Angle2 / (2.0f * DX_PI_F)) - 1.0f) * (2.0f * DX_PI_F);
 	}
 
 	// ç∑Ç™ãñóeîÕàÕÇÊÇËè¨Ç≥Ç¢Ç»ÇÁ
