@@ -1,163 +1,570 @@
+
+#include "../../Utilitys/Math.h"
+#include "../../Utilitys/Random.h"
 #include "DxLib.h"
-#include "Dragonfly.h"
-#include "Bug.h"
-#include <math.h>
-#include"../../Scene/InGameScene.h"
-#include"../../Utilitys/Camera.h"
+#include "Math.h"
 
-int x, y;
-int TonboDestroy;
-Vector2D tonbo; // 円の描画位置
-Bug* tonboscore;
-int TonboRespawn = 0;
-float tonborespawntime = 0;
-static int tonbocount = 0;
-int now_tonbo[10];
-int old_tonbo[10];
-double t = 0.0;
-int tonbofukkatu = 0;
-// 不規則っぽく見える座標を計算する関数
-void Tonbo::TonboMotion(double t, int centerX, int centerY, int* x, int* y)
+#include "../../Utilitys/Math.h"
+#include "../../Utilitys/Random.h"
+#include "../../Utilitys/Camera.h"
+
+#include "../../Scene/InGameScene.h"
+
+#include "Tonbo.h"
+
+#include "../Tree.h"
+
+int Tonbo::images[4] = { -1,-1,-1,-1 };
+
+Tonbo::Tonbo() : Bug()
 {
-    TonboDestroy = TRUE;
-    /* if (tonboscore->GetTonboScore() == 1)
-     {
-         TonboDestroy = FALSE;
-     }*/
-
-     // x座標の計算
-    *x = centerX
-        + (int)(30.0 * sin(t * 0.1)) // 大きく速い揺れ
-        + (int)(100.0 * cos(t * 0.7)) // 中くらいの揺れ
-        + (int)(50.0 * sin(t * 0.9)); // 細かい揺れ
-
-
-    //y座標の計算
-    *y = centerY
-        + (int)(10.0 * cos(t * 1.0)) // ゆっくりした上下
-        + (int)(20.0 * sin(t * 0.9)) // 中くらいの揺れ
-        + (int)(10.0 * cos(t * 0.3)); // 細かい揺れ
-
-
-
-
+	// 察知範囲
+	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
 }
-void Tonbo::TonboUpdate(float delta_second)
-{
-
-    //tonbocount = GetRand(3);
-    for (int i = 0; i < 10; i++)
-    {
-        now_tonbo[i] = tonboscore->GetTonboScore(i);
-        //今のスコアと昔のスコアの差が0より大きかったら入る
-        if (now_tonbo - old_tonbo > 0)
-        {
-
-            if (tonbofukkatu == 0)
-            {
-                TonboDestroy = FALSE;
-                x = -1000;
-                y = -1000;
-                //座標を画面外へ移動
-                tonbo = { -1000.0f,1000.0f };
-                //トンボの描画を停止
-                TonboDestroy = FALSE;
-                tonborespawntime = 0.0f;
-                tonbofukkatu = 1;
-                tonbocount = GetRand(2);
-                tonborespawntime = 0;  //リスポーン時間のカウントの数値を初期化
-                tonbofukkatu = 1;
-            }
-            //リスポーン時間加算
-            tonborespawntime += delta_second;
-            //一秒立ったら再描画
-            if (tonborespawntime >= 1.0f)
-            {
-                TonboDestroy = TRUE;
-                old_tonbo[i] = now_tonbo[i];   //昔のスコアに現在スコアを代入
-                tonbofukkatu = 0;
-            }
-        }
-        else
-        {
-            switch (tonbocount)
-            {
-            case 0:
-
-                TonboMotion(t, 550, 300, &x, &y);
-                TonboRespawn = 1;
-                t += 0.03;
-
-
-                break;
-            case 1:
-
-                TonboMotion(t, 1000, 300, &x, &y);
-                TonboRespawn = 2;
-                t += 0.03;
-                break;
-            case 2:
-                TonboMotion(t, 1000, 100, &x, &y);
-                TonboRespawn = 0;
-                t += 0.03;
-                break;
-            }
-
-
-
-        }
-    }
-
-
-
-
-
-
-    /* TonboMotion(t, 550, 300, &x, &y);
-     t += 0.03f;*/
-
-}
-// 描画関数（毎フレーム呼ばれる）
-void Tonbo::TonboDraw(void)
-{
-
-    // 現在の時間tから座標を計算
-
-
-    //TonboMotion(t, 550, 300, &x, &y);
-
-    if (TonboDestroy == TRUE)
-    {
-        // 円を描画（赤っぽい色）
-        Camera::DrawCircleW({ (float)x, (float)y }, 20, GetColor(255, 200, 100));
-    }
-
-
-    // 時間を進める（これが無いと動かない）
-    //t += 0.03;
-}
-
-Vector2D* Tonbo::TonboLocation(void)
-{
-    tonbo = { (float)x,(float)y };
-    return &tonbo;
-}
-
-void Tonbo::SetTonbo(class Bug* p)
-{
-    tonboscore = p;
-}
-
-Dragonfly::Dragonfly()
+Tonbo::~Tonbo()
 {
 }
 
-Dragonfly::~Dragonfly()
+void Tonbo::Init()
 {
+	images[0] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly1.PNG");
+	images[1] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly2.PNG");
+	images[2] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly3.PNG");
+	images[3] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly4.PNG");
+	
+
+	cicadaGetCount = 0;
 }
 
-void Dragonfly::Set(Vector2D location)
+void Tonbo::Update(float delta)
 {
-    m_location = location;
-    m_isAppearance = true;
+	Animation(delta);
+
+	// 出現しているなら
+	if (m_isAppearance)
+	{
+		// 木の裏にいる
+		if (m_isBack)
+		{
+			PutInFront();
+		}
+
+		// 逃げているなら
+		if (m_isEscape)
+		{
+			Escape(delta);
+		}
+		// 逃げていないなら
+		else
+		{
+			switch (m_state)
+			{
+			case eStand:
+				Stand(delta);
+
+				break;
+			case eMove:
+				Move(delta);
+
+				break;
+			case ePanic:
+				Panic(delta);
+
+				break;
+			}
+
+			PerceptionJudgment();
+		}
+
+		Bug::Update(delta);
+
+		// 当たり判定
+		if (HitCheck())
+		{
+			cicadaGetCount += 1;
+			m_isAppearance = false;
+			// 遷移時間を1.0f秒にする
+			m_transitionTime = 1.0f;
+		}
+	}
+	else
+	{
+		if (m_transitionTime <= 0.0f)
+		{
+			ReSpawn(delta);
+		}
+	}
 }
+
+void Tonbo::Draw() const
+{
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
+}
+
+void Tonbo::DrawOnTheBack() const
+{
+	// 出現しているかつ、背面なら
+	if (m_isAppearance && m_isBack)
+	{
+		Draw();
+	}
+}
+
+void Tonbo::DrawOnTheFront() const
+{
+	// 出現しているかつ、背面ではないならなら
+	if (m_isAppearance && !m_isBack)
+	{
+		Draw();
+	}
+}
+
+void Tonbo::Spawn()
+{
+	// スポーン位置
+	Vector2D location = Bug::RandomLocationOnTheScreen();
+
+	// 位置を近くの木に設定する
+	location = FindNearestTree(location);
+	// 位置を少しずらす
+	location.x += (float)((Random::GetRand() % (int)D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
+	location.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
+
+	// スポーン
+	Set(location);
+}
+
+void Tonbo::ReSpawn(float delta)
+{
+	Spawn();
+
+	// 画面内なら木の裏に
+	if (Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+		m_isBack = true;
+	}
+}
+
+void Tonbo::SetDestination(Vector2D location)
+{
+	// 近くの木を目的地にする
+	m_destination = FindNearestTree(location);
+
+	// 目的地をランダムに座標をずらす
+	m_destination.x += (float)((Random::GetRand() % (int)D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
+	m_destination.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
+}
+
+void Tonbo::Animation(float delta)
+{
+	Bug::Animation(delta);
+
+	// 木の裏にいる
+	if (m_isBack)
+	{
+		m_animCount = 0;
+	}
+	else
+	{
+		// 逃げているなら
+		if (m_isEscape)
+		{
+			// 画像の切り替え
+			if (m_animTime > 0.025f)
+			{
+				m_animTime = 0.0f;
+				m_animCount = m_animCount % 4 + 1;
+			}
+
+			// 画像の向きを徐々に移動方向に向ける
+			GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+		}
+		// 逃げていないなら
+		else
+		{
+			switch (m_state)
+			{
+			case eStand:
+				// 画像の切り替え
+				if (m_animTime > 0.05f)
+				{
+					if (m_animCount != 0)
+					{
+						m_animTime = 0.0f;
+						m_animCount = (m_animCount + 1) % 5;
+					}
+				}
+
+				// 画像の向きを徐々に上に向ける
+				GraduallyTurn(m_Angle, 0.0f, 2.0f * DX_PI_F * delta);
+
+				break;
+			case eMove:
+				// 画像の切り替え
+				if (m_animTime > 0.05f)
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 4 + 1;
+				}
+
+				// 画像の向きを徐々に移動方向に向ける
+				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+
+				break;
+			case ePanic:
+				// 画像の切り替え
+				if (m_animTime > 0.025f)
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 4 + 1;
+				}
+
+				// 画像の向きを徐々に移動方向に向ける
+				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+
+				break;
+			}
+		}
+	}
+}
+
+void Tonbo::Escape(float delta)
+{
+	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+
+	// 向きをプレイヤーから虫への向きに
+	m_direction = VecATan2(playerLocation, m_location);
+	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
+	int r = Random::GetRand() % 50;
+	m_direction += ((float)r / 100.0f - 0.25f) * DX_PI_F;
+
+	// 加速度
+	float acceleration = 2000.0f;
+	// 最大速度
+	float maxSpeed = 600.0f;
+	// 減速度
+	float deceleration = 400.0f;
+
+	// 加速
+	Acceleration(acceleration, maxSpeed, m_direction, delta);
+	// 減速
+	Deceleration(deceleration, delta);
+
+	// 逃げる状態からパニック状態へ
+	// プレイヤーの座標
+	Vector2D ringLocation = targetPlayer->GetRingLocation();
+	float playerLen = Length(Vec2Sub(m_location, playerLocation));
+	float ringLen = Length(Vec2Sub(m_location, ringLocation));
+	// プレイヤー察知
+	// 察知範囲から出た時
+	if (playerLen > m_detectionRange || ringLen > m_detectionRange)
+	{
+		// 察知時間が0以下なら
+		if (m_detectionTime <= 0.0f)
+		{
+			// パニック状態へ
+			m_isEscape = false;
+			m_state = ePanic;
+
+			// 遷移時間を0.1fごとに区切った2.0f~5.0fにする
+			int r = Random::GetRand() % 30;
+			m_transitionTime = (float)r / 10.0f + 2.0f;
+		}
+	}
+	else
+	{
+		// 察知時間を0.1fごとに区切った0.0f~1.0fにする
+		int r = Random::GetRand() % 10;
+		m_detectionTime = (float)r / 10.0f;
+	}
+}
+
+void Tonbo::Stand(float delta)
+{
+	m_moveSpeed = { 0.0f, 0.0f };
+	if (m_transitionTime <= 0.0f)
+	{
+		// 巡回状態へ
+		m_state = eMove;
+		// 向きを0.25πごとに区切ったランダムな向きに
+		int r = Random::GetRand() % 8;
+		m_direction = (float)r / 4.0f * DX_PI_F;
+		// ランダムな木を目的地に設定
+		SetDestination(RandomLocationOnTheScreen());
+
+	}
+}
+
+void Tonbo::Move(float delta)
+{
+	// 加速度
+	float acceleration = 1000.0f;
+	// 最大速度
+	float maxSpeed = 400.0f;
+	// 減速度
+	float deceleration = 200.0f;
+
+	// 徐々に目的地に向ける
+	float destinationDirection = VecATan2(m_location, m_destination);
+	GraduallyTurn(m_direction, destinationDirection, 2.0f * DX_PI_F * delta);
+
+	// 加速
+	Acceleration(acceleration, maxSpeed, m_direction, delta);
+	// 減速
+	Deceleration(deceleration, delta);
+
+	Vector2D treeLocation = FindNearestTree(m_location);
+	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f &&
+		m_location.x > treeLocation.x - D_TREE_WIDTH &&
+		m_location.x < treeLocation.x + D_TREE_WIDTH &&
+		m_location.y > treeLocation.y - D_TREE_HEIGHT &&
+		m_location.y < treeLocation.y + D_TREE_HEIGHT)
+	{
+		// 目的地についたら待機状態へ
+		m_moveSpeed = { 0.0f, 0.0f };
+		m_state = eStand;
+
+		// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
+		int r = Random::GetRand() % 200;
+		m_transitionTime = (float)r / 10.0f + 10.0f;
+	}
+}
+
+void Tonbo::Panic(float delta)
+{
+	// 向きを0.125fπごとに区切った-2.0fπ~2.0fπずらす
+	int r = Random::GetRand() % 32;
+	m_direction += ((float)r / 8.0f - 2.0f) * DX_PI_F * delta;
+
+	// 加速度
+	float acceleration = 2000.0f;
+	// 最大速度
+	float maxSpeed = 600.0f;
+	// 減速度
+	float deceleration = 400.0f;
+
+	// 加速
+	Acceleration(acceleration, maxSpeed, m_direction, delta);
+	// 減速
+	Deceleration(deceleration, delta);
+
+	// 遷移時間が0以下なら
+	if (m_transitionTime <= 0.0f)
+	{
+		// 巡回状態へ
+		m_state = eMove;
+		// 近くの木を目的地に設定
+		SetDestination(m_location);
+	}
+}
+
+void Tonbo::PerceptionJudgment()
+{
+	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+	Vector2D ringLocation = targetPlayer->GetRingLocation();
+	float playerLen = Length(Vec2Sub(m_location, playerLocation));
+	float ringLen = Length(Vec2Sub(m_location, ringLocation));
+
+	// プレイヤー察知
+	// 察知範囲に入った時
+	if (playerLen < m_detectionRange || ringLen < m_detectionRange)
+	{
+		// 察知班にの1/2に入った時
+		if (playerLen < m_detectionRange / 2.0f || ringLen < m_detectionRange / 2.0f)
+		{
+			// 逃げ状態へ
+			TransitionToEscape();
+		}
+		else
+		{
+			// 察知時間が0以下なら
+			if (m_detectionTime <= 0.0f)
+			{
+				TransitionToEscape();
+			}
+		}
+	}
+	else
+	{
+		// 察知時間を0.1fごとに区切った0.0f~2.0fにする
+		int r = Random::GetRand() % 20;
+		m_detectionTime = (float)r / 10.0f;
+	}
+}
+
+void Tonbo::TransitionToEscape()
+{
+	m_isEscape = true;
+	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
+	int r = Random::GetRand() % 10;
+	m_detectionTime = (float)r / 10.0f;
+}
+
+void Tonbo::PutInFront()
+{
+	Vector2D treeLocation = FindNearestTree(m_location);
+
+	// その木から離れたら、前面に置く
+	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
+		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
+		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
+		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
+	{
+		m_isBack = false;
+	}
+}
+
+
+//#include "../../Scene/InGameScene.h"
+//
+//#include "Cicada.h"
+//
+//#include "../Tree.h"
+//
+//float count = 0;
+//bool flag;
+//bool flag2;
+//int abura;
+//float r;
+//int hanten = FALSE;
+//
+//Tonbo::Tonbo():Bug(),
+//      m_moveSpeed(0.0f)
+//	, animation_data()
+//	, animation_count(0)
+//	, animation_number(0)
+//{
+//
+//}
+//
+//int Tonbo::Initialize()
+//{
+//	animation_data[0] = LoadGraph("assets/Dragonfly1.PNG");
+//	animation_data[1] = LoadGraph("assets/Dragonfly2.PNG");
+//	animation_data[2] = LoadGraph("assets/Dragonfly3.PNG");
+//	animation_data[3] = LoadGraph("assets/Dragonfly4.PNG");
+//	image = animation_data[animation_number];
+//	if (image == -1)
+//	{
+//		return FALSE;
+//	}
+//
+//	return TRUE;
+//}
+//
+//Vector2D Tonbo::Update(float delta)
+//{
+//
+//
+//	
+//	count += delta;
+//	Animation();
+//	if (count >= 3.0f && flag == FALSE)
+//	{
+//		velocity.x = GetRand(1);
+//		velocity.y = GetRand(1);
+//		if (velocity.x == 0)
+//		{
+//			velocity.x = -1;
+//		}
+//		if (velocity.y == 0)
+//		{
+//			velocity.y = -1;
+//		}
+//		flag = TRUE;
+//		flag2 = FALSE;
+//	}
+//	if (count >= 5.0f)
+//	{
+//		flag2 = TRUE;
+//	}
+//
+//	if (count >= 6.5f)
+//	{
+//		count = 0;
+//		flag = FALSE;
+//	}
+//	if (location.x <= 10)
+//	{
+//		location.x = 10;
+//	}
+//	if (location.x >= 630)
+//	{
+//		location.x = 630;
+//	}
+//	if (location.y <= 10)
+//	{
+//		location.y = 10;
+//	}
+//	if (location.y >= 470)
+//	{
+//		location.y = 470;
+//	}
+//	if (flag2 == TRUE)
+//	{
+//		abura = GetRand(2);
+//		if (abura == 2)
+//		{
+//			abura = -1;
+//		}
+//		location += abura;
+//	}
+//
+//	
+//
+//	if (velocity.x == -1)
+//	{
+//		hanten = FALSE;
+//	}
+//	else
+//	{
+//		hanten = TRUE;
+//	}
+//	
+//
+//	if (flag2 == FALSE)
+//	{
+//		location += velocity;
+//	}
+//
+//	return location;
+//
+//}
+//
+//
+//void Tonbo::Draw() const
+//{
+//
+//
+//	DrawRotaGraph(location.x, location.y, 5.0, r, image, TRUE, hanten);
+//
+//
+//	//DrawCircleAA(location.x, location.y, 15, 50, GetColor(255, 255, 255),TRUE);
+//	DrawPixel(500, 240, GetColor(0, 255, 255));
+//
+//	DrawFormatString(50, 50, GetColor(255, 0, 0), "%f", count);
+//	DrawFormatString(50, 80, GetColor(255, 0, 0), "%f", r);
+//
+//}
+//void Tonbo::Movemation()
+//{
+//
+//}
+//void Tonbo::SetLocation(float x, float y)
+//{
+//	location.x = 320;
+//	location.y = 240;
+//}
+//void Tonbo::SetLocation(Vector2D vec)
+//{
+//	location = vec;
+//}
+//void Tonbo::Animation()
+//{
+//	animation_count = (animation_count + 1) % 15;
+//	if (animation_count == 0)
+//	{
+//		animation_number = (animation_number + 1) % 4;
+//	}
+//	image = animation_data[animation_number];
+//}
