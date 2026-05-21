@@ -5,11 +5,10 @@
 
 Player::Player()
 {
-	score = 0;	// スコア
-	// 座標
-	// プレイヤーキャラ
-	m_location = { 640.0f, 360.0f };	// プレイヤーの座標
-	m_moveSpeed = { 0.0f, 0.0f };	// 動く速度
+	score = 0;
+	m_location = { 640.0f, 360.0f };
+	m_moveSpeed = {};
+
 	m_maxSpeed = 500.0f * D_OBJECT_SIZE_RATIO;	// 最大速度
 	m_radius = 25.0f * D_OBJECT_SIZE_RATIO;	// 半径
 
@@ -22,10 +21,10 @@ Player::Player()
 
 	m_ringRadius = 40.0f * D_OBJECT_SIZE_RATIO;// リングの半径
 
-	// 虫網（リング）の3D座標
+	// 虫網（リング）の太さ
 	m_ringThickness = m_ringRadius;
 
-	m_stickAngle = 1.0f;	// 棒の角度
+	m_stickAngle = 0.0f;	// 棒の角度
 
 	// スティックの倒しこみ（ 1 ～ -1 ）
 	m_tiltStick = 0.0f;
@@ -33,10 +32,43 @@ Player::Player()
 	// スティックの角度（90°= 1）
 	m_rotateStick = 0.0f;
 	m_oldRotateStick = 0.0f;
+
+	// アニメーション
+	m_animTime = 0.0f;	// アニメーション時間
+	m_animCount = 0;	// アニメーションカウント
 }
 
-Player::Player::~Player()
+Player::~Player()
 {
+}
+
+void Player::Init()
+{
+	score = 0;	// スコア
+	// 座標
+	// プレイヤーキャラ
+	m_location = { 640.0f, 360.0f };	// プレイヤーの座標
+	m_moveSpeed = { 0.0f, 0.0f };	// 動く速度
+
+	// 虫網
+	m_ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
+	m_netLocation = Vec2Mult(m_location, m_netLength);	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
+
+	// 虫網（リング）の太さ
+	m_ringThickness = m_ringRadius;
+
+	m_stickAngle = 0.0f;	// 棒の角度
+
+	// スティックの倒しこみ（ 1 ～ -1 ）
+	m_tiltStick = 0.0f;
+	m_oldTiltStick = 0.0f;
+	// スティックの角度（90°= 1）
+	m_rotateStick = 0.0f;
+	m_oldRotateStick = 0.0f;
+
+	// アニメーション
+	m_animTime = 0.0f;	// アニメーション時間
+	m_animCount = 0;	// アニメーションカウント
 }
 
 void Player::Update(float delta)

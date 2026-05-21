@@ -31,11 +31,17 @@ private:
 	
 	float m_rotateStick;	// スティックの角度（90°= 1）
 	float m_oldRotateStick;	// 前のスティックの角度（90°= 1）
+
+	// アニメーション
+	float m_animTime;	// アニメーション時間
+	int m_animCount;	// アニメーションカウント
+
 public:
 	Player();
 	~Player();
 
 public:
+	void Init();
 	void Update(float delta);
 	void Draw() const;
 
