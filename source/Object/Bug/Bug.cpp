@@ -14,6 +14,12 @@ int Bug::grasshopperGetCount = 0;
 
 Bug::Bug()
 {
+	// 画像情報の格納例
+	// 変数名 = LoadGraph(ファイル名);
+	// エラー情報 = LoadDivGraph(ファイル名, 合計分割数, 横分割数, 縦分割数, Xサイズ, Yサイズ, 変数名);
+	// エラーなら-1
+
+
 	m_isAppearance = false;
 	m_isEscape = false;
 	m_state = eStand;

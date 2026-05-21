@@ -83,7 +83,7 @@ void Camera::DrawBoxW(Vector2D location1, Vector2D location2, unsigned int Color
 	DrawBox((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, Color, true);
 }
 
-void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, int ReverseXFlag, int ReverseYFlage)
+void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlage)
 {
 	location.x += -m_location.x + D_WIN_WIDTH / 2;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2;

@@ -5,9 +5,10 @@
 
 Player* targetPlayer;     //ƒvƒŒƒCƒ„[î•ñ
 
+int Tree::image = -1;
+
 Tree::Tree()
 {
-	image = NULL;
 	m_location = { 0.0f,0.0f };
 }
 
@@ -15,9 +16,13 @@ Tree::~Tree()
 {
 }
 
-void Tree::Set(Vector2D location)
+void Tree::Init()
 {
 	image = LoadGraph("assets/images/tree.PNG");
+}
+
+void Tree::Set(Vector2D location)
+{
 	m_location = location;
 }
 

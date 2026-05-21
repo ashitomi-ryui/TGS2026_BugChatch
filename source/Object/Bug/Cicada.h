@@ -7,12 +7,14 @@
 class Cicada : public Bug
 {
 private:
+	static int images[5];
 
 public:
 	Cicada();
 	~Cicada();
 
 public:
+	static void Init();
 	virtual void Update(float delta) override;
 	virtual void Draw() const override;
 	virtual void DrawOnTheBack() const override;

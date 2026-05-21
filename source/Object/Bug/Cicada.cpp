@@ -11,14 +11,26 @@
 
 #include "../Tree.h"
 
+int Cicada::images[5] = { -1,-1,-1,-1,-1 };
+
 Cicada::Cicada() : Bug()
 {
-
 	// Ž@’m”ÍˆÍ
 	m_detectionRange = 300.0f;
 }
 Cicada::~Cicada()
 {
+}
+
+void Cicada::Init()
+{
+	images[0] = LoadGraph("assets/images/Bugs/Cicada/Cicada.PNG");
+	images[1] = LoadGraph("assets/images/Bugs/Cicada/Fly1.PNG");
+	images[2] = LoadGraph("assets/images/Bugs/Cicada/Fly2.PNG");
+	images[3] = LoadGraph("assets/images/Bugs/Cicada/Fly3.PNG");
+	images[4] = LoadGraph("assets/images/Bugs/Cicada/Fly4.PNG");
+
+	cicadaGetCount = 0;
 }
 
 void Cicada::Update(float delta)
@@ -83,6 +95,8 @@ void Cicada::Update(float delta)
 void Cicada::Draw() const
 {
 	Camera::DrawCircleW(m_location, m_radius, GetColor(0, 0, 255));
+
+	Camera::DrawGraphW(m_location, 2.0f, 0.0f, images[0], false);
 }
 
 void Cicada::DrawOnTheBack() const

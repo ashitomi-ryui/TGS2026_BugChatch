@@ -12,11 +12,12 @@ class Tree
 {
 private:
 	Vector2D m_location;
-	int image;
+	static int image;
 public:
 	Tree();
 	~Tree();
 public:
+	static void Init();
 	void Set(Vector2D location);
 	void Update();
 	void Draw(int id)const;

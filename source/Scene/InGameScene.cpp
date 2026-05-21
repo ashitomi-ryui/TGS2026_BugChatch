@@ -28,6 +28,9 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 	Bug::SetPlayer(&player);
 	Tree::SetPlayer(&player);
 
+	Tree::Init();
+	Cicada::Init();
+
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
 		tree[id].Set({ 100.0f + id * 200.0f, 100.0f + (float)(id % 3) * 400.0f });

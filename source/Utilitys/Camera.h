@@ -33,6 +33,7 @@ public:
 	/// <param name="location1">À•W1</param>
 	/// <param name="location2">À•W2</param>
 	/// <param name="Color">F</param>
+	/// <param name="Thinckness">‘¾‚³</param>
 	static void DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, int Thinckness = 1);
 	
 	/// <summary>
@@ -69,7 +70,7 @@ public:
 	/// <param name="GrHandle">‰æ‘œî•ñ</param>
 	/// <param name="ReverseXFlag">‰¡”½“]</param>
 	/// <param name="ReverseYFlage">c”½“]</param>
-	static void DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, int ReverseXFlag = 0, int ReverseYFlage = 0);
+	static void DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlage = false);
 
 	/// <summary>
 	/// ‰æ–Ê“à‚©’²‚×‚é
