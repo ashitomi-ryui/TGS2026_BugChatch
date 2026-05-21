@@ -4,22 +4,26 @@
 
 #include "Player.h"
 
-#define D_TREE_WIDTH	(70)
-#define D_TREE_HEIGHT	(150)
+#define D_TREE_WIDTH	(90)
+#define D_TREE_HEIGHT	(140)
 #define D_TREE_MAX		(10)
 
 class Tree
 {
 private:
 	Vector2D m_location;
-	static int image;
+	static int images[4];
+
+	float m_animTime;
+	int m_animCount;
+
 public:
 	Tree();
 	~Tree();
 public:
 	static void Init();
 	void Set(Vector2D location);
-	void Update();
+	void Update(float delta);
 	void Draw(int id)const;
 
 public:

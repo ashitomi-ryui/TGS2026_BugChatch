@@ -80,7 +80,7 @@ eSceneType InGameUpdate(float delta_second)
 	camera.Update(player.GetPlayerLocation());	// 
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
-		tree[id].Update();
+		tree[id].Update(delta_second);
 	}
 
 	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)

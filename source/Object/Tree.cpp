@@ -5,11 +5,13 @@
 
 Player* targetPlayer;     //プレイヤー情報
 
-int Tree::image = -1;
+int Tree::images[4] = {};
 
 Tree::Tree()
 {
 	m_location = { 0.0f,0.0f };
+	m_animTime = 0.0f;
+	m_animCount = 0;
 }
 
 Tree::~Tree()
@@ -18,16 +20,29 @@ Tree::~Tree()
 
 void Tree::Init()
 {
-	image = LoadGraph("assets/images/tree.PNG");
+	images[0] = LoadGraph("assets/images/OtherObjects/Tree/Tree1.PNG");
+	images[1] = LoadGraph("assets/images/OtherObjects/Tree/Tree2.PNG");
+	images[2] = LoadGraph("assets/images/OtherObjects/Tree/Tree3.PNG");
+	images[3] = LoadGraph("assets/images/OtherObjects/Tree/Tree4.PNG");
 }
 
 void Tree::Set(Vector2D location)
 {
 	m_location = location;
+	m_animTime = 0.0f;
+	m_animCount = 0;
 }
 
-void Tree::Update()
+void Tree::Update(float delta)
 {
+	m_animTime += delta;
+	if (m_animTime > 0.2f)
+	{
+		m_animTime = 0.0f;
+		m_animCount++;
+		m_animCount %= 4;
+	}
+
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 
 	// プレイヤーに最も近い点
@@ -78,7 +93,7 @@ void Tree::Update()
 
 void Tree::Draw(int id)const
 {
-	Camera::DrawGraphW(m_location, 0.25f, 0.0f, image);
+	Camera::DrawGraphW(m_location, 3.0f, 0.0f, images[m_animCount]);
 }
 
 void Tree::SetPlayer(Player* p)

@@ -94,9 +94,7 @@ void Cicada::Update(float delta)
 
 void Cicada::Draw() const
 {
-	Camera::DrawCircleW(m_location, m_radius, GetColor(0, 0, 255));
-
-	Camera::DrawGraphW(m_location, 2.0f, 0.0f, images[0], false);
+	Camera::DrawGraphW(m_location, 3.0f, 0.0f, images[0], false);
 }
 
 void Cicada::DrawOnTheBack() const
