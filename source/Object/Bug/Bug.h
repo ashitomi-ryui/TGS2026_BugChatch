@@ -31,7 +31,8 @@ protected:
 
 	Vector2D m_location;	// 座標
 	float m_radius;			// 半径
-	float m_direction;		// 向き
+	float m_direction;		// 移動方向
+	float m_Angle;			// 画像の向き
 	Vector2D m_moveSpeed;	// 動き
 	Vector2D m_destination;	// 目的地
 
@@ -83,6 +84,14 @@ protected:
 	/// <param name="deceleration">減速度</param>
 	/// <param name="delta"></param>
 	void Deceleration(float deceleration, float delta);
+
+	/// <summary>
+	/// 徐々に向ける
+	/// </summary>
+	/// <param name="that">変数</param>
+	/// <param name="angle">向けたい方向</param>
+	/// <param name="turningSpeed">方向転換速度</param>
+	void GraduallyTurn(float& that, float angle, float turningSpeed);
 
 protected:
 	/// <summary>

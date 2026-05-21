@@ -95,29 +95,11 @@ Vector2D Reflect(Vector2D v, Vector2D n)
 	return result;
 }
 
-float FindTheAngle(Vector2D a, Vector2D b)
+float VecATan2(Vector2D a, Vector2D b)
 {
-	if(a.x < b.x)
-	{
-		if (a.y > b.y)
-		{
-			return atanf(-(a.y - b.y) / (a.x - b.x));
-		}
-		else
-		{
-			return atanf(-(a.y - b.y) / (a.x - b.x)) + DX_PI_F * 2.0f;
-		}
-	}
-	if (a.x > b.x)
-	{
-		return atanf(-(a.y - b.y) / (a.x - b.x)) + DX_PI_F;
-	}
-	if (a.y > b.y)
-
-	{
-		return 0.5f * DX_PI_F;
-	}
-	return 1.5f * DX_PI_F;
+	float result = atan2f(a.x - b.x, b.y - a.y);
+	result += DX_PI_F;
+	return result;
 }
 
 int AngleComparison(float Angle1, float Angle2, float tolerance)

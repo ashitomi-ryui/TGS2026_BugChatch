@@ -43,7 +43,7 @@ float Dot(Vector2D va, Vector2D vb);
 Vector2D Reflect(Vector2D v, Vector2D n);
 
 // Šp“x‚ğ‹‚ß‚é
-float FindTheAngle(Vector2D a, Vector2D b);
+float VecATan2(Vector2D a, Vector2D b);
  
 /// <summary>
 /// Šp“x‚ğ”äŠr‚·‚é

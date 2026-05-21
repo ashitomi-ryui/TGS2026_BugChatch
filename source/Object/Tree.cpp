@@ -82,10 +82,10 @@ void Tree::Update(float delta)
 	{
 		Vector2D playerMove;
 
-		float angle = FindTheAngle(closest, playerLocation);
+		float angle = VecATan2(closest, playerLocation);
 
-		playerMove.x = cosf(angle) * (playerRadius - len);
-		playerMove.y = -sinf(angle) * (playerRadius - len);
+		playerMove.x = sinf(angle) * (playerRadius - len);
+		playerMove.y = -cosf(angle) * (playerRadius - len);
 
 		targetPlayer->PlayerLocationMove(playerMove);
 	}

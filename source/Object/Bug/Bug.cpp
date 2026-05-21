@@ -27,6 +27,7 @@ Bug::Bug()
 	m_location = { 0.0f, 0.0f };
 	m_radius = 0.0f;
 	m_direction = 0.0f;
+	m_Angle = 0.0f;
 	m_moveSpeed = { 0.0f, 0.0f };
 	m_destination = { 0.0f, 0.0f };
 	m_detectionRange = 0.0f;
@@ -53,8 +54,10 @@ void Bug::Set(Vector2D location)
 	m_location = location;
 	// ”¼Œa
 	m_radius = 20.0f * D_OBJECT_SIZE_RATIO;
-	// Œü‚«
+	// ˆÚ“®•ûŒü
 	m_direction = 0.0f;
+	// ‰æ‘œ‚ÌŒü‚«
+	m_Angle = 0.0f;
 	// “®‚«
 	m_moveSpeed = { 0.0f, 0.0f };
 	// –Ú“I’n
@@ -116,14 +119,14 @@ void Bug::Acceleration(float acceleration, float maxSpeed, float direction, floa
 	acceleration *= D_OBJECT_SIZE_RATIO;
 	maxSpeed *= D_OBJECT_SIZE_RATIO;
 
-	m_moveSpeed.x += cosf(direction) * acceleration * delta;
-	m_moveSpeed.y -= sinf(direction) * acceleration * delta;
+	m_moveSpeed.x += sinf(direction) * acceleration * delta;
+	m_moveSpeed.y -= cosf(direction) * acceleration * delta;
 
 	if (Length(m_moveSpeed) > maxSpeed)
 	{
-		float moveDirection = FindTheAngle({ 0.0f, 0.0f }, m_moveSpeed);
-		m_moveSpeed.x = cosf(moveDirection) * maxSpeed;
-		m_moveSpeed.y = -sinf(moveDirection) * maxSpeed;
+		float moveDirection = VecATan2({ 0.0f, 0.0f }, m_moveSpeed);
+		m_moveSpeed.x = sinf(moveDirection) * maxSpeed;
+		m_moveSpeed.y = -cosf(moveDirection) * maxSpeed;
 	}
 }
 
@@ -157,6 +160,16 @@ void Bug::Deceleration(float deceleration, float delta)
 	else
 	{
 		m_moveSpeed.y = 0.0f;
+	}
+}
+
+void Bug::GraduallyTurn(float& that, float angle, float turningSpeed)
+{
+	// ‰æ‘œ‚ÌŒü‚«‚ğ™X‚ÉˆÚ“®•ûŒü‚ÉŒü‚¯‚é
+	that += AngleComparison(that, angle) * turningSpeed;
+	if (AngleComparison(that, angle, turningSpeed) == 0)
+	{
+		that = angle;
 	}
 }
 

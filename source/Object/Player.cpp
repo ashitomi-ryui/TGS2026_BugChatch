@@ -129,7 +129,7 @@ void Player::Update()
 	m_oldTiltStick = m_tiltStick;
 	m_oldRotateStick = m_rotateStick;
 	m_tiltStick = Length(Vec2Sub({ 0.0f, 0.0f }, rightStick));
-	m_rotateStick = FindTheAngle({ 0.0f, 0.0f }, rightStick);
+	m_rotateStick = VecATan2({ 0.0f, 0.0f }, rightStick);
 	if (m_tiltStick == 0.0f)
 	{
 		m_rotateStick = m_oldRotateStick;
@@ -158,10 +158,10 @@ void Player::Update()
 	netDistance = Length(Vec2Sub(m_netLocation, ringLocation));
 	if (netDistance > m_netLength)
 	{
-		netAngle = FindTheAngle(m_netLocation, ringLocation);
+		netAngle = VecATan2(m_netLocation, ringLocation);
 
-		m_netLocation.x += cosf(netAngle) * (netDistance - m_netLength);
-		m_netLocation.y -= sinf(netAngle) * (netDistance - m_netLength);
+		m_netLocation.x += sinf(netAngle) * (netDistance - m_netLength);
+		m_netLocation.y -= cosf(netAngle) * (netDistance - m_netLength);
 	}
 }
 
@@ -174,22 +174,25 @@ void Player::Draw() const
 
 	Camera::DrawLineW(m_location, ringLocation, 0x00ff00, 5);
 
-	point[0].x = ringLocation.x + cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
-	point[0].y = ringLocation.y - sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[0].x = ringLocation.x + sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[0].y = ringLocation.y - cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
 	
-	point[1].x = ringLocation.x - cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
-	point[1].y = ringLocation.y + sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[1].x = ringLocation.x - sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[1].y = ringLocation.y + cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
 
-	point[2].x = ringLocation.x + cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
-	point[2].y = ringLocation.y - sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[2].x = ringLocation.x + sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[2].y = ringLocation.y - cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
 
-	point[3].x = ringLocation.x - cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
-	point[3].y = ringLocation.y + sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[3].x = ringLocation.x - sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[3].y = ringLocation.y + cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
 
 	Camera::DrawTriangleW(point[0], point[2], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[3], point[0], m_netLocation, 0xffffff);
+
+
+	DrawFormatString(10, 50, 0xffffff, "%.2f", m_rotateStick);
 }
 
 Vector2D Player::GetRingLocation() const

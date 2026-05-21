@@ -40,6 +40,7 @@ void Cicada::Update(float delta)
 	// 出現しているなら
 	if (m_isAppearance)
 	{
+		// 木の裏にいる
 		if (m_isBack)
 		{
 			PutInFront();
@@ -94,7 +95,7 @@ void Cicada::Update(float delta)
 
 void Cicada::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, images[0], false);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
 }
 
 void Cicada::DrawOnTheBack() const
@@ -155,7 +156,73 @@ void Cicada::Animation(float delta)
 {
 	Bug::Animation(delta);
 
+	// 木の裏にいる
+	if (m_isBack)
+	{
+		m_animCount = 0;
+	}
+	else
+	{
+		// 逃げているなら
+		if (m_isEscape)
+		{
+			// 画像の切り替え
+			if (m_animTime > 0.025f)
+			{
+				m_animTime = 0.0f;
+				m_animCount = m_animCount % 4 + 1;
+			}
 
+			// 画像の向きを徐々に移動方向に向ける
+			GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+		}
+		// 逃げていないなら
+		else
+		{
+			switch (m_state)
+			{
+			case eStand:
+				// 画像の切り替え
+				if (m_animTime > 0.05f)
+				{
+					if (m_animCount != 0)
+					{
+						m_animTime = 0.0f;
+						m_animCount = (m_animCount + 1) % 5;
+					}
+				}
+
+				// 画像の向きを徐々に上に向ける
+				GraduallyTurn(m_Angle, 0.0f, 2.0f * DX_PI_F * delta);
+
+				break;
+			case eMove:
+				// 画像の切り替え
+				if (m_animTime > 0.05f)
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 4 + 1;
+				}
+
+				// 画像の向きを徐々に移動方向に向ける
+				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+
+				break;
+			case ePanic:
+				// 画像の切り替え
+				if (m_animTime > 0.025f)
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 4 + 1;
+				}
+
+				// 画像の向きを徐々に移動方向に向ける
+				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+
+				break;
+			}
+		}
+	}
 }
 
 void Cicada::Escape(float delta)
@@ -163,7 +230,7 @@ void Cicada::Escape(float delta)
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 
 	// 向きをプレイヤーから虫への向きに
-	m_direction = FindTheAngle(playerLocation, m_location);
+	m_direction = VecATan2(playerLocation, m_location);
 	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
 	int r = Random::GetRand() % 50;
 	m_direction += ((float)r / 100.0f - 0.25f) * DX_PI_F;
@@ -235,12 +302,8 @@ void Cicada::Move(float delta)
 	float deceleration = 200.0f;
 
 	// 徐々に目的地に向ける
-	float destinationDirection = FindTheAngle(m_location, m_destination);
-	m_direction += AngleComparison(m_direction, destinationDirection) * 2.0f * DX_PI_F * delta;
-	if (AngleComparison(m_direction, destinationDirection, 0.125 * DX_PI_F) == 0)
-	{
-		m_direction = destinationDirection;
-	}
+	float destinationDirection = VecATan2(m_location, m_destination);
+	GraduallyTurn(m_direction, destinationDirection, 2.0f * DX_PI_F * delta);
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);
