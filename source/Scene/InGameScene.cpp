@@ -104,7 +104,7 @@ void InGameDraw(void)
 
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
-		cicada[id].Draw();
+		cicada[id].DrawOnTheFront();
 	}
 	
 	DrawFormatString(10, 10, 0xffffff, "%d", num);

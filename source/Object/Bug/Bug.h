@@ -48,10 +48,11 @@ public:
 	~Bug();
 
 public:
-	virtual void Set(Vector2D location);
-	virtual void Update(float delta);
-	virtual void DrawOnTheBack() const;
-	virtual void Draw() const;
+	virtual void Set(Vector2D location);	// ‰Šú‰»
+	virtual void Update(float delta);		// XV
+	virtual void Draw() const;				// •`‰æ
+	virtual void DrawOnTheBack() const;		// ”w–Ê‚É•`‰æ
+	virtual void DrawOnTheFront() const;	// ‘O–Ê‚É•`‰æ
 
 public:
 	/// <summary>

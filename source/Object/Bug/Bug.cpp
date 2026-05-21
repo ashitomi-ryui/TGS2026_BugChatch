@@ -69,12 +69,26 @@ void Bug::Update(float delta)
 	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
 }
 
-void Bug::DrawOnTheBack() const
+void Bug::Draw() const
 {
 }
 
-void Bug::Draw() const
+void Bug::DrawOnTheBack() const
 {
+	// 出現しているかつ、背面なら
+	if (m_isAppearance && m_isBack)
+	{
+		Draw();
+	}
+}
+
+void Bug::DrawOnTheFront() const
+{
+	// 出現しているかつ、背面ではないならなら
+	if (m_isAppearance && !m_isBack)
+	{
+		Draw();
+	}
 }
 
 void Bug::SetPlayer(Player* p)

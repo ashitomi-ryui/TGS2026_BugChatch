@@ -80,21 +80,26 @@ void Cicada::Update(float delta)
 	}
 }
 
+void Cicada::Draw() const
+{
+	Camera::DrawCircleW(m_location, m_radius, GetColor(0, 0, 255));
+}
+
 void Cicada::DrawOnTheBack() const
 {
 	// 出現しているかつ、背面なら
 	if (m_isAppearance && m_isBack)
 	{
-		Camera::DrawCircleW(m_location, m_radius, GetColor(0, 0, 255));
+		Draw();
 	}
 }
 
-void Cicada::Draw() const
+void Cicada::DrawOnTheFront() const
 {
 	// 出現しているかつ、背面ではないならなら
 	if (m_isAppearance && !m_isBack)
 	{
-		Camera::DrawCircleW(m_location, m_radius, GetColor(0, 0, 255));
+		Draw();
 	}
 }
 
