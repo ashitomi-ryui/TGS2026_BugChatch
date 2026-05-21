@@ -62,7 +62,7 @@ eSceneType InGameUpdate(float delta_second)
 		return eResult;//ゲーム終了時にタイトルに戻る（仮）
 	}
 
-	player.Update();	// プレイヤーの更新
+	player.Update(delta_second);	// プレイヤーの更新
 
 	for (int id = 0;id < D_CICADA_MAX;id++)
 	{

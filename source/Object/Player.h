@@ -36,7 +36,7 @@ public:
 	~Player();
 
 public:
-	void Update();
+	void Update(float delta);
 	void Draw() const;
 
 public:

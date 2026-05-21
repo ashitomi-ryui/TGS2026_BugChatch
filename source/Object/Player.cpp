@@ -10,7 +10,7 @@ Player::Player()
 	// プレイヤーキャラ
 	m_location = { 640.0f, 360.0f };	// プレイヤーの座標
 	m_moveSpeed = { 0.0f, 0.0f };	// 動く速度
-	m_maxSpeed = 3.0f * D_OBJECT_SIZE_RATIO;	// 最大速度
+	m_maxSpeed = 500.0f * D_OBJECT_SIZE_RATIO;	// 最大速度
 	m_radius = 25.0f * D_OBJECT_SIZE_RATIO;	// 半径
 
 	// 虫網
@@ -39,10 +39,10 @@ Player::Player::~Player()
 {
 }
 
-void Player::Update()
+void Player::Update(float delta)
 {
-	float acceleration = 0.5f * D_OBJECT_SIZE_RATIO;
-	float deceleration = 0.2f * D_OBJECT_SIZE_RATIO;
+	float acceleration = 4000.0f * delta * D_OBJECT_SIZE_RATIO;
+	float deceleration = 2000.0f * delta * D_OBJECT_SIZE_RATIO;
 
 	Vector2D leftStick = GetLeftStick();
 	Vector2D rightStick = GetRightStick();
@@ -99,7 +99,7 @@ void Player::Update()
 	}
 
 
-	m_location = Vec2Add(m_location, m_moveSpeed);
+	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
 
 	// 移動の限界
 	if (m_location.x < m_radius)
@@ -190,9 +190,6 @@ void Player::Draw() const
 	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[3], point[0], m_netLocation, 0xffffff);
-
-
-	DrawFormatString(10, 50, 0xffffff, "%.2f", m_rotateStick);
 }
 
 Vector2D Player::GetRingLocation() const
