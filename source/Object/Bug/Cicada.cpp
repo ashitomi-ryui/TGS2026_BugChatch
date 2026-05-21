@@ -16,7 +16,7 @@ int Cicada::images[5] = { -1,-1,-1,-1,-1 };
 Cicada::Cicada() : Bug()
 {
 	// 察知範囲
-	m_detectionRange = 300.0f;
+	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
 }
 Cicada::~Cicada()
 {
@@ -94,7 +94,7 @@ void Cicada::Update(float delta)
 
 void Cicada::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f, 0.0f, images[0], false);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, images[0], false);
 }
 
 void Cicada::DrawOnTheBack() const
@@ -123,8 +123,8 @@ void Cicada::Spawn()
 	// 位置を近くの木に設定する
 	location = FindNearestTree(location);
 	// 位置を少しずらす
-	location.x += (float)((Random::GetRand() % D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
-	location.y += (float)((Random::GetRand() % D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
+	location.x += (float)((Random::GetRand() % (int)D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
+	location.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
 
 	// スポーン
 	Set(location);
@@ -147,8 +147,8 @@ void Cicada::SetDestination(Vector2D location)
 	m_destination = FindNearestTree(location);
 
 	// 目的地をランダムに座標をずらす
-	m_destination.x += (float)((Random::GetRand() % D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
-	m_destination.y += (float)((Random::GetRand() % D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
+	m_destination.x += (float)((Random::GetRand() % (int)D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
+	m_destination.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
 }
 
 void Cicada::Animation(float delta)

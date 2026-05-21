@@ -10,16 +10,17 @@ Player::Player()
 	// プレイヤーキャラ
 	m_location = { 640.0f, 360.0f };	// プレイヤーの座標
 	m_moveSpeed = { 0.0f, 0.0f };	// 動く速度
-	m_maxSpeed = 3.0f;
+	m_maxSpeed = 3.0f * D_OBJECT_SIZE_RATIO;	// 最大速度
+	m_radius = 25.0f * D_OBJECT_SIZE_RATIO;	// 半径
 
 	// 虫網
-	m_stickLength = 150.0f;	// 虫網（棒）の長さ
-	m_netLength = 60.0f;		// 網の終点までの長さ
+	m_stickLength = 150.0f * D_OBJECT_SIZE_RATIO;	// 虫網（棒）の長さ
+	m_netLength = 60.0f * D_OBJECT_SIZE_RATIO;		// 網の終点までの長さ
 
 	m_ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
-	m_netLocation = { 640.0f, 360.0f + m_netLength};	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
+	m_netLocation = Vec2Mult(m_location, m_netLength);	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
 
-	m_ringRadius = 40.0f;// リングの半径
+	m_ringRadius = 40.0f * D_OBJECT_SIZE_RATIO;// リングの半径
 
 	// 虫網（リング）の3D座標
 	m_ringThickness = m_ringRadius;
@@ -40,8 +41,8 @@ Player::Player::~Player()
 
 void Player::Update()
 {
-	float acceleration = 0.5f;
-	float deceleration = 0.2f;
+	float acceleration = 0.5f * D_OBJECT_SIZE_RATIO;
+	float deceleration = 0.2f * D_OBJECT_SIZE_RATIO;
 
 	Vector2D leftStick = GetLeftStick();
 	Vector2D rightStick = GetRightStick();
@@ -101,24 +102,24 @@ void Player::Update()
 	m_location = Vec2Add(m_location, m_moveSpeed);
 
 	// 移動の限界
-	if (m_location.x < 25.0f)
+	if (m_location.x < m_radius)
 	{
-		m_location.x = 25.0f;
+		m_location.x = m_radius;
 		m_moveSpeed.x = 0.0f;
 	}
-	else if (m_location.x > D_STAGE_WIDTH - 25.0f)
+	else if (m_location.x > D_STAGE_WIDTH - m_radius)
 	{
-		m_location.x = D_STAGE_WIDTH - 25.0f;
+		m_location.x = D_STAGE_WIDTH - m_radius;
 		m_moveSpeed.x = 0.0f;
 	}
-	if (m_location.y < 25.0f)
+	if (m_location.y < m_radius)
 	{
-		m_location.y = 25.0f;
+		m_location.y = m_radius;
 		m_moveSpeed.y = 0.0f;
 	}
-	else if (m_location.y > D_STAGE_HEIGHT - 25.0f)
+	else if (m_location.y > D_STAGE_HEIGHT - m_radius)
 	{
-		m_location.y = D_STAGE_HEIGHT - 25.0f;
+		m_location.y = D_STAGE_HEIGHT - m_radius;
 		m_moveSpeed.y = 0.0f;
 	}
 
@@ -166,24 +167,24 @@ void Player::Update()
 
 void Player::Draw() const
 {
-	Camera::DrawCircleW(m_location, 25, 0x00ffff);
+	Camera::DrawCircleW(m_location, m_radius, 0x00ffff);
 	
 	Vector2D point[4];
 	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);
 
 	Camera::DrawLineW(m_location, ringLocation, 0x00ff00, 5);
 
-	point[0].x = ringLocation.x + cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f);
-	point[0].y = ringLocation.y - sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f);
+	point[0].x = ringLocation.x + cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[0].y = ringLocation.y - sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
 	
-	point[1].x = ringLocation.x - cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f);
-	point[1].y = ringLocation.y + sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f);
+	point[1].x = ringLocation.x - cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[1].y = ringLocation.y + sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
 
-	point[2].x = ringLocation.x + cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f);
-	point[2].y = ringLocation.y - sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f);
+	point[2].x = ringLocation.x + cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[2].y = ringLocation.y - sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
 
-	point[3].x = ringLocation.x - cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f);
-	point[3].y = ringLocation.y + sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f);
+	point[3].x = ringLocation.x - cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[3].y = ringLocation.y + sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
 
 	Camera::DrawTriangleW(point[0], point[2], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
@@ -210,6 +211,11 @@ float Player::GetMaxSpeed() const
 Vector2D Player::GetPlayerLocation() const
 {
 	return m_location;
+}
+
+float Player::GetPlayerRadius() const
+{
+	return m_radius;
 }
 
 void Player::PlayerLocationMove(Vector2D vector)

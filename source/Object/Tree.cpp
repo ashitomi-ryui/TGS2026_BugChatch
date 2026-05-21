@@ -77,14 +77,15 @@ void Tree::Update(float delta)
 	}
 
 	float len = Length(Vec2Sub(closest, playerLocation));
-	if (len < 25.0f)
+	float playerRadius = targetPlayer->GetRingRadius();
+	if (len < playerRadius)
 	{
 		Vector2D playerMove;
 
 		float angle = FindTheAngle(closest, playerLocation);
 
-		playerMove.x = cosf(angle) * (25.0f - len);
-		playerMove.y = -sinf(angle) * (25.0f - len);
+		playerMove.x = cosf(angle) * (playerRadius - len);
+		playerMove.y = -sinf(angle) * (playerRadius - len);
 
 		targetPlayer->PlayerLocationMove(playerMove);
 	}
@@ -93,7 +94,7 @@ void Tree::Update(float delta)
 
 void Tree::Draw(int id)const
 {
-	Camera::DrawGraphW(m_location, 3.0f, 0.0f, images[m_animCount]);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, images[m_animCount]);
 }
 
 void Tree::SetPlayer(Player* p)

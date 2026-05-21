@@ -52,7 +52,7 @@ void Bug::Set(Vector2D location)
 	// À•W
 	m_location = location;
 	// ”¼Œa
-	m_radius = 20.0f;
+	m_radius = 20.0f * D_OBJECT_SIZE_RATIO;
 	// Œü‚«
 	m_direction = 0.0f;
 	// “®‚«
@@ -113,6 +113,9 @@ Vector2D Bug::RandomLocationOnTheScreen()
 
 void Bug::Acceleration(float acceleration, float maxSpeed, float direction, float delta)
 {
+	acceleration *= D_OBJECT_SIZE_RATIO;
+	maxSpeed *= D_OBJECT_SIZE_RATIO;
+
 	m_moveSpeed.x += cosf(direction) * acceleration * delta;
 	m_moveSpeed.y -= sinf(direction) * acceleration * delta;
 
@@ -126,6 +129,8 @@ void Bug::Acceleration(float acceleration, float maxSpeed, float direction, floa
 
 void Bug::Deceleration(float deceleration, float delta)
 {
+	deceleration *= D_OBJECT_SIZE_RATIO;
+
 	// Œ¸‘¬
 	// XÀ•W‚ðŒ¸‘¬‚·‚é
 	if (m_moveSpeed.x > deceleration * delta)
