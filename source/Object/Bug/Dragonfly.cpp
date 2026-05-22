@@ -15,6 +15,8 @@
 
 int Dragonfly::images[4] = { -1,-1,-1,-1 };
 
+int a;
+
 Dragonfly::Dragonfly() : Bug()
 {
 	// Ž@’m”ÍˆÍ
