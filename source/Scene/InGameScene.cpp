@@ -9,7 +9,7 @@
 
 #include"../Object/Bug/Cicada.h"
 //#include"../Object/Bug/Dragonfly.h"
-//#include"../Object/Bug/Grasshopper.h"
+#include"../Object/Bug/Grasshopper.h"
 
 #include"../Object/Tree.h"
 
@@ -17,7 +17,7 @@ Tree tree[D_TREE_MAX];
 Player player;
 Cicada cicada[D_CICADA_MAX];
 //Dragonfly dragonfly[D_DRAGONFLY_MAX];
-//Grasshopper grasshopper[D_GRASSHOPPER_MAX];
+Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float timer;
 Camera camera(player.GetPlayerLocation());
 
@@ -30,6 +30,7 @@ int InGameInit(void)//各プログラムの初期化
 
 	Tree::Init();
 	Cicada::Init();
+	Grasshopper::Init();
 
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
@@ -46,10 +47,10 @@ int InGameInit(void)//各プログラムの初期化
 	//{
 	//	dragonfly[id].Spawn();
 	//}
-	//for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
-	//{
-	//	grasshopper[id].Spawn();
-	//}
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	{
+		grasshopper[id].Spawn();
+	}
 
 	return TRUE;
 }
@@ -72,10 +73,10 @@ eSceneType InGameUpdate(float delta_second)
 	//{
 	//	dragonfly[id].Uptate(delta_second);	// トンボの更新
 	//}
-	//for (int id = 0; id < 10; id++)
-	//{
-	//	grasshopper[id].Update(delta_second);	// バッタの更新
-	//}
+	for (int id = 0; id < 10; id++)
+	{
+		grasshopper[id].Update(delta_second);	// バッタの更新
+	}
 
 	camera.Update(player.GetPlayerLocation());	// 
 	for (int id = 0;id < D_TREE_MAX;id++)
@@ -98,6 +99,11 @@ void InGameDraw(void)
 		cicada[id].DrawOnTheBack();
 	}
 
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		grasshopper[id].DrawOnTheBack();
+	}
+
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
 		tree[id].Draw(id);
@@ -108,6 +114,11 @@ void InGameDraw(void)
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		cicada[id].DrawOnTheFront();
+	}
+
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		grasshopper[id].DrawOnTheFront();
 	}
 	
 	DrawFormatString(10, 10, 0xffffff, "%d", num);

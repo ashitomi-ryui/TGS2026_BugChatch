@@ -1,406 +1,424 @@
-#include "Grasshopper.h"
-#include "Bug.h"
-#include "../../Utilitys/Camera.h"
 #include "DxLib.h" 
+#include "Math.h"
 
-Bug* battascore;
+#include "../../Utilitys/Math.h"
+#include "../../Utilitys/Random.h"
+#include "../../Utilitys/Camera.h"
 
-Grasshopper::Grasshopper()
+#include "../../Scene/InGameScene.h"
+
+#include "Grasshopper.h"
+
+#include "../Leaf.h"
+#include "../Tree.h"
+
+int Grasshopper::images[7] = { -1,-1,-1,-1,-1,-1,-1};
+
+Grasshopper::Grasshopper() : Bug()
 {
+	// 察知範囲
+	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
 }
-
 Grasshopper::~Grasshopper()
 {
+	
 }
 
-void Grasshopper::Set(Vector2D location)
+void Grasshopper::Init()
 {
-	m_location = location;
-	m_isAppearance = true;
+	images[0] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper1.PNG");
+	images[1] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper2.PNG");
+	images[2] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper3.PNG");
+	images[3] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper4.PNG");
+	images[4] = LoadGraph("assets/images/Bugs/Grasshopper/Jump1.PNG");
+	images[5] = LoadGraph("assets/images/Bugs/Grasshopper/Jump2.PNG");
+	images[6] = LoadGraph("assets/images/Bugs/Grasshopper/Jump3.PNG");
+
+	grasshopperGetCount = 0;
 }
 
-void Grasshopper::Init(int index)
+void Grasshopper::Update(float delta)
 {
-	location.x = 0;
-	location.y = 0;
-	float vx = 0.0f;
-	float vy = 0.0f;
-	float Watitime = 0.0f;
+	Animation(delta);
 
-	bool Groundy = TRUE;
-	bool UpMove = FALSE;     // 上昇中かどうか
-	float JumpTopY;    // 今回のジャンプで止まるY座標
+	
 
-	bool TopStop = FALSE;     // 頂点で停止中
-	float TopStopTimer = 0.0f;
-}
-
-void Batta::BattaUpdate(float delta_second)
-{
-		
-
-	time += delta_second;
-	for (int i = 0; i < 10; i++)
+	// 出現しているなら
+	if (m_isAppearance)
 	{
-		BattaDestroy = TRUE;
-
-		battacount = battascore->GetBattaScore(i) % 2;
-
-		now_batta[i] = battascore->GetBattaScore(i);
-
-		if (now_batta[i] - old_batta[i] > 0)
+		// 木の裏にいる
+		if (m_isBack)
 		{
-			location = { -100.0f, 100.0f };
+			PutInFront();
+		}
 
-			vx = 0.0f;
-			vy = 0.0f;
-			Watitime = 0.0f;
-			Groundy = TRUE;
-			UpMove = FALSE;
-			TopStop = FALSE;
-			TopStopTimer = 0.0f;
-
-			if (count == 0)
+		// 逃げているなら
+		if (m_isEscape)
+		{
+			Escape(delta);
+		}
+		// 逃げていないなら
+		else
+		{
+			switch (m_state)
 			{
-				BattaDestroy = FALSE;
-				time1 = 0;
-				count = 1;
+			case eStand:
+				Stand(delta);
+
+				break;
+			case eMove:
+				Move(delta);
+
+				break;
+			case ePanic:
+				Panic(delta);
+
+				break;
 			}
 
-			time1 += delta_second;
+			PerceptionJudgment();
+		}
 
-			if (time1 >= 1.0f)
+		Bug::Update(delta);
+
+		// 当たり判定
+		if (HitCheck())
+		{
+			cicadaGetCount += 1;
+			m_isAppearance = false;
+			// 遷移時間を1.0f秒にする
+			m_transitionTime = 1.0f;
+		}
+	}
+	else
+	{
+		if (m_transitionTime <= 0.0f)
+		{
+			ReSpawn(delta);
+		}
+	}
+}
+
+void Grasshopper::Draw() const
+{
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
+}
+
+void Grasshopper::DrawOnTheBack() const
+{
+	// 出現しているかつ、背面なら
+	if (m_isAppearance && m_isBack)
+	{
+		Draw();
+	}
+}
+
+void Grasshopper::DrawOnTheFront() const
+{
+	// 出現しているかつ、背面ではないならなら
+	if (m_isAppearance && !m_isBack)
+	{
+		Draw();
+	}
+}
+
+void Grasshopper::Spawn()
+{
+	// スポーン位置
+	Vector2D location = Bug::RandomLocationOnTheScreen();
+
+	// 位置を近くの木に設定する
+	location = FindNearestTree(location);
+	// 位置を少しずらす
+	location.x += (float)((Random::GetRand() % (int)D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
+	location.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
+
+	// スポーン
+	Set(location);
+}
+
+void Grasshopper::ReSpawn(float delta)
+{
+	Spawn();
+
+	// 画面内なら木の裏に
+	if (Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+		m_isBack = true;
+	}
+}
+
+void Grasshopper::SetDestination(Vector2D location)
+{
+
+	int r = Random::GetRand() % 100;
+
+	// 加速度
+	float acceleration = 2000.0f * ((float)r / 100.0f);
+
+	//移動する向き
+	r = Random::GetRand() % 100 -50;
+	m_destination.y = m_location.y - (float)r;
+
+
+	r = Random::GetRand() % 100;
+
+	m_moveSpeed = { acceleration, -(float)r };
+
+}
+
+void Grasshopper::Animation(float delta)
+{
+	Bug::Animation(delta);
+
+	// 木の裏にいる
+	if (m_isBack)
+	{
+		m_animCount = 0;
+	}
+	else
+	{
+		// 逃げているなら
+		if (m_isEscape)
+		{
+			// 画像の切り替え
+			if (m_animTime > 0.025f)
 			{
-				BattaDestroy = TRUE;
-				old_batta[i] = now_batta[i];
-				count = 0;
+				m_animTime = 0.0f;
+				m_animCount = m_animCount % 4 + 1;
 			}
+
+			// 画像の向きを徐々に移動方向に向ける
+			GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+		}
+		// 逃げていないなら
+		else
+		{
+			switch (m_state)
+			{
+			case eStand:
+				// 画像の切り替え
+				if (m_animTime > 0.05f)
+				{
+					if (m_animCount != 0)
+					{
+						m_animTime = 0.0f;
+						m_animCount = (m_animCount + 1) % 5;
+					}
+				}
+
+				// 画像の向きを徐々に上に向ける
+				GraduallyTurn(m_Angle, 0.0f, 2.0f * DX_PI_F * delta);
+
+				break;
+			case eMove:
+				// 画像の切り替え
+				if (m_animTime > 0.05f)
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 4 + 1;
+				}
+
+				// 画像の向きを徐々に移動方向に向ける
+				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+
+				break;
+			case ePanic:
+				// 画像の切り替え
+				if (m_animTime > 0.025f)
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 4 + 1;
+				}
+
+				// 画像の向きを徐々に移動方向に向ける
+				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+
+				break;
+			}
+		}
+	}
+}
+
+void Grasshopper::Escape(float delta)
+{
+	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+
+	// 向きをプレイヤーから虫への向きに
+	m_direction = VecATan2(playerLocation, m_location);
+	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
+	int r = Random::GetRand() % 50;
+	m_direction += ((float)r / 100.0f - 0.25f) * DX_PI_F;
+
+	// 加速度
+	float acceleration = 2000.0f;
+	// 最大速度
+	float maxSpeed = 600.0f;
+	// 減速度
+	float deceleration = 400.0f;
+
+	// 加速
+	Acceleration(acceleration, maxSpeed, m_direction, delta);
+	// 減速
+	Deceleration(deceleration, delta);
+
+	// 逃げる状態からパニック状態へ
+	// プレイヤーの座標
+	Vector2D ringLocation = targetPlayer->GetRingLocation();
+	float playerLen = Length(Vec2Sub(m_location, playerLocation));
+	float ringLen = Length(Vec2Sub(m_location, ringLocation));
+	// プレイヤー察知
+	// 察知範囲から出た時
+	if (playerLen > m_detectionRange || ringLen > m_detectionRange)
+	{
+		// 察知時間が0以下なら
+		if (m_detectionTime <= 0.0f)
+		{
+			// パニック状態へ
+			m_isEscape = false;
+			m_state = ePanic;
+
+			// 遷移時間を0.1fごとに区切った2.0f~5.0fにする
+			int r = Random::GetRand() % 30;
+			m_transitionTime = (float)r / 10.0f + 2.0f;
+		}
+	}
+	else
+	{
+		// 察知時間を0.1fごとに区切った0.0f~1.0fにする
+		int r = Random::GetRand() % 10;
+		m_detectionTime = (float)r / 10.0f;
+	}
+}
+
+void Grasshopper::Stand(float delta)
+{
+	m_moveSpeed = { 0.0f, 0.0f };
+	if (m_transitionTime <= 0.0f)
+	{
+		// 巡回状態へ
+		m_state = eMove;
+		// 向きを0.25πごとに区切ったランダムな向きに
+		int r = Random::GetRand() % 8;
+		m_direction = (float)r / 4.0f * DX_PI_F;
+		// ランダムな木を目的地に設定
+		SetDestination(RandomLocationOnTheScreen());
+	}
+}
+
+void Grasshopper::Move(float delta)
+{
+	// 加速度
+	float acceleration = 1000.0f;
+	// 最大速度
+	float maxSpeed = 400.0f;
+	// 減速度
+	float deceleration = 200.0f;
+
+	// 徐々に目的地に向ける
+	float destinationDirection = VecATan2(m_location, m_destination);
+	GraduallyTurn(m_direction, destinationDirection, 2.0f * DX_PI_F * delta);
+
+	// 加速
+	/*Acceleration(acceleration, maxSpeed, m_direction, delta);*/
+
+	// 減速
+	/*Deceleration(deceleration, delta);*/
+
+	
+	Vector2D treeLocation = FindNearestTree(m_location);
+	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f)
+	{
+		// 目的地についたら待機状態へ
+		m_moveSpeed = { 0.0f, 0.0f };
+		m_state = eStand;
+
+		// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
+		int r = Random::GetRand() % 200;
+		m_transitionTime = (float)r / 10.0f + 10.0f;
+	}
+}
+
+void Grasshopper::Panic(float delta)
+{
+	// 向きを0.125fπごとに区切った-2.0fπ~2.0fπずらす
+	int r = Random::GetRand() % 32;
+	m_direction += ((float)r / 8.0f - 2.0f) * DX_PI_F * delta;
+
+	// 加速度
+	float acceleration = 2000.0f;
+	// 最大速度
+	float maxSpeed = 600.0f;
+	// 減速度
+	float deceleration = 400.0f;
+
+	// 加速
+	Acceleration(acceleration, maxSpeed, m_direction, delta);
+	// 減速
+	Deceleration(deceleration, delta);
+
+	// 遷移時間が0以下なら
+	if (m_transitionTime <= 0.0f)
+	{
+		// 巡回状態へ
+		m_state = eMove;
+		// 近くの木を目的地に設定
+		SetDestination(m_location);
+	}
+}
+
+void Grasshopper::PerceptionJudgment()
+{
+	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+	Vector2D ringLocation = targetPlayer->GetRingLocation();
+	float playerLen = Length(Vec2Sub(m_location, playerLocation));
+	float ringLen = Length(Vec2Sub(m_location, ringLocation));
+
+	// プレイヤー察知
+	// 察知範囲に入った時
+	if (playerLen < m_detectionRange || ringLen < m_detectionRange)
+	{
+		// 察知班にの1/2に入った時
+		if (playerLen < m_detectionRange / 2.0f || ringLen < m_detectionRange / 2.0f)
+		{
+			// 逃げ状態へ
+			TransitionToEscape();
 		}
 		else
 		{
-			switch (battacount)
+			// 察知時間が0以下なら
+			if (m_detectionTime <= 0.0f)
 			{
-			case 0:
-				groundyY = 690.0f;
-
-				if (battaspawn == 0)
-				{
-					location = { 100.0f, 580.0f };
-					battaspawn = 1;
-				}
-
-				if (Groundy == TRUE)
-				{
-					location.y = groundyY;
-					vy = 0.0f;
-					vx = 0.0f;
-
-					Watitime += delta_second;
-
-					//1.5秒おきに動く
-					if (Watitime > 1.5f)
-					{
-						Watitime = 0.0f;
-						Groundy = FALSE;
-						UpMove = TRUE;
-						TopStop = FALSE;
-						TopStopTimer = 0.0f;
-
-						//50％の確率で左右のどちらかに行く
-						if (rand() % 2 == 0)
-						{
-							vx = 10.0f;
-						}
-						else
-						{
-							vx = -10.0f;
-						}
-
-						// 下の段用のランダムな頂点
-						JumpTopY = (float)(500 + rand() % 120);   // 500～619
-						vy = -8.0f;
-					}
-				}
-				else
-				{
-					// 上昇中
-					if (UpMove == TRUE)
-					{
-						location.x += vx;
-						location.y += vy;
-
-						// 上に向かっている時
-						if (vy < 0.0f)
-						{
-							if (location.y <= JumpTopY)
-							{
-								location.y = JumpTopY;
-								UpMove = FALSE;
-								TopStop = TRUE;
-								TopStopTimer = 0.0f;
-								vx = 0.0f;
-								vy = 0.0f;
-							}
-						}
-						// 下に向かっている時
-						else if (vy > 0.0f)
-						{
-							if (location.y >= JumpTopY)
-							{
-								location.y = JumpTopY;
-								UpMove = FALSE;
-								TopStop = TRUE;
-								TopStopTimer = 0.0f;
-								vx = 0.0f;
-								vy = 0.0f;
-							}
-						}
-					}
-					// 頂点で停止中
-					else if (TopStop == TRUE)
-					{
-						vx = 0.0f;
-						vy = 0.0f;
-						TopStopTimer += delta_second;
-
-
-						location.y = JumpTopY;   // 固定
-
-						if (TopStopTimer >= 1.5f)
-						{
-							TopStop = FALSE;
-							TopStopTimer = 0.0f;
-							// 次のジャンプ
-							UpMove = TRUE;
-
-							if (rand() % 2 == 0)
-							{
-								vx = 10.0f;
-							}
-							else
-							{
-								vx = -10.0f;
-							}
-							// たまに下がる
-							if (rand() % 2 == 0)   // 2回に1回くらい下がる
-							{
-								JumpTopY = location.y + (70 + rand() % 90);   // 70～159下がる
-							}
-							else
-							{
-								JumpTopY = location.y - (70 + rand() % 90);   // 70～159上がる
-							}
-
-							// 上に行きすぎ防止
-							if (JumpTopY < 50.0f)
-							{
-								JumpTopY = 50.0f;
-							}
-
-							// 下に行きすぎ防止
-							if (JumpTopY > 650.0f)
-							{
-								JumpTopY = 650.0f;
-							}
-							// 目標が今より下なら落ちる、上ならジャンプ
-							if (JumpTopY > location.y)
-							{
-								vy = 15.0f;    // 下へ
-							}
-							else
-							{
-								vy = -17.0f;   // 上へ
-							}
-						}
-					}
-					vx *= 0.995f;
-				}
-
-				if (location.x < 20.0f)
-				{
-					location.x = 20.0f;
-				}
-				if (location.x > 650.0f)
-				{
-					location.x = 650.0f;
-				}
-				break;
-
-			case 1:
-				groundyY = 200.0f;
-
-				if (battaspawn == 1)
-				{
-					location = { 350.0f, 200.0f };
-					battaspawn = 0;
-				}
-
-				if (Groundy == TRUE)
-				{
-					location.y = groundyY;
-					vy = 0.0f;
-					vx = 0.0f;
-
-					Watitime += delta_second;
-
-					//1.5秒おきに動く
-					if (Watitime > 1.5f)
-					{
-						Watitime = 0.0f;
-						Groundy = FALSE;
-						UpMove = TRUE;
-						TopStop = FALSE;
-						TopStopTimer = 0.0f;
-						//50%の確率で左右のどちらかに行くに行く
-						if (rand() % 2 == 0)
-						{
-							vx = 5.0f;
-						}
-						else
-						{
-							vx = -5.0f;
-						}
-
-						// 上の段用のランダムな頂点
-						JumpTopY = (float)(50 + rand() % 100);   // 50～149
-						vy = -8.0f;
-					}
-				}
-				else
-				{
-					/*Batta.x += vx;*/
-
-					// 上昇中
-					if (UpMove == TRUE)
-					{
-						location.x += vx;
-						location.y += vy;
-
-						// 上に向かっている時
-						if (vy < 0.0f)
-						{
-							if (location.y <= JumpTopY)
-							{
-								location.y = JumpTopY;
-								UpMove = FALSE;
-								TopStop = TRUE;
-								TopStopTimer = 0.0f;
-								vx = 0.0f;
-								vy = 0.0f;
-							}
-						}
-						// 下に向かっている時
-						else if (vy > 0.0f)
-						{
-							if (location.y >= JumpTopY)
-							{
-								location.y = JumpTopY;
-								UpMove = FALSE;
-								TopStop = TRUE;
-								TopStopTimer = 0.0f;
-								vx = 0.0f;
-								vy = 0.0f;
-							}
-						}
-					}
-					// 頂点で停止中
-					else if (TopStop == TRUE)
-					{
-						vx = 0.0f;
-						TopStopTimer += delta_second;
-
-						location.y = JumpTopY;   // その場で固定
-						if (TopStopTimer >= 1.3f)
-						{
-							TopStop = FALSE;
-							TopStopTimer = 0.0f;
-							UpMove = TRUE;
-
-							if (rand() % 2 == 0)
-							{
-								vx = 5.0f;
-							}
-							else
-							{
-								vx = -5.0f;
-							}
-
-							// たまに下がる
-							if (rand() % 3 == 0)   // 3回に1回くらい下がる
-							{
-								JumpTopY = location.y + (100 + rand() % 40);   // 100～139下がる
-							}
-							else
-							{
-								JumpTopY = location.y - (40 + rand() % 40);   // 40～79上がる
-							}
-
-							// 上に行きすぎ防止
-							if (JumpTopY < 30.0f)
-							{
-								JumpTopY = 30.0f;
-							}
-
-							// 下に行きすぎ防止
-							if (JumpTopY > 650.0f)
-							{
-								JumpTopY = 650.0f;
-							}
-							// 目標が今より下なら落ちる、上ならジャンプ
-							if (JumpTopY > location.y)
-							{
-								vy = 15.0f;    // 下へ
-							}
-							else
-							{
-								vy = -17.0f;   // 上へ
-							}
-
-							if (JumpTopY < 30.0f)
-							{
-								JumpTopY = 30.0f;
-							}
-							// 今いる位置から少しだけ上へジャンプ
-							//JumpTopY = Batta.y - (20.0f + rand() % 30);  // 20～49 上へ
-
-						}
-					}
-
-
-					vx *= 0.995f;
-
-				}
-
-				if (location.x < 330.0f)
-				{
-					location.x = 330.0f;
-				}
-				if (location.x > 1200.0f)
-				{
-					location.x = 1200.0f;
-				}
-				break;
+				TransitionToEscape();
 			}
 		}
 	}
-
-}
-
-void Batta::BattaDraw(void)
-{
-	if (BattaDestroy == TRUE)
+	else
 	{
-		Camera::DrawCircleW(location, 20, GetColor(255, 0, 255));
-		/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
+		// 察知時間を0.1fごとに区切った0.0f~2.0fにする
+		int r = Random::GetRand() % 20;
+		m_detectionTime = (float)r / 10.0f;
 	}
 }
 
-Vector2D* Batta::BattaLocation(void)
+void Grasshopper::TransitionToEscape()
 {
-	return &location;
+	m_isEscape = true;
+	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
+	int r = Random::GetRand() % 10;
+	m_detectionTime = (float)r / 10.0f;
 }
 
-void Batta::SetBatta(class Bug* p)
+void Grasshopper::PutInFront()
 {
-	battascore = p;
+	Vector2D treeLocation = FindNearestTree(m_location);
+
+	// その木から離れたら、前面に置く
+	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
+		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
+		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
+		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
+	{
+		m_isBack = false;
+	}
 }

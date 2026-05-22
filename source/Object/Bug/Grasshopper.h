@@ -1,46 +1,57 @@
 #pragma once
 
+#include"Bug.h"
 #include"../../Utilitys/Math.h"
 
-class Grasshopper
+class Grasshopper :public Bug
 {
 private:
-	Vector2D m_location;	// 座標
-	bool m_isAppearance;	// 出現フラグ
-
+	static int images[7];
 public:
 	Grasshopper();
 	~Grasshopper();
 
 public:
-	void Set(Vector2D location);
+	static void Init();
+	virtual void Update(float delta) override;
+	virtual void DrawOnTheBack() const override;
+	virtual void DrawOnTheFront() const;	// 前面に描画
+	virtual void Draw() const override;
 
-private:
-	/*Vector2D batta;*/
-	float time;
-	float time1;
-	int count;
-	bool BattaDestroy;
-	int now_batta[10];
-	int old_batta[10];
-	int battacount;
-	int battaspawn;
-	float groundyY;
-	float vx = 0.0f;
-	float vy = 0.0f;
-	float Watitime = 0.0f;
+	//スポーン
+	void Spawn();
 
-	bool Groundy;
-	bool UpMove;      // 上昇中かどうか
-	float JumpTopY;    // 今回のジャンプで止まるY座標
+	//リスポーン
+	void ReSpawn(float delta);
 
-	bool TopStop;     // 頂点で停止中
-	float TopStopTimer = 0.0f;
+	//ジャンプ位置の決定
+	void SetDestination(Vector2D location);
 
-	void Init(int index);
-	void BattaUpdate(float delta_second);
-	void BattaDraw(void);
-	Vector2D* BattaLocation(void);
-	void SetBatta(class Bug* p);
+	//アニメーション
+	virtual void Animation(float delta) override;
+
+	//逃げる処理
+	void Escape(float delta);
+
+	//待機
+	void Stand(float delta);
+
+	//
+	void Move(float delta);
+
+	//
+	void Panic(float delta);
+
+	////通常移動
+	//void Patrol(float delta);
+
+	//察知判定
+	void PerceptionJudgment();
+
+	//逃げる状態へ移行
+	void TransitionToEscape();
+
+	//前面へ移動
+	void PutInFront();
+
 };
-
