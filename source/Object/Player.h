@@ -55,6 +55,6 @@ public:
 	/// <summary>
 	/// ƒvƒŒƒCƒ„[‚ğˆÚ“®‚³‚¹‚é
 	/// </summary>
-	/// <param name="vector"></param>
+	/// <param name="vector">ˆÚ“®—Ê</param>
 	void PlayerLocationMove(Vector2D vector);
 };

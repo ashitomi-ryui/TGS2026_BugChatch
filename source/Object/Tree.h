@@ -1,6 +1,7 @@
 #pragma once
 
 #include"../Utilitys/Math.h"
+#include"../Utilitys/Camera.h"
 
 #include "Player.h"
 

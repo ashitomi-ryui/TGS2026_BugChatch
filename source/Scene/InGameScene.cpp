@@ -79,11 +79,12 @@ eSceneType InGameUpdate(float delta_second)
 		grasshopper[id].Update(delta_second);	// バッタの更新
 	}
 
-	camera.Update(player.GetPlayerLocation());	// 
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
-		tree[id].Update(delta_second);
+		tree[id].Update(delta_second);	// 木の更新
 	}
+
+	camera.Update(player.GetPlayerLocation());	// カメラの更新
 
 	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)
 	{
@@ -133,26 +134,6 @@ void InGameDraw(void)
 	}
 	
 	DrawFormatString(10, 10, 0xffffff, "%f", num);
-}
-
-Vector2D GetRingLocation()
-{
-	return player.GetRingLocation();
-}
-
-float GetPlayerMaxSpeed()
-{
-	return player.GetMaxSpeed();
-}
-
-Vector2D GetPlayerLocation()
-{
-	return player.GetPlayerLocation();
-}
-
-void PlayerLocationMove(Vector2D vector)
-{
-	player.PlayerLocationMove(vector);
 }
 
 Vector2D FindNearestTree(Vector2D location)

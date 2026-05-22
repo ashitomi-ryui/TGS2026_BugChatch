@@ -99,7 +99,7 @@ void Dragonfly::Update(float delta)
 
 void Dragonfly::Draw() const
 {
-	Camera::DrawGraphW(m_location, 20.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
 }
 
 void Dragonfly::DrawOnTheBack() const
