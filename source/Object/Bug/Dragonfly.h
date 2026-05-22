@@ -4,14 +4,14 @@
 
 #include "../../Utilitys/Math.h"
 
-class Tonbo : public Bug
+class Dragonfly : public Bug
 {
 private:
 	static int images[4];
 
 public:
-	Tonbo();
-	~Tonbo();
+	Dragonfly();
+	~Dragonfly();
 
 public:
 	static void Init();

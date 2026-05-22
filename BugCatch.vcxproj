@@ -139,7 +139,7 @@
   <ItemGroup>
     <ClCompile Include="source\AppMain.cpp" />
     <ClCompile Include="source\Object\Bug\Bug.cpp" />
-    <ClCompile Include="source\Object\Bug\Tonbo.cpp" />
+    <ClCompile Include="source\Object\Bug\Dragonfly.cpp" />
     <ClCompile Include="source\Object\Leaf.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
     <ClCompile Include="source\Object\Bug\Cicada.cpp" />
@@ -157,7 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Object\Bug\Bug.h" />
-    <ClInclude Include="source\Object\Bug\Tonbo.h" />
+    <ClInclude Include="source\Object\Bug\Dragonfly.h" />
     <ClInclude Include="source\Object\Leaf.h" />
     <ClInclude Include="source\Object\Player.h" />
     <ClInclude Include="source\Object\Bug\Cicada.h" />

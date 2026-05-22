@@ -1,7 +1,4 @@
-
-#include "../../Utilitys/Math.h"
-#include "../../Utilitys/Random.h"
-#include "DxLib.h"
+#include "DxLib.h" 
 #include "Math.h"
 
 #include "../../Utilitys/Math.h"
@@ -10,22 +7,24 @@
 
 #include "../../Scene/InGameScene.h"
 
-#include "Tonbo.h"
+#include "Dragonfly.h"
 
 #include "../Tree.h"
 
-int Tonbo::images[4] = { -1,-1,-1,-1 };
 
-Tonbo::Tonbo() : Bug()
+
+int Dragonfly::images[4] = { -1,-1,-1,-1 };
+
+Dragonfly::Dragonfly() : Bug()
 {
 	// 察知範囲
 	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
 }
-Tonbo::~Tonbo()
+Dragonfly::~Dragonfly()
 {
 }
 
-void Tonbo::Init()
+void Dragonfly::Init()
 {
 	images[0] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly1.PNG");
 	images[1] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly2.PNG");
@@ -36,7 +35,7 @@ void Tonbo::Init()
 	cicadaGetCount = 0;
 }
 
-void Tonbo::Update(float delta)
+void Dragonfly::Update(float delta)
 {
 	Animation(delta);
 
@@ -96,12 +95,12 @@ void Tonbo::Update(float delta)
 	}
 }
 
-void Tonbo::Draw() const
+void Dragonfly::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
+	Camera::DrawGraphW(m_location, 20.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
 }
 
-void Tonbo::DrawOnTheBack() const
+void Dragonfly::DrawOnTheBack() const
 {
 	// 出現しているかつ、背面なら
 	if (m_isAppearance && m_isBack)
@@ -110,7 +109,7 @@ void Tonbo::DrawOnTheBack() const
 	}
 }
 
-void Tonbo::DrawOnTheFront() const
+void Dragonfly::DrawOnTheFront() const
 {
 	// 出現しているかつ、背面ではないならなら
 	if (m_isAppearance && !m_isBack)
@@ -119,7 +118,7 @@ void Tonbo::DrawOnTheFront() const
 	}
 }
 
-void Tonbo::Spawn()
+void Dragonfly::Spawn()
 {
 	// スポーン位置
 	Vector2D location = Bug::RandomLocationOnTheScreen();
@@ -134,7 +133,7 @@ void Tonbo::Spawn()
 	Set(location);
 }
 
-void Tonbo::ReSpawn(float delta)
+void Dragonfly::ReSpawn(float delta)
 {
 	Spawn();
 
@@ -145,7 +144,7 @@ void Tonbo::ReSpawn(float delta)
 	}
 }
 
-void Tonbo::SetDestination(Vector2D location)
+void Dragonfly::SetDestination(Vector2D location)
 {
 	// 近くの木を目的地にする
 	m_destination = FindNearestTree(location);
@@ -155,7 +154,7 @@ void Tonbo::SetDestination(Vector2D location)
 	m_destination.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
 }
 
-void Tonbo::Animation(float delta)
+void Dragonfly::Animation(float delta)
 {
 	Bug::Animation(delta);
 
@@ -228,7 +227,7 @@ void Tonbo::Animation(float delta)
 	}
 }
 
-void Tonbo::Escape(float delta)
+void Dragonfly::Escape(float delta)
 {
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 
@@ -279,7 +278,7 @@ void Tonbo::Escape(float delta)
 	}
 }
 
-void Tonbo::Stand(float delta)
+void Dragonfly::Stand(float delta)
 {
 	m_moveSpeed = { 0.0f, 0.0f };
 	if (m_transitionTime <= 0.0f)
@@ -295,7 +294,7 @@ void Tonbo::Stand(float delta)
 	}
 }
 
-void Tonbo::Move(float delta)
+void Dragonfly::Move(float delta)
 {
 	// 加速度
 	float acceleration = 1000.0f;
@@ -330,7 +329,7 @@ void Tonbo::Move(float delta)
 	}
 }
 
-void Tonbo::Panic(float delta)
+void Dragonfly::Panic(float delta)
 {
 	// 向きを0.125fπごとに区切った-2.0fπ~2.0fπずらす
 	int r = Random::GetRand() % 32;
@@ -358,7 +357,7 @@ void Tonbo::Panic(float delta)
 	}
 }
 
-void Tonbo::PerceptionJudgment()
+void Dragonfly::PerceptionJudgment()
 {
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 	Vector2D ringLocation = targetPlayer->GetRingLocation();
@@ -392,7 +391,7 @@ void Tonbo::PerceptionJudgment()
 	}
 }
 
-void Tonbo::TransitionToEscape()
+void Dragonfly::TransitionToEscape()
 {
 	m_isEscape = true;
 	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
@@ -400,7 +399,7 @@ void Tonbo::TransitionToEscape()
 	m_detectionTime = (float)r / 10.0f;
 }
 
-void Tonbo::PutInFront()
+void Dragonfly::PutInFront()
 {
 	Vector2D treeLocation = FindNearestTree(m_location);
 
