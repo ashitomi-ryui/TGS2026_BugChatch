@@ -21,7 +21,7 @@ Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float timer;
 Camera camera(player.GetPlayerLocation());
 
-int num = 0;
+float num = 0.0f;
 
 int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 {
@@ -87,7 +87,7 @@ eSceneType InGameUpdate(float delta_second)
 
 	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)
 	{
-		num = (int)Random::GetRand(10.0f);
+		num = Random::GetRand(-10.0f, 10.0f, 0.5f);
 	}
 
 	return eInGame;
@@ -132,7 +132,7 @@ void InGameDraw(void)
 		grasshopper[id].DrawOnTheFront();
 	}
 	
-	DrawFormatString(10, 10, 0xffffff, "%d", num);
+	DrawFormatString(10, 10, 0xffffff, "%f", num);
 }
 
 Vector2D GetRingLocation()

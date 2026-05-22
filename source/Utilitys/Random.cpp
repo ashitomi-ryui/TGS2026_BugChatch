@@ -11,10 +11,9 @@ void Random::SetSeed(float f)
 
 float Random::GetRand(float num1, float num2, float interval)
 {
-	seed += rand();
 	seed += 0x6a23;
-	seed %= RAND_MAX;
 	seed *= 0xfa2b;
+	seed += rand();
 	seed = abs(seed);
 	seed %= RAND_MAX;
 
