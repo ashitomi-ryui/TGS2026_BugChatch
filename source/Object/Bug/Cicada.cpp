@@ -124,8 +124,8 @@ void Cicada::Spawn()
 	// 位置を近くの木に設定する
 	location = FindNearestTree(location);
 	// 位置を少しずらす
-	location.x += (float)((Random::GetRand() % (int)D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
-	location.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
+	location.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
+	location.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
 
 	// スポーン
 	Set(location);
@@ -148,8 +148,8 @@ void Cicada::SetDestination(Vector2D location)
 	m_destination = FindNearestTree(location);
 
 	// 目的地をランダムに座標をずらす
-	m_destination.x += (float)((Random::GetRand() % (int)D_TREE_WIDTH) - (D_TREE_WIDTH / 2));
-	m_destination.y += (float)((Random::GetRand() % (int)D_TREE_HEIGHT) - (D_TREE_HEIGHT / 2));
+	m_destination.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
+	m_destination.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
 }
 
 void Cicada::Animation(float delta)
@@ -232,8 +232,7 @@ void Cicada::Escape(float delta)
 	// 向きをプレイヤーから虫への向きに
 	m_direction = VecATan2(playerLocation, m_location);
 	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
-	int r = Random::GetRand() % 50;
-	m_direction += ((float)r / 100.0f - 0.25f) * DX_PI_F;
+	m_direction += Random::GetRand(-0.25f, 0.25f, 0.01f) * DX_PI_F;
 
 	// 加速度
 	float acceleration = 2000.0f;
@@ -264,15 +263,13 @@ void Cicada::Escape(float delta)
 			m_state = ePanic;
 
 			// 遷移時間を0.1fごとに区切った2.0f~5.0fにする
-			int r = Random::GetRand() % 30;
-			m_transitionTime = (float)r / 10.0f + 2.0f;
+			m_transitionTime = Random::GetRand(2.0f, 5.0f, 0.1f);
 		}
 	}
 	else
 	{
 		// 察知時間を0.1fごとに区切った0.0f~1.0fにする
-		int r = Random::GetRand() % 10;
-		m_detectionTime = (float)r / 10.0f;
+		m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 	}
 }
 
@@ -284,8 +281,7 @@ void Cicada::Stand(float delta)
 		// 巡回状態へ
 		m_state = eMove;
 		// 向きを0.25πごとに区切ったランダムな向きに
-		int r = Random::GetRand() % 8;
-		m_direction = (float)r / 4.0f * DX_PI_F;
+		m_direction = Random::GetRand(0.0f, 2.0f, 0.25) * DX_PI_F;
 		// ランダムな木を目的地に設定
 		SetDestination(RandomLocationOnTheScreen());
 
@@ -322,16 +318,14 @@ void Cicada::Move(float delta)
 		m_state = eStand;
 
 		// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
-		int r = Random::GetRand() % 200;
-		m_transitionTime = (float)r / 10.0f + 10.0f;
+		m_transitionTime = Random::GetRand(10.0f, 30.0f, 0.1f);
 	}
 }
 
 void Cicada::Panic(float delta)
 {
 	// 向きを0.125fπごとに区切った-2.0fπ~2.0fπずらす
-	int r = Random::GetRand() % 32;
-	m_direction += ((float)r / 8.0f - 2.0f) * DX_PI_F * delta;
+	m_direction += Random::GetRand(-2.0f, 2.0f, 0.125f) * DX_PI_F * delta;
 
 	// 加速度
 	float acceleration = 2000.0f;
@@ -384,8 +378,7 @@ void Cicada::PerceptionJudgment()
 	else
 	{
 		// 察知時間を0.1fごとに区切った0.0f~2.0fにする
-		int r = Random::GetRand() % 20;
-		m_detectionTime = (float)r / 10.0f;
+		m_detectionTime = Random::GetRand(0.0f, 2.0f, 0.1f);
 	}
 }
 
@@ -393,8 +386,7 @@ void Cicada::TransitionToEscape()
 {
 	m_isEscape = true;
 	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
-	int r = Random::GetRand() % 10;
-	m_detectionTime = (float)r / 10.0f;
+	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 }
 
 void Cicada::PutInFront()

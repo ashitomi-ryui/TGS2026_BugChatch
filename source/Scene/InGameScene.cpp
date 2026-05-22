@@ -87,7 +87,7 @@ eSceneType InGameUpdate(float delta_second)
 
 	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)
 	{
-		num = Random::GetRand(10.0f);
+		num = (int)Random::GetRand(10.0f);
 	}
 
 	return eInGame;
