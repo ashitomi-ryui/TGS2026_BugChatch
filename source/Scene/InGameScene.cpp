@@ -100,12 +100,12 @@ void InGameDraw(void)
 		cicada[id].DrawOnTheBack();
 	}
 
-	for (int id = 0; id < D_CICADA_MAX; id++)
+	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
 	{
 		dragonfly[id].DrawOnTheBack();
 	}
 
-	for (int id = 0; id < D_CICADA_MAX; id++)
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].DrawOnTheBack();
 	}
@@ -122,12 +122,12 @@ void InGameDraw(void)
 		cicada[id].DrawOnTheFront();
 	}
 
-	for (int id = 0; id < D_CICADA_MAX; id++)
+	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
 	{
 		dragonfly[id].DrawOnTheFront();
 	}
 
-	for (int id = 0; id < D_CICADA_MAX; id++)
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].DrawOnTheFront();
 	}

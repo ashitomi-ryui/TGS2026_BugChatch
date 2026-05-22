@@ -1,5 +1,5 @@
 #pragma once
-
+#include "math.h"
 #include "Bug.h"
 
 #include "../../Utilitys/Math.h"
@@ -8,7 +8,12 @@ class Dragonfly : public Bug
 {
 private:
 	static int images[4];
-
+	float count;
+	bool flag;
+bool flag2;
+int abura;
+int hanten = FALSE;
+int i=0;
 public:
 	Dragonfly();
 	~Dragonfly();
