@@ -65,8 +65,7 @@ void Bug::Set(Vector2D location)
 	// 察知時間
 	m_detectionTime = 0.0f;
 	// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
-	int r = Random::GetRand() % 200;
-	m_transitionTime = (float)r / 10.0f + 10.0f;
+	m_transitionTime = Random::GetRand(10.0f, 30.0f, 0.1f);
 	// アニメーション
 	m_animTime = 0.0f;
 	m_animCount = 0;
@@ -109,8 +108,8 @@ Vector2D Bug::RandomLocationOnTheScreen()
 {
 	Vector2D location;	// 位置
 	// 位置を画面内のランダムな位置に設定する
-	location.x = (float)(Random::GetRand() % (int)D_STAGE_WIDTH);
-	location.y = (float)(Random::GetRand() % (int)D_STAGE_HEIGHT);
+	location.x = Random::GetRand(D_STAGE_WIDTH);
+	location.y = Random::GetRand(D_STAGE_HEIGHT);
 	return location;
 }
 
