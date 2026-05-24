@@ -12,8 +12,10 @@
 #include"../Object/Bug/Grasshopper.h"
 
 #include"../Object/Tree.h"
+#include"../Object/Leaf.h"
 
 Tree tree[D_TREE_MAX];
+Leaf leaf[D_LEAF_MAX];
 Player player;
 Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
@@ -29,6 +31,7 @@ int InGameInit(void)//各プログラムの初期化
 	Tree::SetPlayer(&player);
 
 	Tree::Init();
+	Leaf::Init();
 	Cicada::Init();
 	Grasshopper::Init();
 	Dragonfly::Init();
@@ -36,6 +39,10 @@ int InGameInit(void)//各プログラムの初期化
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
 		tree[id].Set({ 100.0f + id * 200.0f, 100.0f + (float)(id % 3) * 400.0f });
+	}
+	for (int id = 0; id < D_LEAF_MAX; id++)
+	{
+		leaf[id].Set({ 300.0f + id * 200.0f,300.0f + (float)(id % 3) * 400.0f });
 	}
 
 	timer = 0;
@@ -84,6 +91,10 @@ eSceneType InGameUpdate(float delta_second)
 	{
 		tree[id].Update(delta_second);
 	}
+	for (int id = 0; id < D_LEAF_MAX; id++)
+	{
+		leaf[id].Update(delta_second);
+	}
 
 	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)
 	{
@@ -113,6 +124,10 @@ void InGameDraw(void)
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
 		tree[id].Draw(id);
+	}
+	for (int id = 0; id < D_LEAF_MAX; id++)
+	{
+		leaf[id].Draw(id);
 	}
 
 	player.Draw();
