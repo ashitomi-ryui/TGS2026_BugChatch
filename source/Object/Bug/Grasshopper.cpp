@@ -10,7 +10,6 @@
 #include "Grasshopper.h"
 
 #include "../Leaf.h"
-#include "../Tree.h"
 
 #define NOMINMAX
 #include <cmath>
@@ -138,8 +137,8 @@ void Grasshopper::Spawn()
 	// 位置を近くの木に設定する
 	location = FindNearestTree(location);
 	// 位置を少しずらす
-	location.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
-	location.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
+	location.x += Random::GetRand((D_LEAF_WIDTH / 2), -(D_LEAF_WIDTH / 2));
+	location.y += Random::GetRand((D_LEAF_HEIGHT / 2), -(D_LEAF_HEIGHT / 2));
 
 	// スポーン
 	Set(location);
@@ -171,7 +170,7 @@ void Grasshopper::SetDestination(Vector2D location)
 	m_startLocation = location;
 
 	// 速さ
-	m_moveSpeed.x = Random::GetRand(0.5f, 1.0f, 0.1f);
+	m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
 
 	top = Random::GetRand(20.0, 50.0, 0.1f);
 
@@ -490,13 +489,13 @@ void Grasshopper::TransitionToEscape()
 
 void Grasshopper::PutInFront()
 {
-	Vector2D treeLocation = FindNearestTree(m_location);
+	Vector2D leafLocation = FindNearestTree(m_location);
 
 	// その木から離れたら、前面に置く
-	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
-		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
-		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
-		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
+	if (m_location.x + m_radius < leafLocation.x - D_LEAF_WIDTH ||
+		m_location.x - m_radius > leafLocation.x + D_LEAF_WIDTH ||
+		m_location.y + m_radius < leafLocation.y - D_LEAF_HEIGHT ||
+		m_location.y - m_radius > leafLocation.y + D_LEAF_HEIGHT)
 	{
 		m_isBack = false;
 	}
