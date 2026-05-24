@@ -6,7 +6,19 @@
 class Grasshopper :public Bug
 {
 private:
+	enum seni
+	{
+		notjump,
+		jump,
+		top_after,
+	};
+
 	static int images[7];
+	float shiita;
+	float top;
+	seni joutai;
+	float count;
+	Vector2D m_startLocation;
 public:
 	Grasshopper();
 	~Grasshopper();

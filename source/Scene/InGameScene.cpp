@@ -81,7 +81,7 @@ eSceneType InGameUpdate(float delta_second)
 	{
 		dragonfly[id].Update(delta_second);	// トンボの更新
 	}
-	for (int id = 0; id < 10; id++)
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].Update(delta_second);	// バッタの更新
 	}
