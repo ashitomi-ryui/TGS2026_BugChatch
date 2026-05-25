@@ -51,3 +51,13 @@ void Leaf::Draw(int id)const
 	Camera::DrawGraphW(m_location, 0.8 * D_OBJECT_SIZE_RATIO, 0.0f, images[m_animCount]);
 }
 
+void Leaf::SetPlayer(Player* p)
+{
+	targetPlayer = p;
+}
+
+Vector2D Leaf::GetLocation() const
+{
+	return m_location;
+}
+

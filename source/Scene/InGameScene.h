@@ -13,3 +13,5 @@ void InGameDraw(void);
 /// <param name="location">ç¿ïW</param>
 /// <returns>ç≈Ç‡ãﬂÇ¢ñÿÇÃç¿ïW</returns>
 Vector2D FindNearestTree(Vector2D location);
+
+Vector2D FindNearestLeaf(Vector2D location);

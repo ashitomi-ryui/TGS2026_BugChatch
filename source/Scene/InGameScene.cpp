@@ -148,6 +148,7 @@ void InGameDraw(void)
 	}
 	
 	DrawFormatString(10, 10, 0xffffff, "%f", num);
+
 }
 
 Vector2D GetRingLocation()
@@ -190,4 +191,26 @@ Vector2D FindNearestTree(Vector2D location)
 	}
 
 	return tree[nearestId].GetLocation();
+}
+
+Vector2D FindNearestLeaf(Vector2D location)
+{
+	int nearestId = -1;	// Å‚à‹ß‚¢–Ø‚ÌID
+	float nearestLen;	// Å‚à‹ß‚¢–Ø‚Ì‹——£
+	Vector2D leafLocation;	// –Ø‚ÌÀ•W
+	float len;	// ‹——£
+
+	for (int id = 0; id < D_TREE_MAX; id++)
+	{
+		leafLocation = tree[id].GetLocation();
+		len = Length(Vec2Sub(location, leafLocation));
+
+		if (nearestId == -1 || len < nearestLen)
+		{
+			nearestId = id;
+			nearestLen = len;
+		}
+	}
+
+	return leaf[nearestId].GetLocation();
 }
