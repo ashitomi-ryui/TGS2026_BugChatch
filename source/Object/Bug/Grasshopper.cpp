@@ -20,7 +20,6 @@ Grasshopper::Grasshopper() : Bug()
 {
 	// 察知範囲
 	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
-	joutai = notjump;
 }
 Grasshopper::~Grasshopper()
 {
@@ -157,6 +156,8 @@ void Grasshopper::ReSpawn(float delta)
 
 void Grasshopper::SetDestination(Vector2D location)
 {
+	shiita = 0;
+
 	//向き
 	m_direction = Random::GetRand(0.0f, 2.0f, 0.1f) * DX_PI_F;
 
@@ -202,6 +203,28 @@ void Grasshopper::SetDestination(Vector2D location)
 	//float min_y = std::;
 
 }
+
+void Grasshopper::EscapeSetDestination(Vector2D location)
+{
+
+	shiita = 0;
+
+	//移動距離
+	float distance = Random::GetRand(50.0f, 300.0f, 0.1f);
+
+	// 目的地
+	m_destination.x = location.x + cosf(m_direction) * distance;
+	m_destination.y = location.y + sinf(m_direction) * distance;
+
+	m_startLocation = location;
+
+	// 速さ
+	m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
+
+	top = Random::GetRand(20.0, 50.0, 0.1f);
+
+}
+
 
 void Grasshopper::Animation(float delta)
 {
@@ -279,23 +302,57 @@ void Grasshopper::Animation(float delta)
 void Grasshopper::Escape(float delta)
 {
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+	if (escape == FALSE)
+	{
+		EscapeSetDestination(m_location);
+		escape = TRUE;
+	}
 
 	// 向きをプレイヤーから虫への向きに
 	m_direction = VecATan2(playerLocation, m_location);
 	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
 	m_direction += Random::GetRand(-0.25f, 0.25f, 0.1f) * DX_PI_F;
 
-	// 加速度
-	float acceleration = 2000.0f;
-	// 最大速度
-	float maxSpeed = 600.0f;
-	// 減速度
-	float deceleration = 400.0f;
+	shiita += m_moveSpeed.x * delta;
 
-	// 加速
-	Acceleration(acceleration, maxSpeed, m_direction, delta);
-	// 減速
-	Deceleration(deceleration, delta);
+	if (shiita > 1.0f)
+	{
+		shiita = 1.0f; // 行き過ぎ防止
+	}
+
+	/*Vector2D treeLocation = FindNearestTree(m_location);
+	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
+		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
+		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
+		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
+	{
+		m_isBack = TRUE;
+	}*/
+
+	//ジャンプの移動処理
+	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
+	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
+
+
+
+	//AIニキ
+	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
+	// sinf(shiita * DX_PI_F) は shiitaが 0.0(始点) -> 0.5(頂点) -> 1.0(終点) で 0 -> 1 -> 0 と変化します
+	// ※ 2Dゲームで上がマイナス方向なら引く、プラス方向なら足す
+	float height = sinf(shiita * DX_PI_F) * top;
+	m_location.y -= height;
+
+
+	// 着地判定（進行度が1.0に達したら終了）
+	if (shiita >= 1.0f)
+	{
+		m_location = m_destination; // 座標を完全に目的地に合わせる
+		m_moveSpeed = { 0.0f, 0.0f };
+		escape = FALSE;
+		m_state = eStand;
+		m_transitionTime = Random::GetRand(1.0f, 2.0f, 0.1f);
+	}
+	
 
 	// 逃げる状態からパニック状態へ
 	// プレイヤーの座標
@@ -314,7 +371,7 @@ void Grasshopper::Escape(float delta)
 			m_state = ePanic;
 
 			// 遷移時間を0.1fごとに区切った2.0f~5.0fにする
-			m_transitionTime = Random::GetRand(2.0f, 5.0f, 0.1f);
+			m_transitionTime = Random::GetRand(1.0f, 3.0f, 0.1f);
 		}
 	}
 	else
@@ -335,16 +392,13 @@ void Grasshopper::Stand(float delta)
 		/*m_direction = Random::GetRand(0.0f, 2.0f, 0.25f) * DX_PI_F;*/
 		// ランダムな木を目的地に設定
 		SetDestination(m_location);
-		shiita = 0;
-		joutai = notjump;
-		count = 0;
 	}
 }
 
 void Grasshopper::Move(float delta)
 {
-	// delta（前フレームからの経過時間）を使って進行度を進める
-	// shiita が 0.0 から 1.0 まで変化する
+	
+
 	shiita += m_moveSpeed.x * delta;
 
 	if (shiita > 1.0f)
@@ -352,15 +406,30 @@ void Grasshopper::Move(float delta)
 		shiita = 1.0f; // 行き過ぎ防止
 	}
 
-	// 1. XとYの「水平な直線移動」を線形補間(Lerp)で計算
+	/*Vector2D treeLocation = FindNearestTree(m_location);
+	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
+		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
+		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
+		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
+	{
+		m_isBack = TRUE;
+	}*/
+
+
+
+
+
+	//ジャンプの移動処理
 	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
 	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
 
+	//AIニキ
 	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
 	// sinf(shiita * DX_PI_F) は shiitaが 0.0(始点) -> 0.5(頂点) -> 1.0(終点) で 0 -> 1 -> 0 と変化します
 	// ※ 2Dゲームで上がマイナス方向なら引く、プラス方向なら足す
 	float height = sinf(shiita * DX_PI_F) * top;
 	m_location.y -= height;
+
 
 	// 着地判定（進行度が1.0に達したら終了）
 	if (shiita >= 1.0f)
@@ -368,8 +437,11 @@ void Grasshopper::Move(float delta)
 		m_location = m_destination; // 座標を完全に目的地に合わせる
 		m_moveSpeed = { 0.0f, 0.0f };
 		m_state = eStand;
-		m_transitionTime = Random::GetRand(20.0f, 5.0f, 0.1f);
+		m_transitionTime = Random::GetRand(1.0f, 2.0f, 0.1f);
 	}
+
+
+
 
 
 	//switch (joutai)
@@ -425,17 +497,37 @@ void Grasshopper::Panic(float delta)
 	// 向きを0.125fπごとに区切った-2.0fπ~2.0fπずらす
 	m_direction += Random::GetRand(-2.0f, 2.0f, 0.125) * DX_PI_F * delta;
 
-	// 加速度
-	float acceleration = 2000.0f;
-	// 最大速度
-	float maxSpeed = 600.0f;
-	// 減速度
-	float deceleration = 400.0f;
+	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
+	m_direction += Random::GetRand(-0.25f, 0.25f, 0.1f) * DX_PI_F;
 
-	// 加速
-	Acceleration(acceleration, maxSpeed, m_direction, delta);
-	// 減速
-	Deceleration(deceleration, delta);
+	shiita += m_moveSpeed.x * delta;
+
+	if (shiita > 1.0f)
+	{
+		shiita = 1.0f; // 行き過ぎ防止
+	}
+
+	/*Vector2D treeLocation = FindNearestTree(m_location);
+	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
+		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
+		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
+		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
+	{
+		m_isBack = TRUE;
+	}*/
+
+	//ジャンプの移動処理
+	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
+	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
+
+
+
+	//AIニキ
+	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
+	// sinf(shiita * DX_PI_F) は shiitaが 0.0(始点) -> 0.5(頂点) -> 1.0(終点) で 0 -> 1 -> 0 と変化します
+	// ※ 2Dゲームで上がマイナス方向なら引く、プラス方向なら足す
+	float height = sinf(shiita * DX_PI_F) * top;
+	m_location.y -= height;
 
 	// 遷移時間が0以下なら
 	if (m_transitionTime <= 0.0f)

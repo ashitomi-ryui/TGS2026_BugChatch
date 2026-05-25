@@ -6,19 +6,12 @@
 class Grasshopper :public Bug
 {
 private:
-	enum seni
-	{
-		notjump,
-		jump,
-		top_after,
-	};
-
 	static int images[7];
 	float shiita;
 	float top;
-	seni joutai;
 	float count;
 	Vector2D m_startLocation;
+	bool escape;
 public:
 	Grasshopper();
 	~Grasshopper();
@@ -38,6 +31,8 @@ public:
 
 	//ジャンプ位置の決定
 	void SetDestination(Vector2D location);
+
+	void EscapeSetDestination(Vector2D location);
 
 	//アニメーション
 	virtual void Animation(float delta) override;
