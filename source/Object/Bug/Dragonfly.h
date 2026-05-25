@@ -7,6 +7,9 @@
 class Dragonfly : public Bug
 {
 private:
+	Vector2D m_destinations[5];
+	bool m_isDestinations[5];
+
 	static int images[4];
 	float count;
 	bool flag;

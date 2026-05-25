@@ -153,8 +153,12 @@ void Dragonfly::ReSpawn(float delta)
 
 void Dragonfly::SetDestination(Vector2D location)
 {
-	// 近くの木を目的地にする
-	//m_destination = FindNearestTree(location);
+	// ランダムな位置を目的地にする
+	for (int i = 0;i < 5;i++)
+	{
+		m_destinations[i] = Bug::RandomLocationOnTheScreen();
+		m_isDestinations[i] = true;
+	}
 
 	// 目的地をランダムに座標をずらす
 	m_destination.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
@@ -239,6 +243,14 @@ void Dragonfly::Escape(float delta)
 
 	// 向きをプレイヤーから虫への向きに
 	m_direction = VecATan2(playerLocation, m_location);
+	if (targetPlayer->GetPlayerLocation().x <= m_location.x)
+	{
+		hanten = TRUE;
+	}
+	else
+	{
+		hanten = FALSE;
+	}
 	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
 	//m_direction += Random::GetRand(-0.25f, 0.25f, 0.01f) * DX_PI_F;
 
@@ -326,21 +338,21 @@ void Dragonfly::Move(float delta)
 		int a = GetRand(1);
 		if (a)
 		{
-			m_moveSpeed.x = 1.0f;
-			hanten = TRUE;
+			m_moveSpeed.x = 5.0f;
+			
 		}
 		else
 		{
-			m_moveSpeed.x = -1.0f;
+			m_moveSpeed.x = -5.0f;
 			hanten = FALSE;
 		}
 
 		m_moveSpeed.y = GetRand(1);
 
-		if (m_moveSpeed.y == 1)
+		if (m_moveSpeed.y == 5.0f)
 		{
-			m_moveSpeed.y = -1;
-			hanten = TRUE;
+			m_moveSpeed.y = -5.0f;
+			
 		}
 		flag = TRUE;
 		flag2 = FALSE;
@@ -410,13 +422,14 @@ void Dragonfly::Panic(float delta)
 	if (m_moveSpeed.x == 0)
 	{
 		m_moveSpeed.x = -1;
-		hanten = FALSE;
+		
 	}
 	if (m_moveSpeed.y == 1)
 	{
 		m_moveSpeed.y = -1;
-		hanten = TRUE;
+	
 	}
+	
 	flag = TRUE;
 	flag2 = FALSE;
 	// 加速度
