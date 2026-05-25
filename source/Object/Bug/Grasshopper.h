@@ -32,7 +32,7 @@ public:
 	//ジャンプ位置の決定
 	void SetDestination(Vector2D location);
 
-	void EscapeSetDestination(Vector2D location);
+	void EscapeSetDestination(Vector2D location,Vector2D Plocation);
 
 	//アニメーション
 	virtual void Animation(float delta) override;
