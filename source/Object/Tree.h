@@ -6,7 +6,7 @@
 
 #define D_TREE_WIDTH	(90.0f * D_OBJECT_SIZE_RATIO)
 #define D_TREE_HEIGHT	(140.0f * D_OBJECT_SIZE_RATIO)
-#define D_TREE_MAX		(10)
+#define D_TREE_MAX		(20)
 
 class Tree
 {
