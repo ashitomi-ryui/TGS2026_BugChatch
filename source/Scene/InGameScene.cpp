@@ -35,6 +35,7 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 	Cicada::Init();
 	Grasshopper::Init();
 	Dragonfly::Init();
+	player.Init();
 
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
@@ -106,6 +107,8 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
+	DrawBox(0, 0, (int)D_WIN_WIDTH, (int)D_WIN_HEIGHT, 0x008800, true);
+
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		cicada[id].DrawOnTheBack();
