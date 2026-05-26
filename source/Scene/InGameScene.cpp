@@ -27,6 +27,8 @@ Camera camera(player.GetPlayerLocation());
 
 float num = 0.0f;
 
+int flowerImage[2] = { -1, -1 };
+
 int InGameInit(void)//各プログラムの初期化
 {
 	Bug::SetPlayer(&player);
@@ -37,14 +39,27 @@ int InGameInit(void)//各プログラムの初期化
 	Cicada::Init();
 	Grasshopper::Init();
 	Dragonfly::Init();
+	player.Init();
 
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
-		tree[id].Set({ 100.0f + id * 200.0f, 100.0f + (float)(id % 3) * 400.0f });
+		int n = 0x7a23;
+		n += 0x8e3 * id;
+		n *= 0xfa2b;
+		n = abs(n);
+
+		tree[id].Set({ D_TREE_WIDTH + (float)(n % (int)(D_STAGE_WIDTH - D_TREE_WIDTH * 2.0f)),
+			D_TREE_HEIGHT + (float)(n % (int)(D_STAGE_HEIGHT - D_TREE_HEIGHT * 2.0f)) });
 	}
 	for (int id = 0; id < D_LEAF_MAX; id++)
 	{
-		leaf[id].Set({ 300.0f + id * 200.0f,300.0f + (float)(id % 3) * 400.0f });
+		int n = 0x7a23;
+		n += 0x8e4 * id;
+		n *= 0xfa2b;
+		n = abs(n);
+		leaf[id].Set({D_LEAF_WIDTH + (float)(n % (int)(D_STAGE_WIDTH - D_LEAF_WIDTH * 2.0f)),
+			D_LEAF_HEIGHT + (float)(n % (int)(D_STAGE_HEIGHT - D_LEAF_HEIGHT * 2.0f))
+	});
 	}
 	for (int id = 0; id < D_GROUND_MAX; id++)
 	{
@@ -65,6 +80,9 @@ int InGameInit(void)//各プログラムの初期化
 	{
 		grasshopper[id].Spawn();
 	}
+
+	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1");
+	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2");
 
 	return TRUE;
 }
@@ -116,6 +134,8 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
+	DrawBox(0, 0, (int)D_WIN_WIDTH, (int)D_WIN_HEIGHT, 0x008800, true);
+
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		cicada[id].DrawOnTheBack();
@@ -131,17 +151,19 @@ void InGameDraw(void)
 		grasshopper[id].DrawOnTheBack();
 	}
 
-	for (int id = 0;id < D_TREE_MAX;id++)
-	{
-		tree[id].Draw(id);
-	}
 	for (int id = 0; id < D_LEAF_MAX; id++)
 	{
 		leaf[id].Draw(id);
 	}
+<<<<<<< HEAD
 	for (int id = 0; id < D_GROUND_MAX; id++)
 	{
 		ground[id].Draw(id);
+=======
+	for (int id = 0;id < D_TREE_MAX;id++)
+	{
+		tree[id].Draw(id);
+>>>>>>> c98a86f822b0df1f500d872aa751d466f27c4474
 	}
 
 	player.Draw();
