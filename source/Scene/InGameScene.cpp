@@ -155,15 +155,16 @@ void InGameDraw(void)
 	{
 		leaf[id].Draw(id);
 	}
-<<<<<<< HEAD
+
 	for (int id = 0; id < D_GROUND_MAX; id++)
 	{
 		ground[id].Draw(id);
-=======
+	}
+
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
 		tree[id].Draw(id);
->>>>>>> c98a86f822b0df1f500d872aa751d466f27c4474
+
 	}
 
 	player.Draw();
