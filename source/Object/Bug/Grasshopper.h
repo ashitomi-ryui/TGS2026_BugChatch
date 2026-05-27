@@ -12,6 +12,8 @@ private:
 	float count;
 	Vector2D m_startLocation;
 	bool escape;
+	bool jougai;
+	Vector2D nearleaf;
 public:
 	Grasshopper();
 	~Grasshopper();
