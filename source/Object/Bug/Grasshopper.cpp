@@ -20,6 +20,7 @@ Grasshopper::Grasshopper() : Bug()
 {
 	// 察知範囲
 	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
+	jougai = FALSE;
 }
 Grasshopper::~Grasshopper()
 {
@@ -97,12 +98,18 @@ void Grasshopper::Update(float delta)
 			ReSpawn(delta);
 		}
 	}
+
+	if (m_location.x<0 || m_location.x>D_STAGE_WIDTH ||
+		m_location.y<0 || m_location.y>D_STAGE_HEIGHT)
+	{
+		jougai = TRUE;
+	}
 }
 
 void Grasshopper::Draw() const
 {
-	/*DrawFormatString(50, 50, GetColor(255, 0, 0), "%f", m_transitionTime);
-	DrawFormatString(50, 100, GetColor(255, 0, 0), "%f", m_location.x);
+	DrawFormatString(50, 50, GetColor(255, 0, 0), "%d", jougai);
+	/*DrawFormatString(50, 100, GetColor(255, 0, 0), "%f", m_location.x);
 	DrawFormatString(50, 150, GetColor(255, 0, 0), "%f", m_location.y);
 	DrawFormatString(50, 200, GetColor(255, 0, 0), "%f", shiita);
 	DrawFormatString(50, 250, GetColor(255, 0, 0), "%f", m_moveSpeed.x);
@@ -133,8 +140,8 @@ void Grasshopper::Spawn()
 	// スポーン位置
 	Vector2D location = Bug::RandomLocationOnTheScreen();
 
-	// 位置を近くの木に設定する
-	location = FindNearestTree(location);
+	// 位置を近くの草に設定する
+	location = FindNearestLeaf(location);
 	// 位置を少しずらす
 	location.x += Random::GetRand((D_LEAF_WIDTH / 2), -(D_LEAF_WIDTH / 2));
 	location.y += Random::GetRand((D_LEAF_HEIGHT / 2), -(D_LEAF_HEIGHT / 2));
@@ -163,55 +170,54 @@ void Grasshopper::SetDestination(Vector2D location)
 {
 	shiita = 0;
 
-	//向き
-	m_direction = Random::GetRand(0.0f, 2.0f, 0.1f) * DX_PI_F;
+	if (jougai == TRUE)
+	{
+		// 近くの木を目的地にする
+		nearleaf = FindNearestLeaf(location);
 
-	//移動距離
-	float distance = Random::GetRand(50.0f, 300.0f, 0.1f);
+		m_direction = atan2f((nearleaf.y - m_location.y), (nearleaf.x - m_location.x));
 
-	// 目的地
-	m_destination.x = location.x + cosf(m_direction) * distance;
-	m_destination.y = location.y + sinf(m_direction) * distance;
+		//移動距離
+		float distance = Random::GetRand(50.0f, 300.0f, 10.0f);
 
-	m_startLocation = location;
+		// 目的地
+		m_destination.x = location.x + cosf(m_direction) * distance;
+		m_destination.y = location.y + sinf(m_direction) * distance;
 
-	// 速さ
-	m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
+		m_startLocation = location;
 
-	top = Random::GetRand(20.0, 50.0, 0.1f);
+		// 速さ
+		m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
 
-	//// 最小頂点
-	//float min_y = std::fminf(0.0f, m_destination.y + 25.0f);
-	//if (m_destination.y + 25.0f >= 50.0f)
-	//{
-	//	min_y = 25.0f;
-	//}
+		top = Random::GetRand(20.0, 50.0, 0.1f);
 
-	//// 最大頂点
-	//float max_y = m_destination.y + 50.0f;
-	//if (max_y >= 50.0f)
-	//{
-	//	max_y = 50.0f;
-	//}
+		
+	}
+	else
+	{
+		//向き
+		m_direction = Random::GetRand(0.0f, 2.0f, 0.1f) * DX_PI_F;
 
+		//移動距離
+		float distance = Random::GetRand(50.0f, 300.0f, 0.1f);
+
+		// 目的地
+		m_destination.x = location.x + cosf(m_direction) * distance;
+		m_destination.y = location.y + sinf(m_direction) * distance;
+
+		m_startLocation = location;
+
+		// 速さ
+		m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
+
+		top = Random::GetRand(20.0, 50.0, 0.1f);
+	}
 	
-
-
-	//// 加速度
-	//float acceleration = 2000.0f * Random::GetRand(100.0f);
-
-	///*m_destination.x = m_location.x - Random::GetRand(100.0f, 50.0f);
-	//m_destination.y = m_location.y - Random::GetRand(100.0f, 50.0f);*/
-
-	//m_moveSpeed = { acceleration, -Random::GetRand(100.0f) };
-
-	//float min_y = std::;
 
 }
 
 void Grasshopper::EscapeSetDestination(Vector2D location,Vector2D Plocation)
 {
-
 	shiita = 0;
 
 	m_direction = atan2f((location.y - Plocation.y), (location.x - Plocation.x));
@@ -256,7 +262,7 @@ void Grasshopper::Animation(float delta)
 			}
 
 			// 画像の向きを徐々に移動方向に向ける
-			GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+			GraduallyTurn(m_Angle, m_direction * 0.5 * DX_PI_F, 2.0f * DX_PI_F * delta);
 		}
 		// 逃げていないなら
 		else
@@ -275,7 +281,7 @@ void Grasshopper::Animation(float delta)
 				}
 
 				// 画像の向きを徐々に上に向ける
-				GraduallyTurn(m_Angle, 0.0f, 2.0f * DX_PI_F * delta);
+				GraduallyTurn(m_Angle, 0.0f * 0.5 * DX_PI_F, 2.0f * DX_PI_F * delta);
 
 				break;
 			case eMove:
@@ -287,7 +293,7 @@ void Grasshopper::Animation(float delta)
 				}
 
 				// 画像の向きを徐々に移動方向に向ける
-				GraduallyTurn(m_Angle, m_direction, 1.0f * DX_PI_F * delta);
+				GraduallyTurn(m_Angle, m_direction * 0.5 * DX_PI_F, 1.0f * DX_PI_F * delta);
 
 				break;
 			case ePanic:
@@ -299,7 +305,7 @@ void Grasshopper::Animation(float delta)
 				}
 
 				// 画像の向きを徐々に移動方向に向ける
-				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
+				GraduallyTurn(m_Angle, m_direction * 0.5 * DX_PI_F, 2.0f * DX_PI_F * delta);
 
 				break;
 			}
@@ -445,6 +451,19 @@ void Grasshopper::Move(float delta)
 		m_moveSpeed = { 0.0f, 0.0f };
 		m_state = eStand;
 		m_transitionTime = Random::GetRand(1.0f, 2.0f, 0.1f);
+		if (jougai == TRUE)
+		{
+
+			if (Length(Vec2Sub(m_location, m_destination)) < 10.0f &&
+				m_location.x > nearleaf.x - D_LEAF_WIDTH &&
+				m_location.x < nearleaf.x + D_LEAF_WIDTH &&
+				m_location.y > nearleaf.y - D_LEAF_HEIGHT &&
+				m_location.y < nearleaf.y + D_LEAF_HEIGHT)
+			{
+				jougai = FALSE;
+			}
+		}
+		
 	}
 
 	
@@ -456,7 +475,7 @@ void Grasshopper::Move(float delta)
 		m_state = eStand;
 
 		// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
-		m_transitionTime = Random::GetRand(10.0f, 30.0f, 0.1f);
+		m_transitionTime = Random::GetRand(1.0f, 5.0f, 0.1f);
 	}
 }
 
@@ -488,14 +507,14 @@ void Grasshopper::Panic(float delta)
 		}
 	}
 
-	Vector2D treeLocation = FindNearestTree(m_location);
+	/*Vector2D treeLocation = FindNearestTree(m_location);
 	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
 		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
 		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
 		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
 	{
 		m_isBack = TRUE;
-	}
+	}*/
 
 
 	//ジャンプの移動処理
@@ -554,7 +573,7 @@ void Grasshopper::TransitionToEscape()
 
 void Grasshopper::PutInFront()
 {
-	Vector2D leafLocation = FindNearestTree(m_location);
+	Vector2D leafLocation = FindNearestLeaf(m_location);
 
 	// その木から離れたら、前面に置く
 	if (m_location.x + m_radius < leafLocation.x - D_LEAF_WIDTH ||

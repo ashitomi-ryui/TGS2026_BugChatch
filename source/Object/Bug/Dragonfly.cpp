@@ -131,7 +131,7 @@ void Dragonfly::Spawn()
 	Vector2D location = Bug::RandomLocationOnTheScreen();
 
 	// à íuÇãﬂÇ≠ÇÃñÿÇ…ê›íËÇ∑ÇÈ
-	//location = FindNearestTree(location);
+	/*location = FindNearestGround(location);*/
 	// à íuÇè≠ÇµÇ∏ÇÁÇ∑
 	location.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
 	location.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
@@ -296,10 +296,10 @@ void Dragonfly::Escape(float delta)
 void Dragonfly::Stand(float delta)
 {
 
-
-
+	
 	if (m_transitionTime <= 0.0f)
 	{
+
 		// èÑâÒèÛë‘Ç÷
 		m_state = eMove;
 		// å¸Ç´Ç0.25ÉŒÇ≤Ç∆Ç…ãÊêÿÇ¡ÇΩÉâÉìÉ_ÉÄÇ»å¸Ç´Ç…
@@ -338,20 +338,20 @@ void Dragonfly::Move(float delta)
 		int a = GetRand(1);
 		if (a)
 		{
-			m_moveSpeed.x = 5.0f;
-			
+			m_moveSpeed.x = 8.0f;
+			hanten = TRUE;
 		}
 		else
 		{
-			m_moveSpeed.x = -5.0f;
+			m_moveSpeed.x = -8.0f;
 			hanten = FALSE;
 		}
 
 		m_moveSpeed.y = GetRand(1);
 
-		if (m_moveSpeed.y == 5.0f)
+		if (m_moveSpeed.y == 8.0f)
 		{
-			m_moveSpeed.y = -5.0f;
+			m_moveSpeed.y = -8.0f;
 			
 		}
 		flag = TRUE;

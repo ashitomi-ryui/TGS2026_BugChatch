@@ -4,22 +4,19 @@
 
 #include "Player.h"
 
-#define D_TREE_WIDTH	(90.0f * D_OBJECT_SIZE_RATIO)
-#define D_TREE_HEIGHT	(140.0f * D_OBJECT_SIZE_RATIO)
-#define D_TREE_MAX		(10)
+#define D_GROUND_WIDTH	(90.0f * D_OBJECT_SIZE_RATIO)
+#define D_GROUND_HEIGHT	(140.0f * D_OBJECT_SIZE_RATIO)
+#define D_GROUND_MAX		(5)
 
-class Tree
+class Ground
 {
 private:
 	Vector2D m_location;
-	static int images[4];
-
-	float m_animTime;
-	int m_animCount;
+	
 
 public:
-	Tree();
-	~Tree();
+	Ground();
+	~Ground();
 public:
 	static void Init();
 	void Set(Vector2D location);
