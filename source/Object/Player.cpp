@@ -2,12 +2,6 @@
 
 #include "Player.h"
 #include "../Utilitys/Camera.h"
-#include "../Utilitys/Random.h"
-
-int Player::m_headImage[3] = {};
-int Player::m_bodyImage = -1;
-int Player::m_legImage[4] = {};
-int Player::m_armImage = -1;
 
 Player::Player()
 {
@@ -16,7 +10,7 @@ Player::Player()
 	m_moveSpeed = {};
 
 	m_maxSpeed = 500.0f * D_OBJECT_SIZE_RATIO;	// 最大速度
-	m_radius = 45.0f * D_OBJECT_SIZE_RATIO;	// 半径
+	m_radius = 25.0f * D_OBJECT_SIZE_RATIO;	// 半径
 
 	// 虫網
 	m_stickLength = 150.0f * D_OBJECT_SIZE_RATIO;	// 虫網（棒）の長さ
@@ -40,17 +34,8 @@ Player::Player()
 	m_oldRotateStick = 0.0f;
 
 	// アニメーション
-	m_walkingFlag = false;	// 歩くフラグ
-	m_holdingFlag = false;	// 虫網を持つフラグ
-	m_reverseFlag = false;	// 反転フラグ
-
-	m_blinkTime = 0.0f;		// 瞬き時間
-	m_headAnimTime = 0.0f;	// 頭の時間
-	m_headAnimCount = 0;	// 頭のカウント
-	m_headSubscript = 0;	// 頭の添え字
-	m_legAnimTime = 0.0f;	// 脚の時間
-	m_legAnimCount = 0;		// 脚のカウント
-	m_legSubscript = 0;		// 脚の添え字
+	m_animTime = 0.0f;	// アニメーション時間
+	m_animCount = 0;	// アニメーションカウント
 }
 
 Player::~Player()
@@ -82,240 +67,20 @@ void Player::Init()
 	m_oldRotateStick = 0.0f;
 
 	// アニメーション
-	m_walkingFlag = false;	// 歩くフラグ
-	m_holdingFlag = false;	// 虫網を持つフラグ
-	m_reverseFlag = false;	// 反転フラグ
-
-	m_blinkTime = 0.0f;		// 瞬き時間
-	m_headAnimTime = 0.0f;	// 頭の時間
-	m_headAnimCount = 0;	// 頭のカウント
-	m_headSubscript = 0;	// 頭の添え字
-	m_legAnimTime = 0.0f;	// 脚の時間
-	m_legAnimCount = 0;		// 脚のカウント
-	m_legSubscript = 0;		// 脚の添え字
-
-	// 画像情報
-	m_headImage[0] = LoadGraph("assets/images/Player/Head1.PNG");
-	m_headImage[1] = LoadGraph("assets/images/Player/Head2.PNG");
-	m_headImage[2] = LoadGraph("assets/images/Player/Head3.PNG");
-
-	m_bodyImage = LoadGraph("assets/images/Player/Body.PNG");
-
-	m_legImage[0] = LoadGraph("assets/images/Player/Leg1.PNG");
-	m_legImage[1] = LoadGraph("assets/images/Player/Leg2.PNG");
-	m_legImage[2] = LoadGraph("assets/images/Player/Leg3.PNG");
-	m_legImage[3] = LoadGraph("assets/images/Player/Leg4.PNG");
-
-	m_armImage = LoadGraph("assets/images/Player/Arm.PNG");
+	m_animTime = 0.0f;	// アニメーション時間
+	m_animCount = 0;	// アニメーションカウント
 }
 
 void Player::Update(float delta)
 {
-	Animation(delta);
-
-	Move(delta);
-	Net(delta);
-}
-
-void Player::Draw() const
-{
-	Vector2D backArmLocation = m_location;
-	Vector2D frontArmLocation = m_location;
-	bool isBackHolding = false;	// 後ろで持つ
-	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);
-	float stickRotate;
-
-	// 持ち手の設定
-	if (m_ringVector.y < 0)
-	{
-		isBackHolding = true;
-	}
-
-	// 腕の位置をずらす
-	if (m_reverseFlag)
-	{
-		backArmLocation.x += 8.0f;
-		frontArmLocation.x -= 8.0f;
-	}
-	else
-	{
-		backArmLocation.x -= 8.0f;
-		frontArmLocation.x += 8.0f;
-	}
-	backArmLocation.y += 2.0f;
-	frontArmLocation.y += 2.0f;
-
-	// 後ろの腕表示
-	// 虫網を持っているなら
-	if(m_holdingFlag)
-	{
-		// 虫網を持つ手が後ろなら
-		if (isBackHolding)
-		{
-			// 棒の向きを設定
-			stickRotate = VecATan2(backArmLocation, ringLocation);
-			// 棒を表示
-			Camera::DrawLineW(backArmLocation, ringLocation, 0x007700, 4);
-			Camera::DrawLineW(backArmLocation, ringLocation, 0x00ff00, 3);
-			// 網を表示
-			DrawNet(ringLocation, stickRotate);
-			// 腕を表示
-			Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
-		}
-		// 虫網を持つ手が前なら
-		else
-		{
-			// 腕を表示
-			Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
-		}
-	}
-	// 虫網を持っていないなら
-	else
-	{
-		// 腕を表示
-		Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
-	}
-
-	// 半径表示
-	Camera::DrawCircleW(m_location, m_radius, 0x777777, false);
-
-	// 脚表示
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_legImage[m_legSubscript], m_reverseFlag);
-	// 体表示
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_bodyImage, m_reverseFlag);
-	// 顔表示
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[m_headSubscript], m_reverseFlag);
-
-	// 前の腕表示
-	// 虫網を持っているなら
-	if(m_holdingFlag)
-	{
-		// 虫網を持つ手が後ろなら
-		if(isBackHolding)
-		{
-			Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
-		}
-		// 虫網を持つ手が前なら
-		else
-		{
-			// 棒の向きを設定
-			stickRotate = VecATan2(frontArmLocation, ringLocation);
-			// 棒を表示
-			Camera::DrawLineW(frontArmLocation, ringLocation, 0x007700, 4);
-			Camera::DrawLineW(frontArmLocation, ringLocation, 0x00ff00, 3);
-			// 腕を表示
-			Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
-			// 網を表示
-			DrawNet(ringLocation, stickRotate);
-		}
-	}
-	// 虫網を持っていないなら
-	else
-	{
-		// 腕を表示
-		Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
-	}
-}
-
-void Player::DrawNet(Vector2D ringLocation, float stickRotate) const
-{
-	Vector2D point[4];
-
-	point[0].x = ringLocation.x + sinf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[0].y = ringLocation.y - cosf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
-
-	point[1].x = ringLocation.x - sinf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[1].y = ringLocation.y + cosf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
-
-	point[2].x = ringLocation.x + sinf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[2].y = ringLocation.y - cosf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
-
-	point[3].x = ringLocation.x - sinf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[3].y = ringLocation.y + cosf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
-
-	Camera::DrawTriangleW(point[0], point[2], m_netLocation, 0xffffff);
-	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
-	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
-	Camera::DrawTriangleW(point[3], point[0], m_netLocation, 0xffffff);
-}
-
-void Player::Animation(float delta)
-{
-	// 瞬きのアニメーション
-	if (m_blinkTime > 0.0f)
-	{
-		m_blinkTime -= delta;
-	}
-	// 瞬き時間が0以下なら瞬き
-	else
-	{
-		m_headAnimTime += delta;
-
-		if (m_headAnimTime >= 0.1f)
-		{
-			m_headAnimCount++;
-
-			if (m_headAnimCount <= 2)
-			{
-				m_headSubscript = m_headAnimCount;
-			}
-			else if (m_headAnimCount == 3)
-			{
-				m_headSubscript = 1;
-			}
-			else
-			{
-				m_headSubscript = 0;
-				m_headAnimCount = 0;
-				// 瞬き時間をランダムにする
-				m_blinkTime = Random::GetRand(10.0f, 0.5f, 0.5f);
-			}
-
-			m_headAnimTime = 0.0f;
-		}
-	}
-
-	// 歩くアニメーション
-	if (m_walkingFlag)
-	{
-		m_legAnimTime += delta;
-
-		if (m_legAnimTime >= 0.2f)
-		{
-			m_legAnimCount++;
-
-			if (m_legAnimCount <= 2)
-			{
-				m_legSubscript = m_legAnimCount + 1;
-			}
-			else if (m_legAnimCount == 3)
-			{
-				m_legSubscript = 2;
-			}
-			else
-			{
-				m_legSubscript = 1;
-				m_legAnimCount = 0;
-			}
-
-			m_legAnimTime = 0.0f;
-		}
-	}
-	else
-	{
-		m_legSubscript = 0;
-		m_legAnimCount = 0;
-		m_legAnimTime = 0.0f;
-	}
-}
-
-void Player::Move(float delta)
-{
-	Vector2D leftStick = GetLeftStick();
-	leftStick.y *= -1;
-
 	float acceleration = 4000.0f * delta * D_OBJECT_SIZE_RATIO;
 	float deceleration = 2000.0f * delta * D_OBJECT_SIZE_RATIO;
+
+	Vector2D leftStick = GetLeftStick();
+	Vector2D rightStick = GetRightStick();
+
+	leftStick.y *= -1;
+	rightStick.y *= -1;
 
 	// 加速
 	// スティック
@@ -365,25 +130,6 @@ void Player::Move(float delta)
 		m_moveSpeed.y = -m_maxSpeed;
 	}
 
-	// 歩くアニメーション
-	if (m_moveSpeed.x != 0 || m_moveSpeed.y != 0)
-	{
-		m_walkingFlag = true;
-
-		// 画像反転
-		if (m_moveSpeed.x < 0)
-		{
-			m_reverseFlag = false;
-		}
-		else if (m_moveSpeed.x > 0)
-		{
-			m_reverseFlag = true;
-		}
-	}
-	else
-	{
-		m_walkingFlag = false;
-	}
 
 	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
 
@@ -409,26 +155,9 @@ void Player::Move(float delta)
 		m_moveSpeed.y = 0.0f;
 	}
 
-}
-
-void Player::Net(float delta)
-{
-	Vector2D rightStick = GetRightStick();
-	rightStick.y *= -1;
-
-	// 虫網を構えるアニメーション
-	if (rightStick.x != 0 || rightStick.y != 0)
-	{
-		m_holdingFlag = true;
-	}
-	else
-	{
-		m_holdingFlag = false;
-	}
-
 	// 虫網
 	m_ringVector = Vec2Mult(rightStick, m_stickLength);
-
+	
 	m_oldTiltStick = m_tiltStick;
 	m_oldRotateStick = m_rotateStick;
 	m_tiltStick = Length(Vec2Sub({ 0.0f, 0.0f }, rightStick));
@@ -454,7 +183,7 @@ void Player::Net(float delta)
 			m_ringThickness = m_ringRadius;
 		}
 	}
-
+	
 	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);	// リングの位置
 	float netDistance;	// リングと網の距離
 	float netAngle;
@@ -466,6 +195,33 @@ void Player::Net(float delta)
 		m_netLocation.x += sinf(netAngle) * (netDistance - m_netLength);
 		m_netLocation.y -= cosf(netAngle) * (netDistance - m_netLength);
 	}
+}
+
+void Player::Draw() const
+{
+	Camera::DrawCircleW(m_location, m_radius, 0x00ffff);
+	
+	Vector2D point[4];
+	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);
+
+	Camera::DrawLineW(m_location, ringLocation, 0x00ff00, 5);
+
+	point[0].x = ringLocation.x + sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[0].y = ringLocation.y - cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	
+	point[1].x = ringLocation.x - sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[1].y = ringLocation.y + cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 10.0f * D_OBJECT_SIZE_RATIO);
+
+	point[2].x = ringLocation.x + sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[2].y = ringLocation.y - cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+
+	point[3].x = ringLocation.x - sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+	point[3].y = ringLocation.y + cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringThickness + 10.0f * D_OBJECT_SIZE_RATIO);
+
+	Camera::DrawTriangleW(point[0], point[2], m_netLocation, 0xffffff);
+	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
+	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
+	Camera::DrawTriangleW(point[3], point[0], m_netLocation, 0xffffff);
 }
 
 Vector2D Player::GetRingLocation() const
