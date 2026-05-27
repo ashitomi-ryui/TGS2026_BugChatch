@@ -17,3 +17,5 @@ Vector2D FindNearestTree(Vector2D location);
 Vector2D FindNearestLeaf(Vector2D location);
 
 Vector2D FindNearestGround(Vector2D location);
+
+Vector2D FindNearestGround(Vector2D location);
