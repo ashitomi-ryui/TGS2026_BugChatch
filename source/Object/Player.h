@@ -25,16 +25,31 @@ private:
 
 	float m_ringRadius;		// リングの大きさ最大値
 	float m_stickAngle;		// 棒の角度
-	
+
 	float m_tiltStick;		// スティックの倒しこみ（ 1 ～ -1 ）
 	float m_oldTiltStick;	// 前のスティックの倒しこみ（ 1 ～ -1 ）
-	
+
 	float m_rotateStick;	// スティックの角度（90°= 1）
 	float m_oldRotateStick;	// 前のスティックの角度（90°= 1）
 
 	// アニメーション
-	float m_animTime;	// アニメーション時間
-	int m_animCount;	// アニメーションカウント
+	bool m_walkingFlag;	// 歩くフラグ
+	bool m_holdingFlag;	// 虫網を持つフラグ
+	bool m_reverseFlag;	// 反転フラグ
+
+	float m_blinkTime;		// 瞬き時間
+	float m_headAnimTime;	// 頭の時間
+	int m_headAnimCount;	// 頭のカウント
+	int m_headSubscript;	// 頭の添え字
+	float m_legAnimTime;	// 脚の時間
+	int m_legAnimCount;		// 脚のカウント
+	int m_legSubscript;		// 脚の添え字
+
+	// 画像情報
+	static int m_headImage[3];
+	static int m_bodyImage;
+	static int m_legImage[4];
+	static int m_armImage;
 
 public:
 	Player();
@@ -44,6 +59,13 @@ public:
 	void Init();
 	void Update(float delta);
 	void Draw() const;
+
+private:
+	void DrawNet(Vector2D ringLocation, float stickRotate) const;
+	void Animation(float delta);
+	void Move(float delta);
+	void Net(float delta);
+
 
 public:
 	Vector2D GetRingLocation() const;
