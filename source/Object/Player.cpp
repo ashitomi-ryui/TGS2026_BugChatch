@@ -4,7 +4,7 @@
 #include "../Utilitys/Camera.h"
 #include "../Utilitys/Random.h"
 
-int Player::m_headImage[3] = {};
+int Player::m_headImage[4] = {};
 int Player::m_bodyImage = -1;
 int Player::m_legImage[4] = {};
 int Player::m_armImage = -1;
@@ -98,6 +98,7 @@ void Player::Init()
 	m_headImage[0] = LoadGraph("assets/images/Player/Head1.PNG");
 	m_headImage[1] = LoadGraph("assets/images/Player/Head2.PNG");
 	m_headImage[2] = LoadGraph("assets/images/Player/Head3.PNG");
+	m_headImage[3] = LoadGraph("assets/images/Player/Head4.PNG");
 
 	m_bodyImage = LoadGraph("assets/images/Player/Body.PNG");
 
@@ -184,7 +185,17 @@ void Player::Draw() const
 	// 体表示
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_bodyImage, m_reverseFlag);
 	// 顔表示
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[m_headSubscript], m_reverseFlag);
+	// 虫網を持つ手が後ろなら
+	if(isBackHolding)
+	{
+		// 後ろ向きの顔を表示
+		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[3], m_reverseFlag);
+	}
+	else
+	{
+		// 前向きの顔を表示
+		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[m_headSubscript], m_reverseFlag);
+	}
 
 	// 前の腕表示
 	// 虫網を持っているなら
