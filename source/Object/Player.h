@@ -46,7 +46,7 @@ private:
 	int m_legSubscript;		// ‹r‚Ì“Y‚¦š
 
 	// ‰æ‘œî•ñ
-	static int m_headImage[3];
+	static int m_headImage[4];
 	static int m_bodyImage;
 	static int m_legImage[4];
 	static int m_armImage;

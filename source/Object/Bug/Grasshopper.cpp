@@ -10,11 +10,12 @@
 #include "Grasshopper.h"
 
 #include "../Leaf.h"
+#include "../Tree.h"
 
 #define NOMINMAX
 #include <cmath>
 
-int Grasshopper::images[7] = { -1,-1,-1,-1,-1,-1,-1};
+int Grasshopper::images[4] = { -1,-1,-1,-1};
 
 Grasshopper::Grasshopper() : Bug()
 {
@@ -30,12 +31,9 @@ Grasshopper::~Grasshopper()
 void Grasshopper::Init()
 {
 	images[0] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper1.PNG");
-	images[1] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper2.PNG");
-	images[2] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper3.PNG");
-	images[3] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper4.PNG");
-	images[4] = LoadGraph("assets/images/Bugs/Grasshopper/Jump1.PNG");
-	images[5] = LoadGraph("assets/images/Bugs/Grasshopper/Jump2.PNG");
-	images[6] = LoadGraph("assets/images/Bugs/Grasshopper/Jump3.PNG");
+	images[1] = LoadGraph("assets/images/Bugs/Grasshopper/Jump1.PNG");
+	images[2] = LoadGraph("assets/images/Bugs/Grasshopper/Jump2.PNG");
+	images[3] = LoadGraph("assets/images/Bugs/Grasshopper/Jump3.PNG");
 
 	grasshopperGetCount = 0;
 }
@@ -47,11 +45,7 @@ void Grasshopper::Update(float delta)
 	// 出現しているなら
 	if (m_isAppearance)
 	{
-		// 木の裏にいる
-		if (m_isBack)
-		{
-			PutInFront();
-		}
+		CheckOverlap();
 
 		// 逃げているなら
 		if (m_isEscape)
@@ -71,10 +65,10 @@ void Grasshopper::Update(float delta)
 				Move(delta);
 
 				break;
-			case ePanic:
+			/*case ePanic:
 				Panic(delta);
 
-				break;
+				break;*/
 			}
 
 			PerceptionJudgment();
@@ -108,13 +102,21 @@ void Grasshopper::Update(float delta)
 
 void Grasshopper::Draw() const
 {
-	DrawFormatString(50, 50, GetColor(255, 0, 0), "%d", jougai);
-	/*DrawFormatString(50, 100, GetColor(255, 0, 0), "%f", m_location.x);
-	DrawFormatString(50, 150, GetColor(255, 0, 0), "%f", m_location.y);
+	bool isTurn = FALSE;
+
+	if (m_Angle > 3.0f)
+	{
+		isTurn = TRUE;
+	}
+
+	DrawFormatString(50, 50, GetColor(255, 0, 0), "%d", m_state);
+	//
+	DrawFormatString(50, 100, GetColor(255, 0, 0), "%d", m_isBack);
+	//DrawFormatString(50, 150, GetColor(255, 0, 0), "%f", m_location.y);
 	DrawFormatString(50, 200, GetColor(255, 0, 0), "%f", shiita);
-	DrawFormatString(50, 250, GetColor(255, 0, 0), "%f", m_moveSpeed.x);
-	DrawFormatString(50, 300, GetColor(255, 0, 0), "%f", m_destination.x);*/
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
+	//DrawFormatString(50, 250, GetColor(255, 0, 0), "%f", m_moveSpeed.x);
+	//DrawFormatString(50, 300, GetColor(255, 0, 0), "%f", m_destination.x);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], isTurn);
 }
 
 void Grasshopper::DrawOnTheBack() const
@@ -242,6 +244,7 @@ void Grasshopper::EscapeSetDestination(Vector2D location,Vector2D Plocation)
 
 void Grasshopper::Animation(float delta)
 {
+
 	Bug::Animation(delta);
 
 	// 木の裏にいる
@@ -251,70 +254,46 @@ void Grasshopper::Animation(float delta)
 	}
 	else
 	{
-		// 逃げているなら
-		if (m_isEscape)
+		
+		if (m_isEscape || m_state == eMove)
 		{
-			// 画像の切り替え
-			if (m_animTime > 0.025f)
+			if (m_destination.x > m_startLocation.x)
 			{
-				m_animTime = 0.0f;
-				m_animCount = m_animCount % 4 + 1;
+				m_Angle = DX_PI_F; // 右を向く
 			}
-
-			// 画像の向きを徐々に移動方向に向ける
-			GraduallyTurn(m_Angle, m_direction * 0.5 * DX_PI_F, 2.0f * DX_PI_F * delta);
+			else
+			{
+				m_Angle = 0.0f;    // 左を向く
+			}
 		}
-		// 逃げていないなら
-		else
+
+		
+		if (m_isEscape || m_state == eMove)
 		{
-			switch (m_state)
+			if (shiita < 0.25f)
 			{
-			case eStand:
-				// 画像の切り替え
-				if (m_animTime > 0.05f)
-				{
-					if (m_animCount != 0)
-					{
-						m_animTime = 0.0f;
-						m_animCount = (m_animCount + 1) % 5;
-					}
-				}
-
-				// 画像の向きを徐々に上に向ける
-				GraduallyTurn(m_Angle, 0.0f * 0.5 * DX_PI_F, 2.0f * DX_PI_F * delta);
-
-				break;
-			case eMove:
-				// 画像の切り替え
-				if (m_animTime > 0.05f)
-				{
-					m_animTime = 0.0f;
-					m_animCount = m_animCount % 4 + 1;
-				}
-
-				// 画像の向きを徐々に移動方向に向ける
-				GraduallyTurn(m_Angle, m_direction * 0.5 * DX_PI_F, 1.0f * DX_PI_F * delta);
-
-				break;
-			case ePanic:
-				// 画像の切り替え
-				if (m_animTime > 0.025f)
-				{
-					m_animTime = 0.0f;
-					m_animCount = m_animCount % 4 + 1;
-				}
-
-				// 画像の向きを徐々に移動方向に向ける
-				GraduallyTurn(m_Angle, m_direction * 0.5 * DX_PI_F, 2.0f * DX_PI_F * delta);
-
-				break;
+				m_animCount = 1; // 飛び始め
 			}
+			else if (shiita < 0.75f)
+			{
+				m_animCount = 2; // 頂点通過
+			}
+			else
+			{
+				m_animCount = 3; // 着地前
+			}
+		}
+		
+		else if (m_state == eStand)
+		{
+			m_animCount = 0; // 通常時（地面にいる画像）に戻す！
 		}
 	}
 }
 
 void Grasshopper::Escape(float delta)
 {
+
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 	if (escape == FALSE)
 	{
@@ -334,14 +313,6 @@ void Grasshopper::Escape(float delta)
 		shiita = 1.0f; // 行き過ぎ防止
 	}
 
-	/*Vector2D treeLocation = FindNearestTree(m_location);
-	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
-		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
-		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
-		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
-	{
-		m_isBack = TRUE;
-	}*/
 
 	//ジャンプの移動処理
 	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
@@ -362,6 +333,7 @@ void Grasshopper::Escape(float delta)
 	{
 		m_location = m_destination; // 座標を完全に目的地に合わせる
 		m_moveSpeed = { 0.0f, 0.0f };
+		shiita = 0;
 		escape = FALSE;
 
 		m_isEscape = false;
@@ -370,37 +342,13 @@ void Grasshopper::Escape(float delta)
 		return;
 	}
 	
-
-	// 逃げる状態からパニック状態へ
-	// プレイヤーの座標
-	Vector2D ringLocation = targetPlayer->GetRingLocation();
-	float playerLen = Length(Vec2Sub(m_location, playerLocation));
-	float ringLen = Length(Vec2Sub(m_location, ringLocation));
-	// プレイヤー察知
-	// 察知範囲から出た時
-	if (playerLen > m_detectionRange || ringLen > m_detectionRange)
-	{
-		// 察知時間が0以下なら
-		if (m_detectionTime <= 0.0f)
-		{
-			// パニック状態へ
-			m_isEscape = false;
-			m_state = ePanic;
-
-			// 遷移時間を0.1fごとに区切った2.0f~5.0fにする
-			m_transitionTime = Random::GetRand(1.0f, 3.0f, 0.1f);
-		}
-	}
-	else
-	{
-		// 察知時間を0.1fごとに区切った0.0f~1.0fにする
-		m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
-	}
+	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
+	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 }
 
 void Grasshopper::Stand(float delta)
 {
-
+	shiita = 0;
 	m_moveSpeed = { 0.0f, 0.0f };
 
 	if (m_transitionTime <= 0.0f)
@@ -416,6 +364,7 @@ void Grasshopper::Stand(float delta)
 
 void Grasshopper::Move(float delta)
 {
+
 	shiita += m_moveSpeed.x * delta;
 
 	if (shiita > 1.0f)
@@ -423,14 +372,6 @@ void Grasshopper::Move(float delta)
 		shiita = 1.0f; // 行き過ぎ防止
 	}
 
-	/*Vector2D treeLocation = FindNearestTree(m_location);
-	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
-		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
-		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
-		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
-	{
-		m_isBack = TRUE;
-	}*/
 
 	//ジャンプの移動処理
 	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
@@ -449,6 +390,7 @@ void Grasshopper::Move(float delta)
 	{
 		m_location = m_destination; // 座標を完全に目的地に合わせる
 		m_moveSpeed = { 0.0f, 0.0f };
+		shiita = 0;
 		m_state = eStand;
 		m_transitionTime = Random::GetRand(1.0f, 2.0f, 0.1f);
 		if (jougai == TRUE)
@@ -479,55 +421,55 @@ void Grasshopper::Move(float delta)
 	}
 }
 
-void Grasshopper::Panic(float delta)
-{
-	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
-	if (escape == FALSE)
-	{
-		EscapeSetDestination(m_location, playerLocation);
-		escape = TRUE;
-	}
-
-
-	shiita += m_moveSpeed.x * delta;
-
-
-	if (shiita >= 1.0f)
-	{
-		shiita = 1.0f;
-		m_location = m_destination;
-		escape = FALSE;// 行き過ぎ防止
-		// 遷移時間が0以下なら
-		if (m_transitionTime <= 0.0f)
-		{
-			// 巡回状態へ
-			m_state = eMove;
-			
-			SetDestination(m_location);
-		}
-	}
-
-	/*Vector2D treeLocation = FindNearestTree(m_location);
-	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
-		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
-		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
-		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
-	{
-		m_isBack = TRUE;
-	}*/
-
-
-	//ジャンプの移動処理
-	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
-	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
-
-	//AIニキ
-	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
-	// sinf(shiita * DX_PI_F) は shiitaが 0.0(始点) -> 0.5(頂点) -> 1.0(終点) で 0 -> 1 -> 0 と変化します
-	// ※ 2Dゲームで上がマイナス方向なら引く、プラス方向なら足す
-	float height = sinf(shiita * DX_PI_F) * top;
-	m_location.y -= height;
-}
+//void Grasshopper::Panic(float delta)
+//{
+//	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+//	if (escape == FALSE)
+//	{
+//		EscapeSetDestination(m_location, playerLocation);
+//		escape = TRUE;
+//	}
+//
+//
+//	shiita += m_moveSpeed.x * delta;
+//
+//
+//	if (shiita >= 1.0f)
+//	{
+//		shiita = 1.0f;
+//		m_location = m_destination;
+//		escape = FALSE;// 行き過ぎ防止
+//		// 遷移時間が0以下なら
+//		if (m_transitionTime <= 0.0f)
+//		{
+//			// 巡回状態へ
+//			m_state = eMove;
+//			
+//			SetDestination(m_location);
+//		}
+//	}
+//
+//	/*Vector2D treeLocation = FindNearestTree(m_location);
+//	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
+//		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
+//		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
+//		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
+//	{
+//		m_isBack = TRUE;
+//	}*/
+//
+//
+//	//ジャンプの移動処理
+//	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
+//	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
+//
+//	//AIニキ
+//	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
+//	// sinf(shiita * DX_PI_F) は shiitaが 0.0(始点) -> 0.5(頂点) -> 1.0(終点) で 0 -> 1 -> 0 と変化します
+//	// ※ 2Dゲームで上がマイナス方向なら引く、プラス方向なら足す
+//	float height = sinf(shiita * DX_PI_F) * top;
+//	m_location.y -= height;
+//}
 
 
 void Grasshopper::PerceptionJudgment()
@@ -571,16 +513,24 @@ void Grasshopper::TransitionToEscape()
 	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 }
 
-void Grasshopper::PutInFront()
-{
-	Vector2D leafLocation = FindNearestLeaf(m_location);
+//void Grasshopper::PutInFront()
+//{
+//	
+//}
 
-	// その木から離れたら、前面に置く
-	if (m_location.x + m_radius < leafLocation.x - D_LEAF_WIDTH ||
-		m_location.x - m_radius > leafLocation.x + D_LEAF_WIDTH ||
-		m_location.y + m_radius < leafLocation.y - D_LEAF_HEIGHT ||
-		m_location.y - m_radius > leafLocation.y + D_LEAF_HEIGHT)
+void Grasshopper::CheckOverlap()
+{
+	Vector2D treeLocation = FindNearestTree(m_location);
+
+	if (m_location.x > treeLocation.x - D_TREE_WIDTH / 2.0f &&  
+		m_location.x < treeLocation.x + D_TREE_WIDTH / 2.0f && 
+		m_location.y > treeLocation.y - D_TREE_HEIGHT / 2.0f && 
+		m_location.y < treeLocation.y)                           
 	{
-		m_isBack = false;
+		m_isBack = TRUE;  
+	}
+	else
+	{
+		m_isBack = FALSE; 
 	}
 }

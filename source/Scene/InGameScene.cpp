@@ -25,8 +25,6 @@ Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float timer;
 Camera camera(player.GetPlayerLocation());
 
-float num = 0.0f;
-
 int flowerImage[2] = { -1, -1 };
 
 int InGameInit(void)//各プログラムの初期化
@@ -90,10 +88,12 @@ int InGameInit(void)//各プログラムの初期化
 eSceneType InGameUpdate(float delta_second)
 {
 	timer += delta_second;
-	if (timer > 60.0f * 3.0f)
+#ifndef _DEBUG
+	if (timer > 60.0f)
 	{
 		return eResult;//ゲーム終了時にタイトルに戻る（仮）
 	}
+#endif
 
 	player.Update(delta_second);	// プレイヤーの更新
 
@@ -122,11 +122,6 @@ eSceneType InGameUpdate(float delta_second)
 	for (int id = 0; id < D_GROUND_MAX; id++)
 	{
 		ground[id].Update(delta_second);
-	}
-
-	if (GetButtonState(XINPUT_BUTTON_A) == ePressed)
-	{
-		num = Random::GetRand(-10.0f, 10.0f, 0.5f);
 	}
 
 	return eInGame;
@@ -180,9 +175,6 @@ void InGameDraw(void)
 	{
 		grasshopper[id].DrawOnTheFront();
 	}
-
-	DrawFormatString(10, 10, 0xffffff, "%f", num);
-
 }
 
 Vector2D GetRingLocation()

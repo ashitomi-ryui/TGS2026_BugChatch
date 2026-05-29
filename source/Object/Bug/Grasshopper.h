@@ -6,7 +6,7 @@
 class Grasshopper :public Bug
 {
 private:
-	static int images[7];
+	static int images[4];
 	float shiita;
 	float top;
 	float count;
@@ -62,5 +62,7 @@ public:
 
 	//‘O–Ê‚ÖˆÚ“®
 	void PutInFront();
+
+	void CheckOverlap();
 
 };
