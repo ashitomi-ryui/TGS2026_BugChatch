@@ -109,11 +109,11 @@ void Grasshopper::Draw() const
 		isTurn = TRUE;
 	}
 
-	DrawFormatString(50, 50, GetColor(255, 0, 0), "%d", m_state);
+	//DrawFormatString(50, 50, GetColor(255, 0, 0), "%d", m_state);
 	//
-	DrawFormatString(50, 100, GetColor(255, 0, 0), "%d", m_isBack);
+	//DrawFormatString(50, 100, GetColor(255, 0, 0), "%d", m_isBack);
 	//DrawFormatString(50, 150, GetColor(255, 0, 0), "%f", m_location.y);
-	DrawFormatString(50, 200, GetColor(255, 0, 0), "%f", shiita);
+	//DrawFormatString(50, 200, GetColor(255, 0, 0), "%f", shiita);
 	//DrawFormatString(50, 250, GetColor(255, 0, 0), "%f", m_moveSpeed.x);
 	//DrawFormatString(50, 300, GetColor(255, 0, 0), "%f", m_destination.x);
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], isTurn);
