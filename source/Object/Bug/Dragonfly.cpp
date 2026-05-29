@@ -10,7 +10,8 @@
 
 #include "Dragonfly.h"
 
-#include "../Tree.h"
+#include "../Ground.h"
+#include"../Tree.h"
 
 int Dragonfly::images[4] = { -1,-1,-1,-1 };
 //float count = 0;
@@ -130,11 +131,17 @@ void Dragonfly::Spawn()
 	// スポーン位置
 	Vector2D location = Bug::RandomLocationOnTheScreen();
 
+
+	m_destination = FindNearestTree(location);
+
+	// 目的地をランダムに座標をずらす
+	m_destination.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
+	m_destination.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
 	// 位置を近くの木に設定する
-	/*location = FindNearestGround(location);*/
+	//location = FindNearestGround(location);
 	// 位置を少しずらす
-	location.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
-	location.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
+	//location.x += Random::GetRand((D_GROUND_WIDTH / 2), -(D_GROUND_WIDTH / 2));
+	//location.y += Random::GetRand((D_GROUND_HEIGHT / 2), -(D_GROUND_HEIGHT / 2));
 
 	// スポーン
 	Set(location);
@@ -142,6 +149,7 @@ void Dragonfly::Spawn()
 
 void Dragonfly::ReSpawn(float delta)
 {
+	//Bug::Animation(delta);
 	Spawn();
 
 	// 画面内なら木の裏に
@@ -153,16 +161,18 @@ void Dragonfly::ReSpawn(float delta)
 
 void Dragonfly::SetDestination(Vector2D location)
 {
-	// ランダムな位置を目的地にする
+	 //ランダムな位置を目的地にする
 	for (int i = 0;i < 5;i++)
 	{
 		m_destinations[i] = Bug::RandomLocationOnTheScreen();
 		m_isDestinations[i] = true;
 	}
+	m_destination = FindNearestGround(location);
+	
 
 	// 目的地をランダムに座標をずらす
-	m_destination.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
-	m_destination.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
+	m_destination.x += Random::GetRand((D_GROUND_WIDTH / 2), -(D_GROUND_WIDTH / 2));
+	m_destination.y += Random::GetRand((D_GROUND_HEIGHT / 2), -(D_GROUND_HEIGHT / 2));
 }
 
 void Dragonfly::Animation(float delta)
@@ -305,7 +315,7 @@ void Dragonfly::Stand(float delta)
 		// 向きを0.25πごとに区切ったランダムな向きに
 		//m_direction = Random::GetRand(0.0f, 2.0f, 0.25) * DX_PI_F;
 		// ランダムな木を目的地に設定
-		//SetDestination(RandomLocationOnTheScreen());
+		SetDestination(RandomLocationOnTheScreen());
 
 	}
 }
@@ -450,7 +460,7 @@ void Dragonfly::Panic(float delta)
 		// 巡回状態へ
 		m_state = eMove;
 		// 近くの木を目的地に設定
-		//SetDestination(m_location);
+		SetDestination(m_location);
 	}
 }
 
@@ -496,16 +506,16 @@ void Dragonfly::TransitionToEscape()
 
 void Dragonfly::PutInFront()
 {
-	//Vector2D treeLocation = FindNearestTree(m_location);
+	Vector2D GroundLocation = FindNearestGround(m_location);
 
-	//// その木から離れたら、前面に置く
-	//if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
-	//	m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
-	//	m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
-	//	m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
-	//{
-	//	m_isBack = false;
-	//}
+	// その木から離れたら、前面に置く
+	if (m_location.x + m_radius < GroundLocation.x - D_GROUND_WIDTH ||
+		m_location.x - m_radius > GroundLocation.x + D_GROUND_WIDTH ||
+		m_location.y + m_radius < GroundLocation.y - D_GROUND_HEIGHT ||
+		m_location.y - m_radius > GroundLocation.y + D_GROUND_HEIGHT)
+	{
+		m_isBack = false;
+	}
 }
 
 
