@@ -11,12 +11,12 @@ private:
 	bool m_isDestinations[5];
 
 	static int images[4];
-	float count;
-	bool flag;
-bool flag2;
-int abura;
-int hanten = FALSE;
-int i=0;
+	float m_hoveringMove;
+	bool m_hoveringFlag;
+	bool m_hoveringFlag2;
+	int m_hovering;
+	bool m_isFlip;
+
 public:
 	Dragonfly();
 	~Dragonfly();

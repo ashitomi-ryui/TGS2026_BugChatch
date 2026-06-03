@@ -14,16 +14,21 @@
 #include"../Tree.h"
 
 int Dragonfly::images[4] = { -1,-1,-1,-1 };
-//float count = 0;
-//bool flag;
-//bool flag2;
-//int abura;
-//int hanten = FALSE;
+
 Dragonfly::Dragonfly() : Bug()
 {
 	// é@ímîÕàÕ
 	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
-	count = 0;
+
+
+	m_destinations[5] = {};
+	m_isDestinations[5] = {};
+
+	m_hoveringMove = 0.0f;
+	m_hoveringFlag = false;
+	m_hoveringFlag2 = false;
+	m_hovering = 0;
+	m_isFlip = false;
 }
 Dragonfly::~Dragonfly()
 {
@@ -37,12 +42,12 @@ void Dragonfly::Init()
 	images[3] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly4.PNG");
 
 
-	cicadaGetCount = 0;
+	dragonflyGetCount = 0;
 }
 
 void Dragonfly::Update(float delta)
 {
-	count += delta;
+	m_hoveringMove += delta;
 	Animation(delta);
 
 	// èoåªÇµÇƒÇ¢ÇÈÇ»ÇÁ
@@ -86,7 +91,7 @@ void Dragonfly::Update(float delta)
 		// ìñÇΩÇËîªíË
 		if (HitCheck())
 		{
-			cicadaGetCount += 1;
+			dragonflyGetCount += 1;
 			m_isAppearance = false;
 			// ëJà⁄éûä‘Ç1.0fïbÇ…Ç∑ÇÈ
 			m_transitionTime = 1.0f;
@@ -103,7 +108,7 @@ void Dragonfly::Update(float delta)
 
 void Dragonfly::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], hanten, false);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], m_isFlip, false);
 	//DrawFormatString(50, 50, GetColor(255, 0, 0), "%d", m_state);
 
 }
@@ -256,11 +261,11 @@ void Dragonfly::Escape(float delta)
 	m_direction = VecATan2(playerLocation, m_location);
 	if (targetPlayer->GetPlayerLocation().x <= m_location.x)
 	{
-		hanten = TRUE;
+		m_isFlip = true;
 	}
 	else
 	{
-		hanten = FALSE;
+		m_isFlip = false;
 	}
 	// å¸Ç´Ç0.01fÉŒÇ≤Ç∆Ç…ãÊêÿÇ¡ÇΩ-0.25fÉŒ~0.25fÉŒÇ∏ÇÁÇ∑
 	//m_direction += Random::GetRand(-0.25f, 0.25f, 0.01f) * DX_PI_F;
@@ -344,18 +349,18 @@ void Dragonfly::Move(float delta)
 	//// å∏ë¨
 	//Deceleration(deceleration, delta);
 
-	if (count >= 3.0f && flag == FALSE)
+	if (m_hoveringMove >= 3.0f && m_hoveringFlag == false)
 	{
 		int a = GetRand(1);
 		if (a)
 		{
 			m_moveSpeed.x = 8.0f;
-			hanten = TRUE;
+			m_isFlip = true;
 		}
 		else
 		{
 			m_moveSpeed.x = -8.0f;
-			hanten = FALSE;
+			m_isFlip = false;
 		}
 
 		m_moveSpeed.y = GetRand(1);
@@ -365,40 +370,32 @@ void Dragonfly::Move(float delta)
 			m_moveSpeed.y = -8.0f;
 			
 		}
-		flag = TRUE;
-		flag2 = FALSE;
+		m_hoveringFlag = true;
+		m_hoveringFlag2 = false;
 	}
-	if (count >= 5.0f)
+	if (m_hoveringMove >= 5.0f)
 	{
-		flag2 = TRUE;
-	}
-
-	if (count >= 6.5f)
-	{
-		count = 0;
-		flag = FALSE;
+		m_hoveringFlag2 = true;
 	}
 
-	if (flag2 == TRUE)
+	if (m_hoveringMove >= 6.5f)
 	{
-		abura = GetRand(2);
-		if (abura == 2)
+		m_hoveringMove = 0;
+		m_hoveringFlag = false;
+	}
+
+	if (m_hoveringFlag2 == true)
+	{
+		m_hovering = (int)Random::GetRand(2.0f);
+		if (m_hovering == 2)
 		{
-			abura = -1;
+			m_hovering = -1;
 		}
-		m_location.x += abura;
-		m_location.y += abura;
+		m_location.x += m_hovering;
+		m_location.y += m_hovering;
 	}
-	/*if (m_moveSpeed.x == -1)
-	{
-		hanten = TRUE;
-	}
-	else
-	{
-		hanten = FALSE;
-	}*/
 
-	if (flag2 == FALSE)
+	if (m_hoveringFlag2 == false)
 	{
 		m_location.x += m_moveSpeed.x;
 		m_location.y += m_moveSpeed.y;
@@ -428,8 +425,8 @@ void Dragonfly::Panic(float delta)
 {
 	// å¸Ç´Ç0.125fÉŒÇ≤Ç∆Ç…ãÊêÿÇ¡ÇΩ-2.0fÉŒ~2.0fÉŒÇ∏ÇÁÇ∑
 	//m_direction += Random::GetRand(-2.0f, 2.0f, 0.125f) * DX_PI_F * delta;
-	m_moveSpeed.x = GetRand(1);
-	m_moveSpeed.y = GetRand(1);
+	m_moveSpeed.x = Random::GetRand(1.0f);
+	m_moveSpeed.y = Random::GetRand(1.0f);
 	if (m_moveSpeed.x == 0)
 	{
 		m_moveSpeed.x = -1;
@@ -441,8 +438,8 @@ void Dragonfly::Panic(float delta)
 	
 	}
 	
-	flag = TRUE;
-	flag2 = FALSE;
+	m_hoveringFlag = true;
+	m_hoveringFlag2 = false;
 	// â¡ë¨ìx
 	float acceleration = 2000.0f;
 	// ç≈ëÂë¨ìx

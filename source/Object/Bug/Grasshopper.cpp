@@ -30,10 +30,14 @@ Grasshopper::~Grasshopper()
 
 void Grasshopper::Init()
 {
+	//画像読み込み
 	images[0] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper1.PNG");
 	images[1] = LoadGraph("assets/images/Bugs/Grasshopper/Jump1.PNG");
 	images[2] = LoadGraph("assets/images/Bugs/Grasshopper/Jump2.PNG");
 	images[3] = LoadGraph("assets/images/Bugs/Grasshopper/Jump3.PNG");
+
+
+
 
 	grasshopperGetCount = 0;
 }
@@ -174,7 +178,7 @@ void Grasshopper::SetDestination(Vector2D location)
 
 	if (jougai == TRUE)
 	{
-		// 近くの木を目的地にする
+		// 近くの草を目的地にする
 		nearleaf = FindNearestLeaf(location);
 
 		m_direction = atan2f((nearleaf.y - m_location.y), (nearleaf.x - m_location.x));
