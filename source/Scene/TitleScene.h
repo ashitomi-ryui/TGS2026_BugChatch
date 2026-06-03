@@ -6,7 +6,9 @@
 class Title
 {
 private:
-	int bgm;
+	int Titlebgm;
+	int ChoiceSE;
+	int DecisionSE;
 	int start_pressed;
 	int start_not_pressed;
 	int help_pressed;

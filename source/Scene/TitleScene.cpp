@@ -46,20 +46,26 @@ int Title::Init()
 	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
 	back_ground = LoadGraph("assets/images/Title/mori.jpg");
 
-	bgm = LoadSoundMem("assets/Audio/Title.wav");
-	if (bgm == -1)
+	Titlebgm = LoadSoundMem("assets/Audio/Title.wav");
+	if (Titlebgm == -1)
 	{
 		return FALSE;
 	}
-	bgm = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
-	if (bgm == -1)
+	ChoiceSE = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
+	if (ChoiceSE == -1)
 	{
 		return FALSE;
 	}
+	DecisionSE = LoadSoundMem("assets/Audio/AS_134044_決定音.wav");
+	if (DecisionSE == -1)
+	{
+		return FALSE;
+	}
+	
 	select_x, select_y, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
-PlaySoundMem(bgm, DX_PLAYTYPE_BACK);
+PlaySoundMem(Titlebgm, DX_PLAYTYPE_BACK);
 	return TRUE;
 }
 
@@ -100,21 +106,27 @@ eSceneType Title::Update(float delta_second)
 	{
 		if (GetLeftStickState_Y(true) == ePressed)//左スティックが上に入力された場合
 		{
+			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK);
 			if (select_x == 1)
 			{
 				select_x = 0;
+				
 			}
 			if (select_y == 0)//一番上が選択されている状態の場合
 			{
 				select_y = 2;//一番下へ戻す
+				
 			}
 			else
 			{
+				
+				
 				select_y--;//上へ移動する
 			}
 		}
 		if (GetLeftStickState_Y(false) == ePressed)//左スティックが下に入力された場合
 		{
+			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK);
 			if (select_x == 1)
 			{
 				select_x = 0;
@@ -125,6 +137,8 @@ eSceneType Title::Update(float delta_second)
 			}
 			else
 			{
+				
+				
 				select_y++;//下へ移動する
 			}
 		}
@@ -157,8 +171,9 @@ eSceneType Title::Update(float delta_second)
 	
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 		{
+			PlaySoundMem(DecisionSE, DX_PLAYTYPE_BACK);
 			pressed = 1;
-			StopSoundMem(bgm);
+			StopSoundMem(Titlebgm);
 		}
 	}
 	
