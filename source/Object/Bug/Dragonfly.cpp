@@ -91,7 +91,7 @@ void Dragonfly::Update(float delta)
 		// “–‚½‚è”»’è
 		if (HitCheck())
 		{
-			cicadaGetCount += 1;
+			dragonflyGetCount += 1;
 			m_isAppearance = false;
 			// ‘JˆÚŽžŠÔ‚ð1.0f•b‚É‚·‚é
 			m_transitionTime = 1.0f;
