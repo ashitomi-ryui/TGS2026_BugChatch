@@ -162,12 +162,13 @@ void Dragonfly::ReSpawn(float delta)
 void Dragonfly::SetDestination(Vector2D location)
 {
 	 //ランダムな位置を目的地にする
-	for (int i = 0;i < 5;i++)
+	/*for (int i = 0;i < 5;i++)
 	{
 		m_destinations[i] = Bug::RandomLocationOnTheScreen();
 		m_isDestinations[i] = true;
-	}
-	m_destination = FindNearestGround(location);
+	}*/
+	m_destination = FindNearestTree(location);
+	//m_destination = FindNearestGround(location);
 	
 
 	// 目的地をランダムに座標をずらす
@@ -506,16 +507,27 @@ void Dragonfly::TransitionToEscape()
 
 void Dragonfly::PutInFront()
 {
-	Vector2D GroundLocation = FindNearestGround(m_location);
+
+	Vector2D treeLocation = FindNearestTree(m_location);
 
 	// その木から離れたら、前面に置く
-	if (m_location.x + m_radius < GroundLocation.x - D_GROUND_WIDTH ||
+	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
+		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
+		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
+		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
+	{
+		m_isBack = false;
+	}
+	//Vector2D GroundLocation = FindNearestGround(m_location);
+
+	// その木から離れたら、前面に置く
+	/*if (m_location.x + m_radius < GroundLocation.x - D_GROUND_WIDTH ||
 		m_location.x - m_radius > GroundLocation.x + D_GROUND_WIDTH ||
 		m_location.y + m_radius < GroundLocation.y - D_GROUND_HEIGHT ||
 		m_location.y - m_radius > GroundLocation.y + D_GROUND_HEIGHT)
 	{
 		m_isBack = false;
-	}
+	}*/
 }
 
 
