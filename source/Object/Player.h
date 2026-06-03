@@ -32,11 +32,11 @@ private:
 	float m_rotateStick;	// スティックの角度（90°= 1）
 	float m_oldRotateStick;	// 前のスティックの角度（90°= 1）
 
-	// アニメーション
 	bool m_walkingFlag;	// 歩くフラグ
 	bool m_holdingFlag;	// 虫網を持つフラグ
 	bool m_reverseFlag;	// 反転フラグ
 
+	// アニメーション
 	float m_blinkTime;		// 瞬き時間
 	float m_headAnimTime;	// 頭の時間
 	int m_headAnimCount;	// 頭のカウント

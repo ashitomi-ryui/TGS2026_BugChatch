@@ -184,3 +184,13 @@ int AngleComparison(float Angle1, float Angle2, float tolerance)
 		}
 	}
 }
+
+void GraduallyTurn(float& that, float angle, float turningSpeed)
+{
+	// that‚ğturningSpeed‚Ì”‚¾‚¯angle‚ÉŒü‚¯‚é
+	that += AngleComparison(that, angle) * turningSpeed;
+	if (AngleComparison(that, angle, turningSpeed) == 0)
+	{
+		that = angle;
+	}
+}

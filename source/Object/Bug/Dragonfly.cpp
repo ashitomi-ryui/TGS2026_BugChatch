@@ -20,10 +20,6 @@ Dragonfly::Dragonfly() : Bug()
 	// Ž@’m”ÍˆÍ
 	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
 
-
-	m_destinations[5] = {};
-	m_isDestinations[5] = {};
-
 	m_hoveringMove = 0.0f;
 	m_hoveringFlag = false;
 	m_hoveringFlag2 = false;
@@ -351,7 +347,7 @@ void Dragonfly::Move(float delta)
 
 	if (m_hoveringMove >= 3.0f && m_hoveringFlag == false)
 	{
-		int a = GetRand(1);
+		int a = (int)Random::GetRand(1.0f);
 		if (a)
 		{
 			m_moveSpeed.x = 8.0f;
@@ -363,7 +359,7 @@ void Dragonfly::Move(float delta)
 			m_isFlip = false;
 		}
 
-		m_moveSpeed.y = GetRand(1);
+		m_moveSpeed.y = Random::GetRand(1.0f);
 
 		if (m_moveSpeed.y == 8.0f)
 		{

@@ -162,16 +162,6 @@ void Bug::Deceleration(float deceleration, float delta)
 	}
 }
 
-void Bug::GraduallyTurn(float& that, float angle, float turningSpeed)
-{
-	// ‰æ‘œ‚ÌŒü‚«‚ğ™X‚ÉˆÚ“®•ûŒü‚ÉŒü‚¯‚é
-	that += AngleComparison(that, angle) * turningSpeed;
-	if (AngleComparison(that, angle, turningSpeed) == 0)
-	{
-		that = angle;
-	}
-}
-
 void Bug::Animation(float delta)
 {
 	m_detectionTime -= delta;

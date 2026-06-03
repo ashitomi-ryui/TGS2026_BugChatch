@@ -53,3 +53,11 @@ float VecATan2(Vector2D a, Vector2D b);
 /// <param name="tolerance">「=」判定になる許容範囲</param>
 /// <returns>「＜」なら「1」、「＞」なら「-1」、「＝」なら「0」</returns>
 int AngleComparison(float Angle1, float Angle2, float tolerance = 0.0f);
+
+/// <summary>
+/// 徐々に向ける
+/// </summary>
+/// <param name="that">変数</param>
+/// <param name="angle">向けたい方向</param>
+/// <param name="turningSpeed">方向転換速度</param>
+void GraduallyTurn(float& that, float angle, float turningSpeed);
