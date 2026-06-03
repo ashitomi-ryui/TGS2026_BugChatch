@@ -51,6 +51,11 @@ int Title::Init()
 	{
 		return FALSE;
 	}
+	bgm = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
+	if (bgm == -1)
+	{
+		return FALSE;
+	}
 	select_x, select_y, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
