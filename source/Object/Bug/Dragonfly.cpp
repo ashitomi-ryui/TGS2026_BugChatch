@@ -37,7 +37,7 @@ void Dragonfly::Init()
 	images[3] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly4.PNG");
 
 
-	cicadaGetCount = 0;
+	dragonflyGetCount = 0;
 }
 
 void Dragonfly::Update(float delta)
