@@ -29,6 +29,10 @@ float Random::GetRand(float num1, float num2, float interval)
 		num1 = num2;
 		num2 = num;
 	}
+
+	// 設定した最大値も含める
+	num2 += interval;
+	
 	// 出したいランダムな値の数がランダム最大値を越さないようにする
 	if ((num2 - num1) / interval > RAND_MAX)
 	{
