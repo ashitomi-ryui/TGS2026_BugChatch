@@ -24,7 +24,7 @@ Dragonfly dragonfly[D_DRAGONFLY_MAX];
 Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float timer;
 Camera camera(player.GetPlayerLocation());
-
+int BGM;
 int flowerImage[2] = { -1, -1 };
 
 int InGameInit(void)//各プログラムの初期化
@@ -38,6 +38,12 @@ int InGameInit(void)//各プログラムの初期化
 	Grasshopper::Init();
 	Dragonfly::Init();
 	player.Init();
+	
+	BGM = LoadSoundMem("assets/Audio/AS_1468345_Main.wav");
+	if (BGM == -1)
+	{
+		return FALSE;
+	}
 
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
@@ -81,16 +87,19 @@ int InGameInit(void)//各プログラムの初期化
 
 	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1");
 	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2");
-
+	ChangeVolumeSoundMem(100, BGM);
+	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
 	return TRUE;
 }
 
 eSceneType InGameUpdate(float delta_second)
 {
+	
 	timer += delta_second;
 #ifndef _DEBUG
 	if (timer > 60.0f)
 	{
+		StopSoundMem(BGM);
 		return eResult;//ゲーム終了時にタイトルに戻る（仮）
 	}
 #endif
