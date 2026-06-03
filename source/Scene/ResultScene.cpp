@@ -1,6 +1,7 @@
-#include"ResultScene.h"
-#include"../Utilitys/Input.h"
 #include<DxLib.h>
+#include"ResultScene.h"
+
+Bug bug;
 
 Result::Result()
 {
@@ -23,6 +24,11 @@ int Result::Init()
 	select_x, pressed = 0;
 	time = 0.0f;
 	time_rug = 0.5f;
+
+	c_count = bug.GetCicadaCount();
+	d_count = bug.GetDragonflyCount();
+	g_count = bug.GetGrasshopperCount();
+
 	return TRUE;
 }
 
@@ -118,5 +124,5 @@ void Result::Draw()const
 		DrawRotaGraph(1000, 600, 1.0, 0.0, ranking_not_pressed, TRUE);
 	}
 
-	
+	DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", c_count);
 }
