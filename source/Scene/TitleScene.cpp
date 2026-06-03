@@ -72,6 +72,7 @@ PlaySoundMem(Titlebgm, DX_PLAYTYPE_BACK);
 eSceneType Title::Update(float delta_second)
 {
 	
+
 	time += delta_second;
 
 	if (pressed == 0)//決定ボタンが押されていない場合
@@ -104,29 +105,26 @@ eSceneType Title::Update(float delta_second)
 
 	if (pressed == 0)
 	{
+
 		if (GetLeftStickState_Y(true) == ePressed)//左スティックが上に入力された場合
 		{
-			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK);
+			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK,TRUE);
 			if (select_x == 1)
 			{
 				select_x = 0;
-				
 			}
 			if (select_y == 0)//一番上が選択されている状態の場合
 			{
 				select_y = 2;//一番下へ戻す
-				
 			}
 			else
 			{
-				
-				
 				select_y--;//上へ移動する
 			}
 		}
 		if (GetLeftStickState_Y(false) == ePressed)//左スティックが下に入力された場合
 		{
-			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK);
+			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK,TRUE);
 			if (select_x == 1)
 			{
 				select_x = 0;
