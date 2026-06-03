@@ -17,6 +17,8 @@
 
 int Grasshopper::images[4] = { -1,-1,-1,-1};
 
+int Grasshopper::Audio[2] = { -1,-1 };
+
 Grasshopper::Grasshopper() : Bug()
 {
 	// 察知範囲
@@ -36,7 +38,8 @@ void Grasshopper::Init()
 	images[2] = LoadGraph("assets/images/Bugs/Grasshopper/Jump2.PNG");
 	images[3] = LoadGraph("assets/images/Bugs/Grasshopper/Jump3.PNG");
 
-
+	Audio[0] = LoadSoundMem("assets/Audio/Batta.wav");
+	Audio[1] = LoadSoundMem("assets/Audio/BattaJump.wav");
 
 
 	grasshopperGetCount = 0;
@@ -305,10 +308,11 @@ void Grasshopper::Escape(float delta)
 		escape = TRUE;
 	}
 
-	//// 向きをプレイヤーから虫への向きに
-	//m_direction = VecATan2(playerLocation, m_location);
-	// 向きを0.01fπごとに区切った-0.25fπ~0.25fπずらす
-	/*m_direction += Random::GetRand(-0.25f, 0.25f, 0.1f) * DX_PI_F;*/
+	if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+		PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
+	}
+
 
 	shiita += m_moveSpeed.x * delta;
 
@@ -355,6 +359,11 @@ void Grasshopper::Stand(float delta)
 	shiita = 0;
 	m_moveSpeed = { 0.0f, 0.0f };
 
+	if (CheckSoundMem(Audio[0]) != TRUE&& Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+		PlaySoundMem(Audio[0], DX_PLAYTYPE_BACK);
+	}
+
 	if (m_transitionTime <= 0.0f)
 	{
 		// 巡回状態へ
@@ -368,6 +377,11 @@ void Grasshopper::Stand(float delta)
 
 void Grasshopper::Move(float delta)
 {
+	
+	if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+		PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
+	}
 
 	shiita += m_moveSpeed.x * delta;
 
@@ -396,7 +410,7 @@ void Grasshopper::Move(float delta)
 		m_moveSpeed = { 0.0f, 0.0f };
 		shiita = 0;
 		m_state = eStand;
-		m_transitionTime = Random::GetRand(1.0f, 2.0f, 0.1f);
+		m_transitionTime = Random::GetRand(5.0f, 10.0f, 1.0f);
 		if (jougai == TRUE)
 		{
 
