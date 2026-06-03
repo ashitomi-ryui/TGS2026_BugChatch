@@ -44,12 +44,20 @@ Vector2D Reflect(Vector2D v, Vector2D n);
 
 // 角度を求める
 float VecATan2(Vector2D a, Vector2D b);
- 
+
+/// <summary>
+/// 角度の減算
+/// </summary>
+/// <param name="Angle1">角度1</param>
+/// <param name="Angle2">角度2</param>
+/// <returns>角度1 - 角度2</returns>
+float AngleSub(float Angle1, float Angle2);
+
 /// <summary>
 /// 角度を比較する
 /// </summary>
-/// <param name="Angle1">前の角度</param>
-/// <param name="Angle2">今の角度</param>
+/// <param name="Angle1">角度1</param>
+/// <param name="Angle2">角度2</param>
 /// <param name="tolerance">「=」判定になる許容範囲</param>
 /// <returns>「＜」なら「1」、「＞」なら「-1」、「＝」なら「0」</returns>
 int AngleComparison(float Angle1, float Angle2, float tolerance = 0.0f);
@@ -61,3 +69,11 @@ int AngleComparison(float Angle1, float Angle2, float tolerance = 0.0f);
 /// <param name="angle">向けたい方向</param>
 /// <param name="turningSpeed">方向転換速度</param>
 void GraduallyTurn(float& that, float angle, float turningSpeed);
+
+/// <summary>
+/// 徐々に直す
+/// </summary>
+/// <param name="that">変数</param>
+/// <param name="f">直したい数</param>
+/// <param name="fixSpeed">直す速度</param>
+void FixGradually(float& that, float f, float fixSpeed);

@@ -102,8 +102,9 @@ float VecATan2(Vector2D a, Vector2D b)
 	return result;
 }
 
-int AngleComparison(float Angle1, float Angle2, float tolerance)
+float AngleSub(float Angle1, float Angle2)
 {
+	// Angle1を0.0fから2.0fに
 	if (Angle1 >= 0.0f)
 	{
 		Angle1 -= (float)((int)(Angle1 / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
@@ -112,7 +113,8 @@ int AngleComparison(float Angle1, float Angle2, float tolerance)
 	{
 		Angle1 -= (float)((int)(Angle1 / (2.0f * DX_PI_F)) - 1.0f) * (2.0f * DX_PI_F);
 	}
-	
+
+	// Angle2を0.0fから2.0fに
 	if (Angle2 >= 0.0f)
 	{
 		Angle2 -= (float)((int)(Angle2 / (2.0f * DX_PI_F))) * (2.0f * DX_PI_F);
@@ -122,67 +124,44 @@ int AngleComparison(float Angle1, float Angle2, float tolerance)
 		Angle2 -= (float)((int)(Angle2 / (2.0f * DX_PI_F)) - 1.0f) * (2.0f * DX_PI_F);
 	}
 
-	// 差が許容範囲より小さいなら
-	if (fabsf(Angle2 - Angle1) <= tolerance || 
-		fabsf((Angle2 + 2.0f * DX_PI_F) - Angle1) <= tolerance ||
-		fabsf(Angle2 - (Angle1 + 2.0f * DX_PI_F)) <= tolerance)
+	// Angle1とAngle2の差が半周より大きいとき
+	if (fabsf(Angle1 - Angle2) > DX_PI_F)
 	{
-		// Angle1 = Angle2
-		return 0;
+		// Angle1の方が大きいとき
+		if (Angle1 > Angle2)
+		{
+			// Angle1とAngle2の差に一周を引いた値を返す
+			return Angle1 - Angle2 - 2.0f * DX_PI_F;
+		}
+		// Angle2の方が大きいとき
+		// Angle1とAngle2の差に一周を足した値を返す
+		return Angle1 - Angle2 + 2.0f * DX_PI_F;
 	}
 
-	// Angle1がπより小さいとき
-	if (Angle1 < DX_PI_F)
+	// Angle1とAngle2の差を返す
+	return Angle1 - Angle2;
+}
+
+int AngleComparison(float Angle1, float Angle2, float tolerance)
+{
+	float dif = AngleSub(Angle1, Angle2);
+
+	// 差が許容範囲より大きいとき
+	if (fabsf(dif) > tolerance)
 	{
-		// Angle2がAngle1よりも大きいとき
-		if (Angle2 > Angle1)
-		{
-			// Angle2がAngle1の反対側より大きいなら
-			if (Angle2 > Angle1 + 1.0f * DX_PI_F)
-			{
-				// Angle1 > Angle2
-				return -1;
-			}
-			// Angle2がAngle1の反対側より小さいなら
-			else
-			{
-				// Angle1 < Angle2
-				return 1;
-			}
-		}
-		// Angle2がAngle1よりも小さいなら
-		else
+		// Angle1の方が大きいなら
+		if (dif > 0.0f)
 		{
 			// Angle1 > Angle2
 			return -1;
 		}
+		// Angle2の方が大きいなら
+		// Angle1 < Angle2
+		return 1;
 	}
-	// Angle1がπより大きいとき
-	else
-	{
-		// Angle2がAngle1よりも小さいとき
-		if (Angle2 < Angle1)
-		{
-			// Angle2がAngle1の反対側より小さいなら
-			if (Angle2 < Angle1 - 1.0f * DX_PI_F)
-			{
-				// Angle1 < Angle2
-				return 1;
-			}
-			// Angle2がAngle1の反対側より大きいなら
-			else
-			{
-				// Angle1 > Angle2
-				return -1;
-			}
-		}
-		// Angle2がAngle1よりも大きいなら
-		else
-		{
-			// Angle1 < Angle2
-			return 1;
-		}
-	}
+
+	// Angle1 = Angle2
+	return 0;
 }
 
 void GraduallyTurn(float& that, float angle, float turningSpeed)
@@ -192,5 +171,22 @@ void GraduallyTurn(float& that, float angle, float turningSpeed)
 	if (AngleComparison(that, angle, turningSpeed) == 0)
 	{
 		that = angle;
+	}
+}
+
+void FixGradually(float& that, float f, float fixSpeed)
+{
+	// thatをfixSpeedの数だけfに向ける
+	if (fabsf(that - f) < fixSpeed)
+	{
+		that = f;
+	}
+	else if (that < f)
+	{
+		that += fixSpeed;
+	}
+	else
+	{
+		that -= fixSpeed;
 	}
 }
