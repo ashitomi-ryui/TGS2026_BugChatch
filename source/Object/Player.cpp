@@ -39,13 +39,16 @@ Player::Player()
 	// スティックの角度（90°= 1）
 	m_rotateStick = 0.0f;
 	m_oldRotateStick = 0.0f;
+	m_valueRotateStick = 0.0f;
 
 	m_ringSpeed = 0.0f;	// リングの速度
 
 	m_walkingFlag = false;	// 歩くフラグ
 	m_holdingFlag = false;	// 虫網を持つフラグ
+	m_oldHoldingFlag = false;	// 前フレームの虫網を持つフラグ
 	m_reverseFlag = false;	// 反転フラグ
 	m_pullTheNetFlag = false;	// 虫網を引くフラグ
+	m_rotatingPullFlag = false;	// 回転させながら引くフラグ
 
 	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
@@ -84,13 +87,16 @@ void Player::Init()
 	// スティックの角度（90°= 1）
 	m_rotateStick = 0.0f;
 	m_oldRotateStick = 0.0f;
+	m_valueRotateStick = 0.0f;
 
 	m_ringSpeed = 0.0f;	// リングの速度
 
 	m_walkingFlag = false;	// 歩くフラグ
 	m_holdingFlag = false;	// 虫網を持つフラグ
+	m_oldHoldingFlag = false;	// 前フレームの虫網を持つフラグ
 	m_reverseFlag = false;	// 反転フラグ
 	m_pullTheNetFlag = false;	// 虫網を引くフラグ
+	m_rotatingPullFlag = false;	// 回転させながら引くフラグ
 
 	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
@@ -454,6 +460,7 @@ void Player::Move(float delta)
 
 void Player::Net(float delta)
 {
+	m_oldHoldingFlag = m_holdingFlag;
 	Vector2D rightStick = GetRightStick();
 	rightStick.y *= -1;
 
@@ -474,37 +481,7 @@ void Player::Net(float delta)
 		// 虫網を引いている
 		m_pullTheNetFlag = true;
 	}
-
-	float multiplier = 1.0f;	// 掛ける値
-	// 右を向いているとき
-	if (m_reverseFlag)
-	{
-		// 掛ける値を反転
-		multiplier *= -1.0f;
-	}
-	// スティックを右側に倒したとき
-	if (rightStick.x > 0.0f)
-	{
-		// 掛ける値を反転
-		multiplier *= -1.0f;
-	}
-	// スティックを下側に倒したとき
-	if (rightStick.y > 0.0f)
-	{
-		// 掛ける値を反転
-		multiplier *= -1.0f;
-	}
-	// 虫網を引くとき
-	if(m_pullTheNetFlag)
-	{
-		// 掛ける値を反転
-		multiplier *= -1.0f;
-	}
-
-	// プレイヤーに近いほど90°ずらす
-	m_rotateStick += 0.5f * DX_PI_F * (1.0f - m_tiltStick) * multiplier;
 	
-
 	float ringAcceleration = 500.0f * delta * D_OBJECT_SIZE_RATIO;
 
 	// スティックが倒されていないなら
@@ -523,6 +500,60 @@ void Player::Net(float delta)
 	}
 	else
 	{
+		if(!m_oldHoldingFlag)
+		{
+			// 虫網の向きに足す値
+			m_valueRotateStick = 0.5f * DX_PI_F;
+			// 右を向いているとき
+			if (m_reverseFlag)
+			{
+				// 掛ける値を反転
+				m_valueRotateStick *= -1.0f;
+			}
+
+			// スティックを右側に倒したとき
+			if (rightStick.x > 0.0f)
+			{
+				// 掛ける値を反転
+				m_valueRotateStick *= -1.0f;
+			}
+			// スティックを下側に倒したとき
+			if (rightStick.y > 0.0f)
+			{
+				// 掛ける値を反転
+				m_valueRotateStick *= -1.0f;
+			}
+		}
+
+		// 虫網を引くとき
+		if (m_pullTheNetFlag)
+		{
+			// スティック倒しこみが90%以上なら
+			if (m_tiltStick > 0.9f)
+			{
+				// 回しながら引く
+				m_rotatingPullFlag = true;
+			}
+
+			// 回しながら引く
+			if(m_rotatingPullFlag)
+			{
+				// プレイヤーに近いほど90°ずらす
+				m_rotateStick -= m_valueRotateStick * (1.0f - m_tiltStick);
+			}
+			else
+			{
+				// プレイヤーに近いほど90°ずらす
+				m_rotateStick += m_valueRotateStick * (1.0f - m_tiltStick);
+			}
+		}
+		else
+		{
+			m_rotatingPullFlag = false;
+			// プレイヤーに近いほど90°ずらす
+			m_rotateStick += m_valueRotateStick * (1.0f - m_tiltStick);
+		}
+
 		// 虫網を構える
 		m_holdingFlag = true;
 

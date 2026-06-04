@@ -31,13 +31,16 @@ private:
 
 	float m_rotateStick;	// スティックの角度（90°= 1）
 	float m_oldRotateStick;	// 前のスティックの角度（90°= 1）
+	float m_valueRotateStick;	// スティックの角度に足す値
 
 	float m_ringSpeed;	// リングの速度
 
 	bool m_walkingFlag;	// 歩くフラグ
 	bool m_holdingFlag;	// 虫網を持つフラグ
+	bool m_oldHoldingFlag;	// 前フレームの虫網を持つフラグ
 	bool m_reverseFlag;	// 反転フラグ
 	bool m_pullTheNetFlag;	// 虫網を引くフラグ
+	bool m_rotatingPullFlag;	// 回転させながら引くフラグ
 
 	// アニメーション
 	float m_blinkTime;		// 瞬き時間
