@@ -180,15 +180,16 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\images\Player\Arm.PNG" />
+    <Image Include="assets\images\Player\BugNet.PNG" />
     <Image Include="assets\images\Player\Head1.PNG" />
     <Image Include="assets\images\Player\Head2.PNG" />
     <Image Include="assets\images\Player\Head3.PNG" />
     <Image Include="assets\images\Player\Body.PNG" />
+    <Image Include="assets\images\Player\Head4.PNG" />
     <Image Include="assets\images\Player\Leg1.PNG" />
     <Image Include="assets\images\Player\Leg2.PNG" />
     <Image Include="assets\images\Player\Leg3.PNG" />
     <Image Include="assets\images\Player\Leg4.PNG" />
-    <Image Include="assets\images\tree.PNG" />
     <Image Include="assets\Title\end_on.png" />
     <Image Include="images\tree.PNG" />
   </ItemGroup>

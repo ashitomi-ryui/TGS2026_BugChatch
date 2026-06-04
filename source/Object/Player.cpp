@@ -8,6 +8,7 @@ int Player::m_headImage[4] = {};
 int Player::m_bodyImage = -1;
 int Player::m_legImage[4] = {};
 int Player::m_armImage = -1;
+int Player::m_netImage = -1;
 
 Player::Player()
 {
@@ -20,10 +21,10 @@ Player::Player()
 
 	// 虫網
 	m_stickLength = 150.0f * D_OBJECT_SIZE_RATIO;	// 虫網（棒）の長さ
-	m_netLength = 60.0f * D_OBJECT_SIZE_RATIO;		// 網の終点までの長さ
+	m_netLength = 80.0f * D_OBJECT_SIZE_RATIO;		// 網の終点までの長さ
 
 	m_ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
-	m_netLocation = Vec2Mult(m_location, m_netLength);	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
+	m_netLocation = Vec2Mult(m_location, m_netLength);	// 網の終点座標（膨らんでいる部分）
 
 	m_ringRadius = 40.0f * D_OBJECT_SIZE_RATIO;// リングの半径
 
@@ -39,11 +40,14 @@ Player::Player()
 	m_rotateStick = 0.0f;
 	m_oldRotateStick = 0.0f;
 
-	// アニメーション
+	m_ringSpeed = 0.0f;	// リングの速度
+
 	m_walkingFlag = false;	// 歩くフラグ
 	m_holdingFlag = false;	// 虫網を持つフラグ
 	m_reverseFlag = false;	// 反転フラグ
+	m_pullTheNetFlag = false;	// 虫網を引くフラグ
 
+	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
 	m_headAnimTime = 0.0f;	// 頭の時間
 	m_headAnimCount = 0;	// 頭のカウント
@@ -67,7 +71,7 @@ void Player::Init()
 
 	// 虫網
 	m_ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
-	m_netLocation = Vec2Mult(m_location, m_netLength);	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
+	m_netLocation = Vec2Mult(m_location, m_netLength);	// 網の終点座標（膨らんでいる部分）
 
 	// 虫網（リング）の太さ
 	m_ringThickness = m_ringRadius;
@@ -81,11 +85,14 @@ void Player::Init()
 	m_rotateStick = 0.0f;
 	m_oldRotateStick = 0.0f;
 
-	// アニメーション
+	m_ringSpeed = 0.0f;	// リングの速度
+
 	m_walkingFlag = false;	// 歩くフラグ
 	m_holdingFlag = false;	// 虫網を持つフラグ
 	m_reverseFlag = false;	// 反転フラグ
+	m_pullTheNetFlag = false;	// 虫網を引くフラグ
 
+	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
 	m_headAnimTime = 0.0f;	// 頭の時間
 	m_headAnimCount = 0;	// 頭のカウント
@@ -108,6 +115,8 @@ void Player::Init()
 	m_legImage[3] = LoadGraph("assets/images/Player/Leg4.PNG");
 
 	m_armImage = LoadGraph("assets/images/Player/Arm.PNG");
+
+	m_netImage = LoadGraph("assets/images/Player/BugNet.PNG");
 }
 
 void Player::Update(float delta)
@@ -120,11 +129,18 @@ void Player::Update(float delta)
 
 void Player::Draw() const
 {
+	// 後ろの腕のずらす位置
 	Vector2D backArmLocation = m_location;
+	// 前の腕のずらす位置
 	Vector2D frontArmLocation = m_location;
-	bool isBackHolding = false;	// 後ろで持つ
+	// 後ろで持つかどうか
+	bool isBackHolding = false;
+	// 虫網の座標
 	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);
+	// 虫網の向き
 	float stickRotate;
+	// 虫網の棒の太さ
+	float stickThickness = 8.0f * D_OBJECT_SIZE_RATIO;
 
 	// 持ち手の設定
 	if (m_ringVector.y < 0)
@@ -156,10 +172,10 @@ void Player::Draw() const
 			// 棒の向きを設定
 			stickRotate = VecATan2(backArmLocation, ringLocation);
 			// 棒を表示
-			Camera::DrawLineW(backArmLocation, ringLocation, 0x007700, 4);
-			Camera::DrawLineW(backArmLocation, ringLocation, 0x00ff00, 3);
+			Camera::DrawLineW(backArmLocation, ringLocation, 0x007700, stickThickness);
+			Camera::DrawLineW(backArmLocation, ringLocation, 0x00ff00, stickThickness - 2.0f);
 			// 網を表示
-			DrawNet(ringLocation, stickRotate);
+			DrawNet(ringLocation);
 			// 腕を表示
 			Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
 		}
@@ -173,6 +189,9 @@ void Player::Draw() const
 	// 虫網を持っていないなら
 	else
 	{
+		// 構えていない虫網を表示
+		Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, (0.2f - 0.4f * (int)m_reverseFlag) * DX_PI_F, m_netImage, m_reverseFlag);
+
 		// 腕を表示
 		Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
 	}
@@ -185,8 +204,8 @@ void Player::Draw() const
 	// 体表示
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_bodyImage, m_reverseFlag);
 	// 顔表示
-	// 虫網を持つ手が後ろなら
-	if(isBackHolding)
+	// 虫網を持っているかつ、虫網を持つ手が後ろなら
+	if(m_holdingFlag && isBackHolding)
 	{
 		// 後ろ向きの顔を表示
 		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[3], m_reverseFlag);
@@ -212,12 +231,12 @@ void Player::Draw() const
 			// 棒の向きを設定
 			stickRotate = VecATan2(frontArmLocation, ringLocation);
 			// 棒を表示
-			Camera::DrawLineW(frontArmLocation, ringLocation, 0x007700, 4);
-			Camera::DrawLineW(frontArmLocation, ringLocation, 0x00ff00, 3);
+			Camera::DrawLineW(frontArmLocation, ringLocation, 0x007700, stickThickness);
+			Camera::DrawLineW(frontArmLocation, ringLocation, 0x00ff00, stickThickness - 2.0f);
 			// 腕を表示
 			Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
 			// 網を表示
-			DrawNet(ringLocation, stickRotate);
+			DrawNet(ringLocation);
 		}
 	}
 	// 虫網を持っていないなら
@@ -228,22 +247,31 @@ void Player::Draw() const
 	}
 }
 
-void Player::DrawNet(Vector2D ringLocation, float stickRotate) const
+void Player::DrawNet(Vector2D ringLocation) const
 {
 	Vector2D point[4];
+	// 虫網のリング（緑の部分）の太さ
+	float ringThickness = 8.0f * D_OBJECT_SIZE_RATIO;
 
-	point[0].x = ringLocation.x + sinf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[0].y = ringLocation.y - cosf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[0].x = ringLocation.x + sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[0].y = ringLocation.y - cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
 
-	point[1].x = ringLocation.x - sinf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[1].y = ringLocation.y + cosf(stickRotate) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[1].x = ringLocation.x - sinf(m_rotateStick) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[1].y = ringLocation.y + cosf(m_rotateStick) * (m_tiltStick * m_ringRadius + 5.0f * D_OBJECT_SIZE_RATIO);
 
-	point[2].x = ringLocation.x + sinf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[2].y = ringLocation.y - cosf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[2].x = ringLocation.x + sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringRadius - fabsf(m_ringThickness) + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[2].y = ringLocation.y - cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringRadius - fabsf(m_ringThickness) + 5.0f * D_OBJECT_SIZE_RATIO);
 
-	point[3].x = ringLocation.x - sinf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
-	point[3].y = ringLocation.y + cosf(stickRotate + 0.5f * DX_PI_F) * (m_ringThickness + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[3].x = ringLocation.x - sinf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringRadius - fabsf(m_ringThickness) + 5.0f * D_OBJECT_SIZE_RATIO);
+	point[3].y = ringLocation.y + cosf(m_rotateStick + 0.5f * DX_PI_F) * (m_ringRadius - fabsf(m_ringThickness) + 5.0f * D_OBJECT_SIZE_RATIO);
 
+	// リングの表示
+	Camera::DrawLineW(point[0], point[2], 0x00ff00, ringThickness - 2.0f);
+	Camera::DrawLineW(point[0], point[3], 0x00ff00, ringThickness - 2.0f);
+	Camera::DrawLineW(point[1], point[2], 0x00ff00, ringThickness - 2.0f);
+	Camera::DrawLineW(point[1], point[3], 0x00ff00, ringThickness - 2.0f);
+
+	// 網の表示
 	Camera::DrawTriangleW(point[0], point[2], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
@@ -384,10 +412,12 @@ void Player::Move(float delta)
 		// 画像反転
 		if (m_moveSpeed.x < 0)
 		{
+			// 左向き
 			m_reverseFlag = false;
 		}
 		else if (m_moveSpeed.x > 0)
 		{
+			// 右向き
 			m_reverseFlag = true;
 		}
 	}
@@ -427,55 +457,141 @@ void Player::Net(float delta)
 	Vector2D rightStick = GetRightStick();
 	rightStick.y *= -1;
 
-	// 虫網を構えるアニメーション
-	if (rightStick.x != 0 || rightStick.y != 0)
-	{
-		m_holdingFlag = true;
-	}
-	else
-	{
-		m_holdingFlag = false;
-	}
-
-	// 虫網
-	m_ringVector = Vec2Mult(rightStick, m_stickLength);
-
 	m_oldTiltStick = m_tiltStick;
 	m_oldRotateStick = m_rotateStick;
 	m_tiltStick = Length(Vec2Sub({ 0.0f, 0.0f }, rightStick));
 	m_rotateStick = VecATan2({ 0.0f, 0.0f }, rightStick);
-	if (m_tiltStick == 0.0f)
+	
+	// 前の倒しこみより今の倒しこみが大きければ
+	if (m_tiltStick > m_oldTiltStick)
 	{
-		m_rotateStick = m_oldRotateStick;
-		m_ringThickness = m_ringRadius;
+		// 虫網を引いていない
+		m_pullTheNetFlag = false;
+	}
+	// 前の倒しこみより今の倒しこみが小されば
+	else if (m_tiltStick < m_oldTiltStick)
+	{
+		// 虫網を引いている
+		m_pullTheNetFlag = true;
+	}
+
+	float multiplier = 1.0f;	// 掛ける値
+	// 右を向いているとき
+	if (m_reverseFlag)
+	{
+		// 掛ける値を反転
+		multiplier *= -1.0f;
+	}
+	// スティックを右側に倒したとき
+	if (rightStick.x > 0.0f)
+	{
+		// 掛ける値を反転
+		multiplier *= -1.0f;
+	}
+	// スティックを下側に倒したとき
+	if (rightStick.y > 0.0f)
+	{
+		// 掛ける値を反転
+		multiplier *= -1.0f;
+	}
+	// 虫網を引くとき
+	if(m_pullTheNetFlag)
+	{
+		// 掛ける値を反転
+		multiplier *= -1.0f;
+	}
+
+	// プレイヤーに近いほど90°ずらす
+	m_rotateStick += 0.5f * DX_PI_F * (1.0f - m_tiltStick) * multiplier;
+	
+
+	float ringAcceleration = 500.0f * delta * D_OBJECT_SIZE_RATIO;
+
+	// スティックが倒されていないなら
+	if (Length(Vec2Sub({ 0.0f, 0.0f }, rightStick)) == 0.0f && Length(Vec2Sub({ 0.0f, 0.0f }, m_ringVector)) == 0.0f)
+	{
+		// 虫網を持たない
+		m_holdingFlag = false;
+
+		// 虫網（リング）の初期化
+		m_ringThickness = 0.0f;
+		m_ringSpeed = 0.0f;
+		m_ringVector = { 0.0f, 0.0f };
+
+		// 網の最短位置初期化
+		m_netLocation = m_location;
 	}
 	else
 	{
-		// リングの太さ
-		m_ringThickness += fabsf(m_tiltStick - m_oldTiltStick) * m_ringRadius;
-		m_ringThickness -= fabsf(m_rotateStick - m_oldRotateStick) * m_ringRadius;
+		// 虫網を構える
+		m_holdingFlag = true;
 
-		// 虫網を回す最小値、最大値を設定
-		if (m_ringThickness < 0.0f)
+		// リングの移動
+		// リングが、倒したい位置に無かった場合
+		if (Length(Vec2Sub(m_ringVector, Vec2Mult(rightStick, m_stickLength))) > 0.1f * D_OBJECT_SIZE_RATIO)
 		{
-			m_ringThickness = 0.0f;
+			// 加速
+			m_ringSpeed += ringAcceleration;
+
+			// 位置を変える
+			FixGradually(m_ringVector.x, sinf(m_rotateStick) * m_tiltStick * m_stickLength, m_ringSpeed);
+			FixGradually(m_ringVector.y, -cosf(m_rotateStick) * m_tiltStick * m_stickLength, m_ringSpeed);
+		}
+		else
+		{
+			// その位置にする
+			m_ringSpeed = 0.0f;
+			m_ringVector = Vec2Mult(rightStick, m_stickLength);
+		}
+
+		// リングの見た目の太さを、倒したり引いた時に太くする
+		FixGradually(m_ringThickness, 0.0f, fabsf(m_tiltStick - m_oldTiltStick) * m_ringRadius);
+
+		// リングが、プレイヤーと遠かったら
+		if(Length(m_ringVector) > m_stickLength / 5.0f)
+		{
+			// リングの見た目の太さを、回した時に細く、反対側に回す時に太くする
+			m_ringThickness += AngleSub(m_rotateStick, m_oldRotateStick) * m_ringRadius / 2.0f;
+		}
+
+		// リングの太さの最小値、最大値を設定
+		if (m_ringThickness < -m_ringRadius)
+		{
+			m_ringThickness = -m_ringRadius;
 		}
 		else if (m_ringThickness > m_ringRadius)
 		{
 			m_ringThickness = m_ringRadius;
 		}
-	}
 
-	Vector2D ringLocation = Vec2Add(m_location, m_ringVector);	// リングの位置
-	float netDistance;	// リングと網の距離
-	float netAngle;
-	netDistance = Length(Vec2Sub(m_netLocation, ringLocation));
-	if (netDistance > m_netLength)
-	{
-		netAngle = VecATan2(m_netLocation, ringLocation);
 
-		m_netLocation.x += sinf(netAngle) * (netDistance - m_netLength);
-		m_netLocation.y -= cosf(netAngle) * (netDistance - m_netLength);
+		// 網の最端位置の移動
+		Vector2D ringLocation = Vec2Add(m_location, m_ringVector);	// リングの位置
+		float netAngle;		// 網の向き
+		float netDistance;	// 網の距離
+
+		// 重力で落ちる表現
+		Vector2D ringUnderLocation = { ringLocation.x, ringLocation.y + m_netLength };
+		// 網からリングの下への向き
+		netAngle = VecATan2(m_netLocation, ringUnderLocation);
+		// 網からリングの下への距離
+		netDistance = Length(Vec2Sub(m_netLocation, ringUnderLocation));
+
+		// 移動
+		FixGradually(m_netLocation.x, m_netLocation.x + sinf(netAngle) * netDistance, netDistance * delta);
+		FixGradually(m_netLocation.y, m_netLocation.y - cosf(netAngle) * netDistance, netDistance * delta);
+
+		// 網の長さ制限
+		// 網からリングへの距離
+		netDistance = Length(Vec2Sub(m_netLocation, ringLocation));
+		if (netDistance > m_netLength)
+		{
+			// 網からリングへの向き
+			netAngle = VecATan2(m_netLocation, ringLocation);
+
+			m_netLocation.x += sinf(netAngle) * (netDistance - m_netLength);
+			m_netLocation.y -= cosf(netAngle) * (netDistance - m_netLength);
+		}
 	}
 }
 
