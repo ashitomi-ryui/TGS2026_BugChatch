@@ -10,7 +10,6 @@
 
 #include "Dragonfly.h"
 
-#include "../Ground.h"
 #include"../Tree.h"
 
 int Dragonfly::images[4] = { -1,-1,-1,-1 };
@@ -20,9 +19,10 @@ Dragonfly::Dragonfly() : Bug()
 	// 察知範囲
 	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
 
+	m_destinationNum = 0;
 	m_hoveringMove = 0.0f;
+	m_hoveringTimeFlag = false;
 	m_hoveringFlag = false;
-	m_hoveringFlag2 = false;
 	m_hovering = 0;
 	m_isFlip = false;
 }
@@ -70,7 +70,14 @@ void Dragonfly::Update(float delta)
 
 				break;
 			case eMove:
-				Move(delta);
+				if (m_hoveringFlag)
+				{
+					Hovering(delta);
+				}
+				else
+				{
+					Move(delta);
+				}
 
 				break;
 			case ePanic:
@@ -133,16 +140,11 @@ void Dragonfly::Spawn()
 	Vector2D location = Bug::RandomLocationOnTheScreen();
 
 
-	m_destination = FindNearestTree(location);
-
 	// 目的地をランダムに座標をずらす
 	m_destination.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
 	m_destination.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
 	// 位置を近くの木に設定する
-	//location = FindNearestGround(location);
-	// 位置を少しずらす
-	//location.x += Random::GetRand((D_GROUND_WIDTH / 2), -(D_GROUND_WIDTH / 2));
-	//location.y += Random::GetRand((D_GROUND_HEIGHT / 2), -(D_GROUND_HEIGHT / 2));
+	location = FindNearestTree(location);
 
 	// スポーン
 	Set(location);
@@ -160,7 +162,7 @@ void Dragonfly::ReSpawn(float delta)
 	}
 }
 
-void Dragonfly::SetDestination(Vector2D location)
+void Dragonfly::SetDestination()
 {
 	 //ランダムな位置を目的地にする
 	/*for (int i = 0;i < 5;i++)
@@ -168,83 +170,99 @@ void Dragonfly::SetDestination(Vector2D location)
 		m_destinations[i] = Bug::RandomLocationOnTheScreen();
 		m_isDestinations[i] = true;
 	}*/
-	m_destination = FindNearestTree(location);
-	//m_destination = FindNearestGround(location);
-	
 
-	// 目的地をランダムに座標をずらす
-	m_destination.x += Random::GetRand((D_GROUND_WIDTH / 2), -(D_GROUND_WIDTH / 2));
-	m_destination.y += Random::GetRand((D_GROUND_HEIGHT / 2), -(D_GROUND_HEIGHT / 2));
+
+	Vector2D temp[5] = {};	// 仮の目的地
+	bool m_isAlreadySet[5] = {};	// 設定済みかどうか
+
+	// 仮の目的地に5つのランダムな点を設定する
+	for (int i = 0;i < 5;i++)
+	{
+		temp[i] = RandomLocationOnTheScreen();
+		m_isAlreadySet[i] = false;
+	}
+
+	Vector2D reference = m_location;	// 基準点
+	float minLen;	// 最も近い距離
+
+	// 仮の目的地のあてはめ
+	// i = 目的地の添え字
+	for (int i = 0;i < 5;i++)
+	{
+		// 最も近い距離の初期化
+		minLen = -1.0f;
+
+		// j = 参照する仮の目的地の添え字
+		for (int j = 0;j < 5;j++)
+		{
+			// 並び替えがまだなら
+			if(m_isAlreadySet[j] == false)
+			{
+				// 最も近い距離が未設定、または、基準点までの距離が最も近い距離より小さいなら
+				if (minLen == -1.0f || minLen > Length(Vec2Sub(reference, temp[j])))
+				{
+					// 目的地をその点にする
+					m_destinations[i] = temp[j];
+					m_isAlreadySet[j] = true;
+					// その点を基準点にする
+					reference = temp[j];
+				}
+			}
+		}
+	}
+	m_destinationNum = 0;
 }
 
 void Dragonfly::Animation(float delta)
 {
 	Bug::Animation(delta);
 
-	// 木の裏にいる
-	if (m_isBack)
+	// 逃げているなら
+	if (m_isEscape)
 	{
-		m_animCount = 0;
+		// 画像の切り替え
+		if (m_animTime > 0.025f)
+		{
+			m_animTime = 0.0f;
+			m_animCount = m_animCount % 2;
+		}
 	}
+	// 逃げていないなら
 	else
 	{
-		// 逃げているなら
-		if (m_isEscape)
+		switch (m_state)
 		{
+		case eStand:
+			// 画像の切り替え
+			m_animCount = 0;
+
+			break;
+		case eMove:
+			// 画像の切り替え
+			if (m_animTime > 0.05f)
+			{
+				if (m_hoveringFlag)
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 2;
+				}
+				else
+				{
+					m_animTime = 0.0f;
+					m_animCount = m_animCount % 2;
+				}
+			}
+
+			break;
+		case ePanic:
 			// 画像の切り替え
 			if (m_animTime > 0.025f)
 			{
 				m_animTime = 0.0f;
-				m_animCount = m_animCount % 3 + 1;
+				m_animCount = m_animCount % 2;
 			}
 
-			// 画像の向きを徐々に移動方向に向ける
-			//GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
-		}
-		// 逃げていないなら
-		else
-		{
-			switch (m_state)
-			{
-			case eStand:
-				// 画像の切り替え
-				if (m_animTime > 0.05f)
-				{
-
-					m_animTime = 0.0f;
-					m_animCount = (m_animCount + 1) % 3;
-
-				}
-
-				// 画像の向きを徐々に上に向ける
-				//GraduallyTurn(m_Angle, 0.0f, 2.0f * DX_PI_F * delta);
-
-				break;
-			case eMove:
-				// 画像の切り替え
-				if (m_animTime > 0.05f)
-				{
-					m_animTime = 0.0f;
-					m_animCount = m_animCount % 3 + 1;
-				}
-
-				// 画像の向きを徐々に移動方向に向ける
-				//GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
-
-				break;
-			case ePanic:
-				// 画像の切り替え
-				if (m_animTime > 0.025f)
-				{
-					m_animTime = 0.0f;
-					m_animCount = m_animCount % 3 + 1;
-				}
-
-				// 画像の向きを徐々に移動方向に向ける
-				//GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
-
-				break;
-			}
+			break;
 		}
 	}
 }
@@ -314,107 +332,47 @@ void Dragonfly::Stand(float delta)
 
 		// 巡回状態へ
 		m_state = eMove;
-		// 向きを0.25πごとに区切ったランダムな向きに
-		//m_direction = Random::GetRand(0.0f, 2.0f, 0.25) * DX_PI_F;
-		// ランダムな木を目的地に設定
-		SetDestination(RandomLocationOnTheScreen());
+		// 目的地を設定
+		SetDestination();
 
 	}
 }
 
 void Dragonfly::Move(float delta)
 {
+	// 加速度
+	float acceleration = 1000.0f;
+	// 最大速度
+	float maxSpeed = 400.0f;
+	// 減速度
+	float deceleration = 200.0f;
 
+	// 徐々に目的地に向ける
+	float destinationDirection = VecATan2(m_location, m_destinations[m_destinationNum]);	// 目的地への向き
+	GraduallyTurn(m_direction, destinationDirection, 2.0f * DX_PI_F * delta);
 
-	//// 加速度
-	//float acceleration = 1000.0f;
-	//// 最大速度
-	//float maxSpeed = 400.0f;
-	//// 減速度
-	//float deceleration = 200.0f;
+	// 加速
+	Acceleration(acceleration, maxSpeed, m_direction, delta);
+	// 減速
+	Deceleration(deceleration, delta);
 
-	//// 徐々に目的地に向ける
-	//float destinationDirection = VecATan2(m_location, m_destination);
-
-
-
-	//GraduallyTurn(m_direction, destinationDirection, 2.0f * DX_PI_F * delta);
-
-	//// 加速
-	//Acceleration(acceleration, maxSpeed, m_direction, delta);
-	//// 減速
-	//Deceleration(deceleration, delta);
-
-	if (m_hoveringMove >= 3.0f && m_hoveringFlag == false)
+	// 目的地についたら
+	if (Length(Vec2Sub(m_location, m_destinations[m_destinationNum])) < 10.0f)
 	{
-		int a = (int)Random::GetRand(1.0f);
-		if (a)
+		if (m_destinationNum < 4)
 		{
-			m_moveSpeed.x = 8.0f;
-			m_isFlip = true;
+			m_destinationNum++;
 		}
 		else
 		{
-			m_moveSpeed.x = -8.0f;
-			m_isFlip = false;
+			// 待機状態へ
+			m_moveSpeed = { 0.0f, 0.0f };
+			m_state = eStand;
+
+			// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
+			m_transitionTime = Random::GetRand(10.0f, 30.0f, 0.1f);
 		}
-
-		m_moveSpeed.y = Random::GetRand(1.0f);
-
-		if (m_moveSpeed.y == 8.0f)
-		{
-			m_moveSpeed.y = -8.0f;
-			
-		}
-		m_hoveringFlag = true;
-		m_hoveringFlag2 = false;
 	}
-	if (m_hoveringMove >= 5.0f)
-	{
-		m_hoveringFlag2 = true;
-	}
-
-	if (m_hoveringMove >= 6.5f)
-	{
-		m_hoveringMove = 0;
-		m_hoveringFlag = false;
-	}
-
-	if (m_hoveringFlag2 == true)
-	{
-		m_hovering = (int)Random::GetRand(2.0f);
-		if (m_hovering == 2)
-		{
-			m_hovering = -1;
-		}
-		m_location.x += m_hovering;
-		m_location.y += m_hovering;
-	}
-
-	if (m_hoveringFlag2 == false)
-	{
-		m_location.x += m_moveSpeed.x;
-		m_location.y += m_moveSpeed.y;
-	}
-	// 目的地についたら待機状態へ
-	//m_moveSpeed = { 0.0f, 0.0f };
-	m_state = eStand;
-
-	//return m_location.x;
-	//Vector2D treeLocation = FindNearestTree(m_location);
-	//if (Length(Vec2Sub(m_location, m_destination)) < 10.0f &&
-	//	m_location.x > treeLocation.x - D_TREE_WIDTH &&
-	//	m_location.x < treeLocation.x + D_TREE_WIDTH &&
-	//	m_location.y > treeLocation.y - D_TREE_HEIGHT &&
-	//	m_location.y < treeLocation.y + D_TREE_HEIGHT)
-	//{
-	//	// 目的地についたら待機状態へ
-	//	m_moveSpeed = { 0.0f, 0.0f };
-	//	m_state = eStand;
-
-	//	// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
-	//	m_transitionTime = Random::GetRand(10.0f, 30.0f, 0.1f);
-	//}
 }
 
 void Dragonfly::Panic(float delta)
@@ -434,8 +392,8 @@ void Dragonfly::Panic(float delta)
 	
 	}
 	
-	m_hoveringFlag = true;
-	m_hoveringFlag2 = false;
+	m_hoveringTimeFlag = true;
+	m_hoveringFlag = false;
 	// 加速度
 	float acceleration = 2000.0f;
 	// 最大速度
@@ -453,9 +411,65 @@ void Dragonfly::Panic(float delta)
 	{
 		// 巡回状態へ
 		m_state = eMove;
-		// 近くの木を目的地に設定
-		SetDestination(m_location);
+		// 目的地を設定
+		SetDestination();
 	}
+}
+
+void Dragonfly::Hovering(float delta)
+{
+	if (m_hoveringMove >= 3.0f && m_hoveringTimeFlag == false)
+	{
+		int a = (int)Random::GetRand(1.0f);
+		if (a)
+		{
+			m_moveSpeed.x = 8.0f;
+			m_isFlip = true;
+		}
+		else
+		{
+			m_moveSpeed.x = -8.0f;
+			m_isFlip = false;
+		}
+
+		m_moveSpeed.y = Random::GetRand(1.0f);
+
+		if (m_moveSpeed.y == 8.0f)
+		{
+			m_moveSpeed.y = -8.0f;
+
+		}
+		m_hoveringTimeFlag = true;
+		m_hoveringFlag = false;
+	}
+	if (m_hoveringMove >= 5.0f)
+	{
+		m_hoveringFlag = true;
+	}
+
+	if (m_hoveringMove >= 6.5f)
+	{
+		m_hoveringMove = 0;
+		m_hoveringTimeFlag = false;
+	}
+
+	if (m_hoveringFlag == true)
+	{
+		m_hovering = (int)Random::GetRand(2.0f);
+		if (m_hovering == 2)
+		{
+			m_hovering = -1;
+		}
+		m_location.x += m_hovering;
+		m_location.y += m_hovering;
+	}
+
+	if (m_hoveringFlag == false)
+	{
+		m_location.x += m_moveSpeed.x;
+		m_location.y += m_moveSpeed.y;
+	}
+	m_state = eStand;
 }
 
 void Dragonfly::PerceptionJudgment()

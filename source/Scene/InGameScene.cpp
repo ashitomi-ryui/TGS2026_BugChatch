@@ -13,11 +13,9 @@
 
 #include"../Object/Tree.h"
 #include"../Object/Leaf.h"
-#include"../Object/Ground.h"
 
 Tree tree[D_TREE_MAX];
 Leaf leaf[D_LEAF_MAX];
-Ground ground[D_GROUND_MAX];
 Player player;
 Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
@@ -64,10 +62,6 @@ int InGameInit(void)//äeÉvÉçÉOÉâÉÄÇÃèâä˙âª
 		leaf[id].Set({ D_LEAF_WIDTH + (float)(n % (int)(D_STAGE_WIDTH - D_LEAF_WIDTH * 2.0f)),
 			D_LEAF_HEIGHT + (float)(n % (int)(D_STAGE_HEIGHT - D_LEAF_HEIGHT * 2.0f))
 			});
-	}
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		ground[id].Set({ 300.0f + id * 200.0f,300.0f + (float)(id % 3) * 400.0f });
 	}
 
 	timer = 0;
@@ -128,10 +122,6 @@ eSceneType InGameUpdate(float delta_second)
 	{
 		leaf[id].Update(delta_second);
 	}
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		ground[id].Update(delta_second);
-	}
 
 	return eInGame;
 }
@@ -155,10 +145,6 @@ void InGameDraw(void)
 		grasshopper[id].DrawOnTheBack();
 	}
 
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		ground[id].Draw(id);
-	}
 	for (int id = 0; id < D_LEAF_MAX; id++)
 	{
 		leaf[id].Draw(id);
@@ -248,26 +234,4 @@ Vector2D FindNearestLeaf(Vector2D location)
 	}
 
 	return leaf[nearestId].GetLocation();
-}
-
-Vector2D FindNearestGround(Vector2D location)
-{
-	int nearestId = -1;
-	float nearestLen;
-	Vector2D groundLocation;
-	float len;
-
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		groundLocation = ground[id].GetLocation();
-		len = Length(Vec2Sub(location, groundLocation));
-
-		if (nearestId == -1 || len < nearestLen)
-		{
-			nearestId = id;
-			nearestLen = len;
-		}
-	}
-
-	return ground[nearestId].GetLocation();
 }

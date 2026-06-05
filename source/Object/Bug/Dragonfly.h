@@ -7,15 +7,17 @@
 class Dragonfly : public Bug
 {
 private:
-	Vector2D m_destinations[5] = {};
-	bool m_isDestinations[5] = {};
+	Vector2D m_destinations[5] = {};	// 目的地（5つ）
+	int m_destinationNum;	// 目的地の添え字
 
 	static int images[4];
 	float m_hoveringMove;
-	bool m_hoveringFlag;
-	bool m_hoveringFlag2;
+	bool m_hoveringTimeFlag;
+	bool m_hoveringFlag;	// ホバリングしているかどうか
 	int m_hovering;
 	bool m_isFlip;
+
+	int m_hoveringCount;	// ホバリング回数
 
 public:
 	Dragonfly();
@@ -41,8 +43,7 @@ public:
 	/// <summary>
 	/// 目的地の設定
 	/// </summary>
-	/// <param name="location">移動したい場所</param>
-	void SetDestination(Vector2D location);
+	void SetDestination();
 
 
 	/// <summary>
@@ -72,6 +73,12 @@ public:
 	/// </summary>
 	/// <param name="delta"></param>
 	void Panic(float delta);
+
+	/// <summary>
+	/// ホバリング
+	/// </summary>
+	/// <param name="delta"></param>
+	void Hovering(float delta);
 
 	/// <summary>
 	/// 察知判定
