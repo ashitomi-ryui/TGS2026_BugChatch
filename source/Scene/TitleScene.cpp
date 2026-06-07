@@ -46,6 +46,8 @@ int Title::Init()
 	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
 	back_ground = LoadGraph("assets/images/Title/mori.jpg");
 
+	LoadDivGraph("assets/images/OtherObjects/word3.png",10,10,1,30,30,word3);
+
 	Titlebgm = LoadSoundMem("assets/Audio/Title.wav");
 	if (Titlebgm == -1)
 	{
@@ -245,6 +247,8 @@ void Title::Draw()const
 	{
 		DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);//通常サイズに戻す
 	}
+
+	DrawRotaGraph(100, 100, 1.0, 0.0, word3[2], TRUE);
 
 	SetFontSize(50);
 	DrawString(200, 200, "Aボタンで開始できます", GetColor(255, 255, 255), TRUE);//仮タイトル

@@ -23,6 +23,8 @@ private:
 	int pressed;
 	float time;
 	float time_rug;
+private:
+	int word3[10];
 public:
 	Title();
 	~Title();
