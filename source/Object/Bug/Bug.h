@@ -85,14 +85,6 @@ protected:
 	/// <param name="delta"></param>
 	void Deceleration(float deceleration, float delta);
 
-	/// <summary>
-	/// 徐々に向ける
-	/// </summary>
-	/// <param name="that">変数</param>
-	/// <param name="angle">向けたい方向</param>
-	/// <param name="turningSpeed">方向転換速度</param>
-	void GraduallyTurn(float& that, float angle, float turningSpeed);
-
 protected:
 	/// <summary>
 	/// アニメーション

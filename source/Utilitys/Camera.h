@@ -36,7 +36,7 @@ public:
 	/// <param name="location2">座標2</param>
 	/// <param name="Color">色</param>
 	/// <param name="Thinckness">太さ</param>
-	static void DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, int Thinckness = 1);
+	static void DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, float Thinckness = 1.0f);
 	
 	/// <summary>
 	/// ワールド座標に三角形を描画

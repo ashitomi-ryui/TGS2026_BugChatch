@@ -19,24 +19,30 @@ private:
 	float m_netLength;		// 網の終点までの長さ
 
 	Vector2D m_ringVector;	// プレイヤーを基準とした虫網（リング）の中心の座標
-	Vector2D m_netLocation;	// 虫網（リング）を基準とした網の終点（膨らんでいる部分）
+	Vector2D m_netLocation;	// 網の終点座標（膨らんでいる部分）
 
-	float m_ringThickness;	// 虫網（リング）の太さ
+	float m_ringThickness;	// 虫網（リング）の太さ（0.0fが太く、0.0fから離れるほど細い）
 
 	float m_ringRadius;		// リングの大きさ最大値
 	float m_stickAngle;		// 棒の角度
 
 	float m_tiltStick;		// スティックの倒しこみ（ 1 ～ -1 ）
-	float m_oldTiltStick;	// 前のスティックの倒しこみ（ 1 ～ -1 ）
+	float m_oldTiltStick;	// 前のスティックの倒しこみ（ 0 ～ 1 ）
 
 	float m_rotateStick;	// スティックの角度（90°= 1）
 	float m_oldRotateStick;	// 前のスティックの角度（90°= 1）
+	float m_valueRotateStick;	// スティックの角度に足す値
 
-	// アニメーション
+	float m_ringSpeed;	// リングの速度
+
 	bool m_walkingFlag;	// 歩くフラグ
 	bool m_holdingFlag;	// 虫網を持つフラグ
+	bool m_oldHoldingFlag;	// 前フレームの虫網を持つフラグ
 	bool m_reverseFlag;	// 反転フラグ
+	bool m_pullTheNetFlag;	// 虫網を引くフラグ
+	bool m_rotatingPullFlag;	// 回転させながら引くフラグ
 
+	// アニメーション
 	float m_blinkTime;		// 瞬き時間
 	float m_headAnimTime;	// 頭の時間
 	int m_headAnimCount;	// 頭のカウント
@@ -50,6 +56,7 @@ private:
 	static int m_bodyImage;
 	static int m_legImage[4];
 	static int m_armImage;
+	static int m_netImage;
 
 public:
 	Player();
@@ -61,7 +68,7 @@ public:
 	void Draw() const;
 
 private:
-	void DrawNet(Vector2D ringLocation, float stickRotate) const;
+	void DrawNet(Vector2D ringLocation) const;
 	void Animation(float delta);
 	void Move(float delta);
 	void Net(float delta);

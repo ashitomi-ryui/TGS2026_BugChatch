@@ -43,14 +43,14 @@ void Camera::Draw() const
 
 }
 
-void Camera::DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, int Thinckness)
+void Camera::DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, float Thinckness)
 {
 	location1.x += -m_location.x + D_WIN_WIDTH / 2;
 	location1.y += -m_location.y + D_WIN_HEIGHT / 2;
 	location2.x += -m_location.x + D_WIN_WIDTH / 2;
 	location2.y += -m_location.y + D_WIN_HEIGHT / 2;
 
-	DrawLine((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, Color, Thinckness);
+	DrawLine((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, Color, (int)Thinckness);
 }
 
 void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D location3, unsigned int Color)

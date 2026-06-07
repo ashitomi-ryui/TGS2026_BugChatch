@@ -13,18 +13,16 @@
 
 #include"../Object/Tree.h"
 #include"../Object/Leaf.h"
-#include"../Object/Ground.h"
 
 Tree tree[D_TREE_MAX];
 Leaf leaf[D_LEAF_MAX];
-Ground ground[D_GROUND_MAX];
 Player player;
 Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
 Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float timer;
 Camera camera(player.GetPlayerLocation());
-
+int BGM;
 int flowerImage[2] = { -1, -1 };
 
 int InGameInit(void)//各プログラムの初期化
@@ -38,6 +36,12 @@ int InGameInit(void)//各プログラムの初期化
 	Grasshopper::Init();
 	Dragonfly::Init();
 	player.Init();
+	
+	BGM = LoadSoundMem("assets/Audio/AS_1468345_Main.wav");
+	if (BGM == -1)
+	{
+		return FALSE;
+	}
 
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
@@ -59,10 +63,6 @@ int InGameInit(void)//各プログラムの初期化
 			D_LEAF_HEIGHT + (float)(n % (int)(D_STAGE_HEIGHT - D_LEAF_HEIGHT * 2.0f))
 			});
 	}
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		ground[id].Set({ 300.0f + id * 200.0f,300.0f + (float)(id % 3) * 400.0f });
-	}
 
 	timer = 0;
 	for (int id = 0; id < D_CICADA_MAX; id++)
@@ -81,16 +81,19 @@ int InGameInit(void)//各プログラムの初期化
 
 	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1");
 	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2");
-
+	ChangeVolumeSoundMem(100, BGM);
+	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
 	return TRUE;
 }
 
 eSceneType InGameUpdate(float delta_second)
 {
+	
 	timer += delta_second;
 #ifndef _DEBUG
 	if (timer > 60.0f)
 	{
+		StopSoundMem(BGM);
 		return eResult;//ゲーム終了時にタイトルに戻る（仮）
 	}
 #endif
@@ -119,10 +122,6 @@ eSceneType InGameUpdate(float delta_second)
 	{
 		leaf[id].Update(delta_second);
 	}
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		ground[id].Update(delta_second);
-	}
 
 	return eInGame;
 }
@@ -146,10 +145,6 @@ void InGameDraw(void)
 		grasshopper[id].DrawOnTheBack();
 	}
 
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		ground[id].Draw(id);
-	}
 	for (int id = 0; id < D_LEAF_MAX; id++)
 	{
 		leaf[id].Draw(id);
@@ -239,26 +234,4 @@ Vector2D FindNearestLeaf(Vector2D location)
 	}
 
 	return leaf[nearestId].GetLocation();
-}
-
-Vector2D FindNearestGround(Vector2D location)
-{
-	int nearestId = -1;
-	float nearestLen;
-	Vector2D groundLocation;
-	float len;
-
-	for (int id = 0; id < D_GROUND_MAX; id++)
-	{
-		groundLocation = ground[id].GetLocation();
-		len = Length(Vec2Sub(location, groundLocation));
-
-		if (nearestId == -1 || len < nearestLen)
-		{
-			nearestId = id;
-			nearestLen = len;
-		}
-	}
-
-	return ground[nearestId].GetLocation();
 }
