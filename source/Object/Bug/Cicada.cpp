@@ -124,8 +124,8 @@ void Cicada::Spawn()
 	// 位置を近くの木に設定する
 	location = FindNearestTree(location);
 	// 位置を少しずらす
-	location.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
-	location.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
+	location.x += Random::GetRand((D_TREE_WIDTH / 2.0f), -(D_TREE_WIDTH / 4.0f));
+	location.y += Random::GetRand((D_TREE_HEIGHT / 2.0f), -(D_TREE_HEIGHT / 4.0f));
 
 	// スポーン
 	Set(location);
@@ -278,7 +278,7 @@ void Cicada::Stand(float delta)
 	m_moveSpeed = { 0.0f, 0.0f };
 	if (m_transitionTime <= 0.0f)
 	{
-		// 巡回状態へ
+		// 移動状態へ
 		m_state = eMove;
 		// 向きを0.25πごとに区切ったランダムな向きに
 		m_direction = Random::GetRand(0.0f, 2.0f, 0.25) * DX_PI_F;
@@ -307,7 +307,8 @@ void Cicada::Move(float delta)
 	Deceleration(deceleration, delta);
 
 	Vector2D treeLocation = FindNearestTree(m_location);
-	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f &&
+	// 目的地についたかつ、木の範囲なら
+	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f * D_OBJECT_SIZE_RATIO &&
 		m_location.x > treeLocation.x - D_TREE_WIDTH &&
 		m_location.x < treeLocation.x + D_TREE_WIDTH &&
 		m_location.y > treeLocation.y - D_TREE_HEIGHT &&
@@ -342,7 +343,7 @@ void Cicada::Panic(float delta)
 	// 遷移時間が0以下なら
 	if (m_transitionTime <= 0.0f)
 	{
-		// 巡回状態へ
+		// 移動状態へ
 		m_state = eMove;
 		// 近くの木を目的地に設定
 		SetDestination(m_location);

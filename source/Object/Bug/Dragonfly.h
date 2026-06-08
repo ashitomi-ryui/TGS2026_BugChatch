@@ -8,17 +8,21 @@ class Dragonfly : public Bug
 {
 private:
 	Vector2D m_destinations[5] = {};	// 目的地（5つ）
-	int m_destinationNum;	// 目的地の添え字
+	int m_destinationSub;	// 目的地の添え字
+	int m_destinationNum;	// 目的地の数
 
-	static int images[4];
-	float m_hoveringMove;
-	bool m_hoveringTimeFlag;
-	bool m_hoveringFlag;	// ホバリングしているかどうか
-	int m_hovering;
-	bool m_isFlip;
-
+	bool m_isHovering;	// ホバリングしているかどうか
 	int m_hoveringCount;	// ホバリング回数
+	bool m_isFlapping;		// 羽ばたき
 
+	float shiita;  // ホバリングがどれぐらい完了しているか
+	float bottom;     // ホバリング時の底辺
+	Vector2D m_startLocation;   // ホバリング開始地点
+
+	bool m_isBreak;	// 休憩
+
+	static int images[4];	// 画像情報
+	bool m_isFlip;			// 反転
 public:
 	Dragonfly();
 	~Dragonfly();
@@ -81,6 +85,12 @@ public:
 	void Hovering(float delta);
 
 	/// <summary>
+	/// 休憩に向かう
+	/// </summary>
+	/// <param name="delta"></param>
+	void HeadingForABreak(float delta);
+
+	/// <summary>
 	/// 察知判定
 	/// </summary>
 	/// <param name="delta"></param>
@@ -90,9 +100,4 @@ public:
 	/// 逃げ状態への遷移
 	/// </summary>
 	void TransitionToEscape();
-
-	/// <summary>
-	/// 前面に置く
-	/// </summary>
-	void PutInFront();
 };

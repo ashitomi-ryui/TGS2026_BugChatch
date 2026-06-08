@@ -64,8 +64,8 @@ void Bug::Set(Vector2D location)
 	m_destination = { 0.0f, 0.0f };
 	// 察知時間
 	m_detectionTime = 0.0f;
-	// 遷移時間を0.1fごとに区切った10.0f~30.0fにする
-	m_transitionTime = Random::GetRand(10.0f, 30.0f, 0.1f);
+	// 遷移時間を0.1fごとに区切った0.0f~10.0fにする
+	m_transitionTime = Random::GetRand(10.0f, 0.1f);
 	// アニメーション
 	m_animTime = 0.0f;
 	m_animCount = 0;

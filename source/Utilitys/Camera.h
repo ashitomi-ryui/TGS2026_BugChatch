@@ -1,5 +1,6 @@
 #pragma once
 #include "Math.h"
+#include <DxLib.h>
 
 //==========================================================
 // マクロ定義
@@ -73,6 +74,16 @@ public:
 	/// <param name="ReverseXFlag">横反転</param>
 	/// <param name="ReverseYFlage">縦反転</param>
 	static void DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlage = false);
+	
+	/// <summary>
+	/// ワールド座標で文章を描画
+	/// </summary>
+	/// <param name="location">座標</param>
+	/// <param name="size">大きさ</param>
+	/// <param name="Color">色</param>
+	/// <param name="FormatString">文字情報</param>
+	/// <param name=""></param>
+	static void DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...);
 
 	/// <summary>
 	/// 画面内か調べる

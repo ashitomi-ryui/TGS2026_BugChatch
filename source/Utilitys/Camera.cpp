@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "Camera.h"
 #include <cmath>
+#include <string.h>
 
 Vector2D Camera::m_location = { 0.0f, 0.0f };
 
@@ -90,6 +91,40 @@ void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHa
 
 	DrawRotaGraphF(location.x, location.y, ExRate, Angle, GrHandle, true, ReverseXFlag, ReverseYFlage);
 
+}
+
+void Camera::DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...)
+{
+	// í∑Ç≥
+	int maxLen = -1;
+	int len = 0;
+	// çsêî
+	int count = 0;
+	for (int i = 0;FormatString[i] != '\0';i++)
+	{
+		if (FormatString[i] == '\n')
+		{
+			count++;
+			if (maxLen == -1 || maxLen < len)
+				maxLen = len;
+			len = 0;
+		}
+		else
+		{
+			len++;
+		}
+	}
+	if (maxLen == -1)
+		maxLen = (int)strlen(FormatString);
+
+	location.x -= (float)maxLen / 2.0f * size;
+	location.y -= (float)count / 2.0f * size;
+
+	location.x += -m_location.x + D_WIN_WIDTH / 2;
+	location.y += -m_location.y + D_WIN_HEIGHT / 2;
+
+	SetFontSize(size);
+	DrawFormatStringF(location.x, location.y, Color, FormatString);
 }
 
 bool Camera::CheckItsOnTheScreen(Vector2D location, float radius)
