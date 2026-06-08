@@ -6,14 +6,14 @@ int Random::seed = 0;
 
 void Random::SetSeed(float f)
 {
-	seed = (int)(f * (float)0xfa2b) + rand();
+	seed = (int)(f * (float)0xfa2b) + DxLib::GetRand(RAND_MAX);
 }
 
 float Random::GetRand(float num1, float num2, float interval)
 {
 	seed += 0x6a23;
 	seed *= 0xfa2b;
-	seed += rand();
+	seed += DxLib::GetRand(RAND_MAX);
 	seed = abs(seed);
 	seed %= RAND_MAX;
 

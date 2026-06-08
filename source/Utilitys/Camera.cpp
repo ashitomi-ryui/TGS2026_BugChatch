@@ -125,6 +125,7 @@ void Camera::DrawFormatStringW(Vector2D location, int size, unsigned int Color, 
 
 	SetFontSize(size);
 	DrawFormatStringF(location.x, location.y, Color, FormatString);
+	SetFontSize(10);
 }
 
 bool Camera::CheckItsOnTheScreen(Vector2D location, float radius)
