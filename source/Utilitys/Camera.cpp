@@ -34,9 +34,8 @@ std::vector<std::string> Camera::word3_1Data = {};
 std::vector<std::string> Camera::word4Data = {};
 
 // コンストラクタ
-Camera::Camera(Vector2D location)
+Camera::Camera()
 {
-	m_location = location;
 }
 
 // デストラクタ
@@ -98,6 +97,8 @@ void Camera::Init()
 		"網", "振", "回", "虫", "乱", "獲",
 		"捕", "秒", "合", "計", "位", "匹",
 	};
+
+	m_location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f };
 }
 
 // 更新処理
@@ -123,9 +124,36 @@ void Camera::Update(Vector2D playerLocation)
 
 }
 
-void Camera::Draw() const
+void Camera::Draw()
 {
+	Vector2D location1 = FitLocationToScreen({ 0.0f, 0.0f });
+	Vector2D location2 = FitLocationToScreen({ D_WIN_WIDTH, 0.0f });
+	Vector2D location3 = FitLocationToScreen({ 0.0f, D_WIN_HEIGHT });
+	Vector2D location4 = FitLocationToScreen({ D_WIN_WIDTH, D_WIN_HEIGHT });
+	DxLib::DrawBox(D_WIN_WIDTH, 0.0f, location1.x, location1.y, 0x000000, true);
+	DxLib::DrawBox(D_WIN_WIDTH, D_WIN_HEIGHT, location2.x, location2.y, 0x000000, true);
+	DxLib::DrawBox(0.0f, 0.0f, location3.x, location3.y, 0x000000, true);
+	DxLib::DrawBox(0.0f, D_WIN_HEIGHT, location4.x, location4.y, 0x000000, true);
+}
 
+Vector2D Camera::GetScreenLocation()
+{
+	return m_screenLocation;
+}
+
+float Camera::GetScreenRatioSize()
+{
+	return m_screenRatioSize;
+}
+
+void Camera::SetScreenLocation(Vector2D location)
+{
+	m_screenLocation = location;
+}
+
+void Camera::SetScreenRatioSize(float ratio)
+{
+	m_screenRatioSize = ratio;
 }
 
 void Camera::DrawLine(Vector2D location1, Vector2D location2, unsigned int Color, float Thinckness)
