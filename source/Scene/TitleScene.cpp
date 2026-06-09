@@ -2,31 +2,32 @@
 #include"../Utilitys/Input.h"
 #include<DxLib.h>
 
-//Title title;
+int Title::Titlebgm = -1;
+int Title::ChoiceSE = -1;
+int Title::DecisionSE = -1;
+int Title::start_pressed = -1;
+int Title::start_not_pressed = -1;
+int Title::help_pressed = -1;
+int Title::help_not_pressed = -1;
+int Title::end_pressed = -1;
+int Title::end_not_pressed = -1;
+int Title::ranking_pressed = -1;
+int Title::ranking_not_pressed = -1;
+int Title::back_ground = -1;
 
-//int TitleInit(void)//タイトルの初期化
-//{
-//	return TRUE;
-//}
-//
-//eSceneType TitleUpdate(float delta_second)//タイトル更新処理
-//{
-//	if (GetKeyInputState(KEY_INPUT_SPACE) == ePressed)
-//	{
-//		return eInGame;
-//	}
-//	
-//	return eTitle;
-//}
-//
-//void TitleDraw(void)//タイトル表示
-//{
-//	DrawString(200, 200, "SPACEを押してメイン画面へ移動",GetColor(225, 0, 0), TRUE);
-//}
+int Title::select_x = 0;
+int Title::select_y = 0;
+int Title::pressed = 0;
+float Title::time = 0.0f;
+float Title::time_rug = 0.5f;
+
+int Title::word1[50] = {};
+int Title::word3[10] = {};
+
 
 Title::Title()
 {
-	/*start_not_pressed = LoadGraph("assets/Title/start_off.png");*/
+
 }
 
 Title::~Title()
@@ -46,6 +47,7 @@ int Title::Init()
 	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
 	back_ground = LoadGraph("assets/images/Title/mori.jpg");
 
+	LoadDivGraph("assets/images/OtherObjects/word1.png", 50, 5, 10, 30, 30, word1);
 	LoadDivGraph("assets/images/OtherObjects/word3.png",10,10,1,30,30,word3);
 
 	Titlebgm = LoadSoundMem("assets/Audio/Title.wav");
@@ -64,10 +66,10 @@ int Title::Init()
 		return FALSE;
 	}
 	
-	select_x, select_y, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
-	time = 0.0f;
-	time_rug = 0.5f;
-PlaySoundMem(Titlebgm, DX_PLAYTYPE_BACK);
+    PlaySoundMem(Titlebgm, DX_PLAYTYPE_BACK);
+
+	select_x, select_y, pressed = 0;
+	time = 0.0f; time_rug = 0.5f;
 	return TRUE;
 }
 
@@ -248,10 +250,8 @@ void Title::Draw()const
 		DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);//通常サイズに戻す
 	}
 
-	DrawRotaGraph(100, 100, 1.0, 0.0, word3[2], TRUE);
+	DrawFormatString(100, 100, GetColor(255, 255, 255), "たいとるはりゅういにまかせました");
 
-	SetFontSize(50);
-	DrawString(200, 200, "Aボタンで開始できます", GetColor(255, 255, 255), TRUE);//仮タイトル
 	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", select_y);*/
 	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
 }

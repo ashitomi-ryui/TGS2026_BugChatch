@@ -1,6 +1,13 @@
 #include<DxLib.h>
 #include"ResultScene.h"
 
+int Result::word1[50] = {};
+int Result::word2[15] = {};
+int Result::word3[10] = {};
+int Result::word4[18] = {};
+int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
+int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
+
 Bug bug;
 
 Result::Result()
@@ -10,7 +17,7 @@ Result::Result()
 
 Result::~Result()
 {
-
+	
 }
 
 int Result::Init()
@@ -25,9 +32,45 @@ int Result::Init()
 	time = 0.0f;
 	time_rug = 0.5f;
 
-	c_count = bug.GetCicadaCount();
-	d_count = bug.GetDragonflyCount();
-	g_count = bug.GetGrasshopperCount();
+	LoadDivGraph("assets/images/OtherObjects/word1.png", 50, 5, 10, 30, 30, word1);
+	LoadDivGraph("assets/images/OtherObjects/word2.png", 15, 5, 3, 30, 30, word2);
+	LoadDivGraph("assets/images/OtherObjects/word3.png", 10, 10, 1, 30, 30, word3);
+	LoadDivGraph("assets/images/OtherObjects/word4.png", 18, 6, 3, 30, 30, word4);
+
+	p.point[0] = bug.GetCicadaCount();
+	p.point[1] = bug.GetDragonflyCount();
+	p.point[2] = bug.GetGrasshopperCount();
+	p.point[3] = p.point[0] + p.point[1] + p.point[2];
+
+	for (int i = 0; i < DISPLAY_LIMIT; i++)
+	{
+		if (p.point[i] >= 1000)
+		{
+			if (p.point[i] >= 10000)
+			{
+				p.point[i] = 9999;
+			}
+			p.size[i] = 3;
+		}
+		else if (1000 > p.point[i] && p.point[i] >= 100)
+		{
+			p.size[i] = 2;
+		}
+		else if (100 > p.point[i] && p.point[i] >= 10)
+		{
+			p.size[i] = 1;
+		}
+		else
+		{
+			p.size[i] = 0;
+		}
+
+		for (int j = p.size[i]; j >= 0; j--)
+		{
+			display[i][j] = (p.point[i] / divisor[j]) % 10;
+		}
+		
+	}
 
 	return TRUE;
 }
@@ -124,5 +167,13 @@ void Result::Draw()const
 		DrawRotaGraph(1000, 600, 1.0, 0.0, ranking_not_pressed, TRUE);
 	}
 
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", c_count);
+	for (int i = 0; i < DISPLAY_LIMIT; i++)
+	{
+		for (int j = p.size[i]; j >= 0; j--)
+		{
+			DrawRotaGraph(750 + 80 * (p.size[i] - j), 200 + 100 * i, 3.5, 0.0, word3[display[i][j]], TRUE);
+		}
+
+		DrawRotaGraph(750 + 80 * (p.size[i] + 1), 200 + 100 * i, 3.5, 0.0, word4[17], TRUE);
+	}
 }

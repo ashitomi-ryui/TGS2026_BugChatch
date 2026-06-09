@@ -3,28 +3,32 @@
 #include"SceneType.h"
 #include"../Utilitys/Input.h"
 
+#define TITLE_WORD (13)
+
 class Title
 {
 private:
-	int Titlebgm;
-	int ChoiceSE;
-	int DecisionSE;
-	int start_pressed;
-	int start_not_pressed;
-	int help_pressed;
-	int help_not_pressed;
-	int end_pressed;
-	int end_not_pressed;
-	int ranking_pressed;
-	int ranking_not_pressed;
-	int back_ground;
-	int select_x;
-	int select_y;
-	int pressed;
-	float time;
-	float time_rug;
+	static int Titlebgm;
+	static int ChoiceSE;
+	static int DecisionSE;
+	static int start_pressed;
+	static int start_not_pressed;
+	static int help_pressed;
+	static int help_not_pressed;
+	static int end_pressed;
+	static int end_not_pressed;
+	static int ranking_pressed;
+	static int ranking_not_pressed;
+	static int back_ground;
+	static int select_x;
+	static int select_y;
+	static int pressed;
+	static float time;
+	static float time_rug;
 private:
-	int word3[10];
+	static int word1[50];
+	static int word2[15];
+	static int word3[10];
 public:
 	Title();
 	~Title();

@@ -7,6 +7,8 @@
 #include"../Object/Bug/Dragonfly.h"
 #include"../Object/Bug/Grasshopper.h"
 
+#define DISPLAY_LIMIT (4)
+
 class Result
 {
 private:
@@ -22,9 +24,19 @@ private:
 	float time;
 	float time_rug;
 private:
-	int c_count;
-	int d_count;
-	int g_count;
+	struct point
+	{
+		int point[DISPLAY_LIMIT];
+		int size[DISPLAY_LIMIT];
+	};
+	static int divisor[DISPLAY_LIMIT];
+	static int display[DISPLAY_LIMIT][DISPLAY_LIMIT];
+	point p;
+private:
+	static int word1[50];
+	static int word2[15];
+	static int word3[10];
+	static int word4[18];
 public:
 	Result();
 	~Result();
