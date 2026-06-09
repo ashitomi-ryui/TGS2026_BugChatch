@@ -236,7 +236,6 @@ void Grasshopper::SetDestination(Vector2D location)
 		{
 			m_isJump = false;
 		}
-		m_isJump = false;
 	}
 	
 
