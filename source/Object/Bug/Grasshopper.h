@@ -6,14 +6,19 @@
 class Grasshopper :public Bug
 {
 private:
-	static int images[4];
+	static int images[7];
 	static int Audio[2];
+
+	bool m_isTurn;
+	bool m_isJump;	// ジャンプするか
 	float shiita;  //ジャンプがどれぐらい完了しているかのやつ
 	float top;     //ジャンプ時の頂点
 	Vector2D m_startLocation;   //ジャンプ開始地点
 	bool escape;   //逃げフラグ
 	bool jougai;   //画面外にでたか
 	Vector2D nearleaf;  //一番近くの草
+
+
 public:
 	Grasshopper();
 	~Grasshopper();
