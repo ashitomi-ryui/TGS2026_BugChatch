@@ -1,5 +1,6 @@
 #include"RankingScene.h"
 #include"../Utilitys/Input.h"
+#include"../Utilitys/Camera.h"
 #include<DxLib.h>
 
 Ranking::Ranking()
@@ -125,10 +126,12 @@ void Ranking::Draw()const
 		DrawRotaGraph(860, 595, 1.0, 0.0, title_not_pressed, TRUE);
 	}
 
-	for (int i = 0; i < 3; i++)
+	/*for (int i = 0; i < 3; i++)
 	{
 		DrawFormatString(100, 100 + 50 * i, GetColor(255, 255, 255), "%d", ranking[i]);
-	}
+	}*/
+
+	Camera::DrawFormatString({ 500,250 }, 100, 0.0, "1ˆÊ %d•C\n2ˆÊ %d•C\n3ˆÊ %d•C", ranking[0], ranking[1], ranking[2]);
 }
 
 int Ranking::LoadRankData()

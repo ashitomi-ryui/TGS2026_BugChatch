@@ -1,6 +1,7 @@
 #include<DxLib.h>
 #include"ResultScene.h"
 #include"RankingScene.h"
+#include"../Utilitys/Camera.h"
 
 int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
 int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
@@ -172,13 +173,6 @@ void Result::Draw()const
 		DrawRotaGraph(1000, 600, 1.0, 0.0, ranking_not_pressed, TRUE);
 	}
 
-	//for (int i = 0; i < DISPLAY_LIMIT; i++)
-	//{
-	//	for (int j = p.size[i]; j >= 0; j--)
-	//	{
-	//		DrawRotaGraph(750 + 80 * (p.size[i] - j), 200 + 100 * i, 3.5, 0.0, word3[display[i][j]], TRUE);
-	//	}
+	Camera::DrawFormatString({ 550,200 }, 100, 0.0, "ÇπÇ› %dïC\nÇ∆ÇÒÇ⁄ %dïC\nÇŒÇ¡ÇΩ %dïC\nçáåv %dïC", p.point[0], p.point[1], p.point[2], p.point[3]);
 
-	//	DrawRotaGraph(750 + 80 * (p.size[i] + 1), 200 + 100 * i, 3.5, 0.0, word4[17], TRUE);
-	//}
 }
