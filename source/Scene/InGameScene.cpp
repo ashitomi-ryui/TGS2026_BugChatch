@@ -43,25 +43,61 @@ int InGameInit(void)//各プログラムの初期化
 		return FALSE;
 	}
 
+	// 木の初期化
+	float playerRadius = player.GetPlayerRadius();
+	float treeRadius;	// 木の中心から一番離れた長さ
+	treeRadius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_TREE_WIDTH, D_TREE_HEIGHT }));
 	for (int id = 0; id < D_TREE_MAX; id++)
 	{
-		int n = 0x7a23;
-		n += 0x8e3 * id;
-		n *= 0xfa2b;
-		n = abs(n);
+		Vector2D location = { 0.0f, 0.0f };		// スポーン座標
+		Vector2D nearestTree = { 0.0f, 0.0f };	// 最も近い木
+		float installationRadius;
+		do
+		{
+			// ランダム
+			int r = Random::GetRand();
+			// 座標を画面内のランダムに
+			location.x = D_TREE_WIDTH + (float)(r % (int)(D_STAGE_WIDTH - D_TREE_WIDTH * 2.0f));
+			location.y = D_TREE_HEIGHT + (float)(r % (int)(D_STAGE_HEIGHT - D_TREE_HEIGHT * 2.0f));
 
-		tree[id].Set({ D_TREE_WIDTH + (float)(n % (int)(D_STAGE_WIDTH - D_TREE_WIDTH * 2.0f)),
-			D_TREE_HEIGHT + (float)(n % (int)(D_STAGE_HEIGHT - D_TREE_HEIGHT * 2.0f)) });
+			// 最も近い木の座標を取得
+			nearestTree = FindNearestTree(location);
+
+			// 設置半径
+			installationRadius = treeRadius + playerRadius * 2.0f;
+			// 近くに何もなくなるまでループ
+		} while (Length(Vec2Sub(location, nearestTree)) < installationRadius + treeRadius);
+
+		tree[id].Set(location);
 	}
+	// 草の初期化
+	float leafRadius;	// 草の中心から一番離れた長さ
+	leafRadius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_TREE_WIDTH, D_TREE_HEIGHT }));
 	for (int id = 0; id < D_LEAF_MAX; id++)
 	{
-		int n = 0x7a23;
-		n += 0x8e4 * id;
-		n *= 0xfa2b;
-		n = abs(n);
-		leaf[id].Set({ D_LEAF_WIDTH + (float)(n % (int)(D_STAGE_WIDTH - D_LEAF_WIDTH * 2.0f)),
-			D_LEAF_HEIGHT + (float)(n % (int)(D_STAGE_HEIGHT - D_LEAF_HEIGHT * 2.0f))
-			});
+		Vector2D location = { 0.0f, 0.0f };		// スポーン座標
+		Vector2D nearestTree = { 0.0f, 0.0f };	// 最も近い木
+		Vector2D nearestLeaf = { 0.0f, 0.0f };	// 最も近い草
+		float installationRadius;
+		do
+		{
+			// ランダム
+			int r = Random::GetRand();
+			// 座標を画面内のランダムに
+			location.x = D_LEAF_WIDTH + (float)(r % (int)(D_STAGE_WIDTH - D_LEAF_WIDTH * 2.0f));
+			location.y = D_LEAF_HEIGHT + (float)(r % (int)(D_STAGE_HEIGHT - D_LEAF_HEIGHT * 2.0f));
+			
+			// 最も近い木の座標を取得
+			nearestTree = FindNearestTree(location);
+			// 最も近い草の座標を取得
+			nearestLeaf = FindNearestLeaf(location);
+			
+			// 近くに何もなくなるまでループ
+		} while (Length(Vec2Sub(location, nearestTree)) < leafRadius + treeRadius
+			|| Length(Vec2Sub(location, nearestLeaf)) < leafRadius * 2.0f);
+
+		leaf[id].Set(location);
+		
 	}
 
 	timer = 0;
@@ -202,14 +238,22 @@ Vector2D FindNearestTree(Vector2D location)
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
 		treeLocation = tree[id].GetLocation();
-		len = Length(Vec2Sub(location, treeLocation));
 
-		if (nearestId == -1 || len < nearestLen)
+		if (treeLocation.x != 0.0f &&
+			treeLocation.y != 0.0f)
 		{
-			nearestId = id;
-			nearestLen = len;
+			len = Length(Vec2Sub(location, treeLocation));
+
+			if (nearestId == -1 || len < nearestLen)
+			{
+				nearestId = id;
+				nearestLen = len;
+			}
 		}
 	}
+
+	if (nearestId == -1)
+		return { -100.0f,-100.0f };
 
 	return tree[nearestId].GetLocation();
 }
@@ -221,17 +265,25 @@ Vector2D FindNearestLeaf(Vector2D location)
 	Vector2D leafLocation;	// 木の座標
 	float len;	// 距離
 
-	for (int id = 0; id < D_TREE_MAX; id++)
+	for (int id = 0; id < D_LEAF_MAX; id++)
 	{
-		leafLocation = tree[id].GetLocation();
-		len = Length(Vec2Sub(location, leafLocation));
+		leafLocation = leaf[id].GetLocation();
 
-		if (nearestId == -1 || len < nearestLen)
+		if (leafLocation.x != 0.0f &&
+			leafLocation.y != 0.0f)
 		{
-			nearestId = id;
-			nearestLen = len;
+			len = Length(Vec2Sub(location, leafLocation));
+
+			if (nearestId == -1 || len < nearestLen)
+			{
+				nearestId = id;
+				nearestLen = len;
+			}
 		}
 	}
+
+	if (nearestId == -1)
+		return { -100.0f,-100.0f };
 
 	return leaf[nearestId].GetLocation();
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "Math.h"
+#include <DxLib.h>
 
 //==========================================================
 // マクロ定義
@@ -8,8 +9,8 @@
 #define D_WIN_WIDTH		(1280.0f)	// スクリーンの横幅
 #define D_WIN_HEIGHT	(720.0f)	// スクリーンの縦幅
 
-#define D_STAGE_WIDTH	(D_WIN_WIDTH * 2.0f)	// ステージ横幅
-#define D_STAGE_HEIGHT	(D_WIN_HEIGHT * 2.0f)	// ステージ縦幅
+#define D_STAGE_WIDTH	(D_WIN_WIDTH * 2.5f)	// ステージ横幅
+#define D_STAGE_HEIGHT	(D_WIN_HEIGHT * 2.5f)	// ステージ縦幅
 
 #define D_OBJECT_SIZE_RATIO	(2.0f / 3.0f)	// オブジェクトや移動などのサイズ比率
 
@@ -73,6 +74,16 @@ public:
 	/// <param name="ReverseXFlag">横反転</param>
 	/// <param name="ReverseYFlage">縦反転</param>
 	static void DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlage = false);
+	
+	/// <summary>
+	/// ワールド座標で文章を描画
+	/// </summary>
+	/// <param name="location">座標</param>
+	/// <param name="size">大きさ</param>
+	/// <param name="Color">色</param>
+	/// <param name="FormatString">文字情報</param>
+	/// <param name=""></param>
+	static void DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...);
 
 	/// <summary>
 	/// 画面内か調べる
