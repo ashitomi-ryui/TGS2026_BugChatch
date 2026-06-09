@@ -24,6 +24,7 @@ float timer;
 int BGM;
 int flowerImage[2] = { -1, -1 };
 
+int sceneChange;
 float shiita;
 
 int InGameInit(void)//各プログラムの初期化
@@ -101,7 +102,7 @@ int InGameInit(void)//各プログラムの初期化
 		
 	}
 
-	timer = 0;
+	timer = 0.0f;
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		// スポーン
@@ -121,11 +122,11 @@ int InGameInit(void)//各プログラムの初期化
 	ChangeVolumeSoundMem(100, BGM);
 	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
 
-
+	sceneChange = 0;
 	shiita = 0.0f;
 
-	//Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT / 4.0f });
-	//Camera::SetScreenRatioSize(0.2f);
+	Camera::SetScreenLocation({ -D_WIN_WIDTH / 4.0f, D_WIN_HEIGHT / 4.0f });
+	Camera::SetScreenRatioSize(0.2f);
 
 
 	return TRUE;
@@ -133,41 +134,116 @@ int InGameInit(void)//各プログラムの初期化
 
 eSceneType InGameUpdate(float delta_second)
 {
-	
-	timer += delta_second;
-#ifndef _DEBUG
-	if (timer > 60.0f)
+	switch (sceneChange)
 	{
-		StopSoundMem(BGM);
-		return eResult;//ゲーム終了時にタイトルに戻る（仮）
-	}
+	case 0:
+		shiita -= 2.0f * delta_second;
+
+		Vector2D loc = Camera::GetScreenLocation();
+
+		loc.x += D_WIN_WIDTH * 1.5f * delta_second;
+		loc.y = D_WIN_HEIGHT / 4.0f + sinf(shiita * DX_PI_F) * D_WIN_HEIGHT * 0.1f;
+
+		if (loc.x >= D_WIN_WIDTH / 2.0f)
+		{
+			loc.x = D_WIN_WIDTH / 2.0f;
+			sceneChange = 1;
+		}
+
+		Camera::SetScreenLocation(loc);
+
+		break;
+	case 1:
+		shiita -= 2.0f * delta_second;
+
+		if (shiita < -1.0f)
+		{
+			shiita = -1.0f; // 行き過ぎ防止
+
+			sceneChange = 2;
+			shiita = 0.0f;
+		}
+
+		Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+			D_WIN_HEIGHT / 4.0f + sinf(shiita * DX_PI_F) * D_WIN_HEIGHT * 0.1f });
+
+		break;
+	case 2:
+		shiita -= 2.0f * delta_second;
+
+		{
+			float ratio = Camera::GetScreenRatioSize();
+			ratio += ratio * 3.2f * delta_second;
+			if (ratio > 1.0f)
+			{
+				ratio = 1.0f;
+			}
+
+			if (shiita < -1.0f)
+			{
+				shiita = -1.0f; // 行き過ぎ防止
+
+				sceneChange = 3;
+				timer = 0.0f;
+				ratio = 1.0f;
+			}
+
+			//ジャンプの移動処理
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT / 4.0f + (D_WIN_HEIGHT / -4.0f) * shiita - height });
+
+			Camera::SetScreenRatioSize(ratio);
+		}
+
+		break;
+	case 3:
+		timer += delta_second;
+
+		if (timer >= 3.0f)
+		{
+			sceneChange = 4;
+			timer = 0.0f;
+		}
+
+		break;
+	case 4:
+#ifndef _DEBUG
+		if (timer > 60.0f)
+		{
+			StopSoundMem(BGM);
+			return eResult;//ゲーム終了時にタイトルに戻る（仮）
+		}
 #endif
 
-	player.Update(delta_second);	// プレイヤーの更新
+		player.Update(delta_second);	// プレイヤーの更新
 
-	for (int id = 0;id < D_CICADA_MAX;id++)
-	{
-		cicada[id].Update(delta_second);	// セミの更新
-	}
-	for (int id = 0;id < D_DRAGONFLY_MAX;id++)
-	{
-		dragonfly[id].Update(delta_second);	// トンボの更新
-	}
-	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
-	{
-		grasshopper[id].Update(delta_second);	// バッタの更新
-	}
+		for (int id = 0;id < D_CICADA_MAX;id++)
+		{
+			cicada[id].Update(delta_second);	// セミの更新
+		}
+		for (int id = 0;id < D_DRAGONFLY_MAX;id++)
+		{
+			dragonfly[id].Update(delta_second);	// トンボの更新
+		}
+		for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+		{
+			grasshopper[id].Update(delta_second);	// バッタの更新
+		}
 
-	for (int id = 0;id < D_TREE_MAX;id++)
-	{
-		tree[id].Update(delta_second);
-	}
-	for (int id = 0; id < D_LEAF_MAX; id++)
-	{
-		leaf[id].Update(delta_second);
-	}
+		for (int id = 0;id < D_TREE_MAX;id++)
+		{
+			tree[id].Update(delta_second);
+		}
+		for (int id = 0; id < D_LEAF_MAX; id++)
+		{
+			leaf[id].Update(delta_second);
+		}
 
-	Camera::Update(player.GetPlayerLocation());	// カメラの更新
+		Camera::Update(player.GetPlayerLocation());	// カメラの更新
+
+		break;
+	}
 	return eInGame;
 }
 
@@ -214,6 +290,13 @@ void InGameDraw(void)
 	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
 	{
 		dragonfly[id].DrawOnTheFront();
+	}
+
+	switch(sceneChange)
+	{
+	case 3:
+		Camera::DrawFormatString({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "%d", 3 - (int)timer);
+		break;
 	}
 
 	Camera::Draw();
