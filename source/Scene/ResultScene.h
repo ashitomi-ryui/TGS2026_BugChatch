@@ -32,11 +32,7 @@ private:
 	static int divisor[DISPLAY_LIMIT];
 	static int display[DISPLAY_LIMIT][DISPLAY_LIMIT];
 	point p;
-private:
-	static int word1[50];
-	static int word2[15];
-	static int word3[10];
-	static int word4[18];
+
 public:
 	Result();
 	~Result();
