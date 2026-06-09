@@ -44,13 +44,35 @@ private:
 	static std::vector<std::string> word4Data;
 	
 public:
-	Camera(Vector2D location);
+	Camera();
 	~Camera();
 
 public:
 	static void Init();
-	void Update(Vector2D playerLocation);
-	void Draw() const;
+	static void Update(Vector2D playerLocation);
+	static void Draw();
+
+public:
+	/// <summary>
+	/// 画面の位置を取得
+	/// </summary>
+	/// <returns>座標</returns>
+	static Vector2D GetScreenLocation();
+	/// <summary>
+	/// 画面の比率を取得
+	/// </summary>
+	/// <returns>比率</returns>
+	static float GetScreenRatioSize();
+	/// <summary>
+	/// 画面の位置を設定（初期値　{ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f }）
+	/// </summary>
+	/// <param name="location">座標</param>
+	static void SetScreenLocation(Vector2D location);
+	/// <summary>
+	/// 画面の比率を設定（初期値　1.0f）
+	/// </summary>
+	/// <param name="ratio">比率</param>
+	static void SetScreenRatioSize(float ratio);
 
 public:
 

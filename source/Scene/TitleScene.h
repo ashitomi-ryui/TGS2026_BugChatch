@@ -25,6 +25,9 @@ private:
 	static int pressed;
 	static float time;
 	static float time_rug;
+
+	float shiita;
+
 private:
 	static int word1[50];
 	static int word2[15];

@@ -21,9 +21,10 @@ Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
 Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float timer;
-Camera camera(player.GetPlayerLocation());
 int BGM;
 int flowerImage[2] = { -1, -1 };
+
+float shiita;
 
 int InGameInit(void)//各プログラムの初期化
 {
@@ -119,6 +120,14 @@ int InGameInit(void)//各プログラムの初期化
 	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2");
 	ChangeVolumeSoundMem(100, BGM);
 	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
+
+
+	shiita = 0.0f;
+
+	//Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT / 4.0f });
+	//Camera::SetScreenRatioSize(0.2f);
+
+
 	return TRUE;
 }
 
@@ -149,7 +158,6 @@ eSceneType InGameUpdate(float delta_second)
 		grasshopper[id].Update(delta_second);	// バッタの更新
 	}
 
-	camera.Update(player.GetPlayerLocation());	// 
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{
 		tree[id].Update(delta_second);
@@ -159,12 +167,18 @@ eSceneType InGameUpdate(float delta_second)
 		leaf[id].Update(delta_second);
 	}
 
+	Camera::Update(player.GetPlayerLocation());	// カメラの更新
 	return eInGame;
 }
 
 void InGameDraw(void)
 {
 	DrawBox(0, 0, (int)D_WIN_WIDTH, (int)D_WIN_HEIGHT, 0x008800, true);
+
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	{
+		grasshopper[id].DrawOnTheBack();
+	}
 
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
@@ -174,11 +188,6 @@ void InGameDraw(void)
 	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
 	{
 		dragonfly[id].DrawOnTheBack();
-	}
-
-	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
-	{
-		grasshopper[id].DrawOnTheBack();
 	}
 
 	for (int id = 0; id < D_LEAF_MAX; id++)
@@ -192,6 +201,11 @@ void InGameDraw(void)
 
 	player.Draw();
 
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	{
+		grasshopper[id].DrawOnTheFront();
+	}
+
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		cicada[id].DrawOnTheFront();
@@ -202,10 +216,7 @@ void InGameDraw(void)
 		dragonfly[id].DrawOnTheFront();
 	}
 
-	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
-	{
-		grasshopper[id].DrawOnTheFront();
-	}
+	Camera::Draw();
 }
 
 Vector2D GetRingLocation()

@@ -7,6 +7,7 @@
 #include"ResultScene.h"
 #include"HelpScene.h"
 #include"RankingScene.h"
+#include "../Utilitys/Camera.h"
 
 eSceneType current_type;
 
@@ -91,6 +92,9 @@ void SceneDraw(void)
 
 int ChangeScene(eSceneType new_scene_type)
 {
+	Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f });
+	Camera::SetScreenRatioSize(1.0f);
+
 	int result = FALSE;//遷移先初期化の成否
 	switch (new_scene_type)//遷移先シーン種別に応じた初期化
 	{
@@ -111,6 +115,7 @@ int ChangeScene(eSceneType new_scene_type)
 		result = rank.Init();
 		break;
 	}
+
 	current_type = new_scene_type;//現在シーンの更新
 	return result;//初期化結果を返却
 }

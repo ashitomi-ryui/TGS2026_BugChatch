@@ -1,6 +1,7 @@
 #include"TitleScene.h"
 #include"RankingScene.h"
 #include"../Utilitys/Input.h"
+#include"../Utilitys/Camera.h"
 #include<DxLib.h>
 
 Ranking title;
@@ -79,19 +80,39 @@ int Title::Init()
 
 	select_x, select_y, pressed = 0;
 	time = 0.0f; time_rug = 0.5f;
+
+	shiita = 0.0f;
+
 	return TRUE;
 }
 
 eSceneType Title::Update(float delta_second)
 {
-	
-
 	time += delta_second;
 
 	if (pressed == 0)//決定ボタンが押されていない場合
 	{
 		time_rug += delta_second;
 	}
+	else
+	{
+		shiita += 2.0f * delta_second;
+
+		if (shiita > 1.0f)
+		{
+			shiita = 1.0f; // 行き過ぎ防止
+		}
+
+		//ジャンプの移動処理
+		float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 4.0f);
+		Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f + (D_WIN_WIDTH * 2.0f / 3.0f) * shiita,
+			D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 2.0f) * shiita - height });
+
+		
+		Camera::SetScreenRatioSize(Camera::GetScreenRatioSize() - 2.0f * delta_second);
+
+	}
+
 	if (time >= time_rug)
 	{
 		if (select_x == 0)
@@ -193,74 +214,71 @@ eSceneType Title::Update(float delta_second)
 
 void Title::Draw()const
 {
-	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
+	Camera::DrawGraph({ 640, 360 }, 1.0, 0.0, back_ground);
 
 	if (select_y == 0)//スタートが選択されている場合
 	{
 		if (pressed == 1)//ボタンが押されている場合
 		{
-			DrawRotaGraph(640, 400, 1.2, 0.0, start_pressed, TRUE);//ボタンを押された状態にする
+			Camera::DrawGraph({ 640, 400 }, 1.2, 0.0, start_pressed);//ボタンを押された状態にする
 		}
 		else
 		{
-			DrawRotaGraph(640, 400, 1.2, 0.0, start_not_pressed, TRUE);//ボタンを押されていない状態にする
+			Camera::DrawGraph({ 640, 400 }, 1.2, 0.0, start_not_pressed);//ボタンを押されていない状態にする
 		}
 	}
 	else
 	{
-		DrawRotaGraph(640, 400, 1.0, 0.0, start_not_pressed, TRUE);//通常サイズに戻す
+		Camera::DrawGraph({ 640, 400 }, 1.0, 0.0, start_not_pressed);//通常サイズに戻す
 	}
 
 	if (select_y == 1 && select_x == 0)//ヘルプが選択されている場合
 	{
 		if (pressed == 1)
 		{
-			DrawRotaGraph(640, 520, 1.2, 0.0, help_pressed, TRUE);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 520 }, 1.2, 0.0, help_pressed);//ボタンを大きくする
 		}
 		else
 		{
-			DrawRotaGraph(640, 520, 1.2, 0.0, help_not_pressed, TRUE);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 520 }, 1.2, 0.0, help_not_pressed);//ボタンを大きくする
 		}
 	}
 	else
 	{
-		DrawRotaGraph(640, 520, 1.0, 0.0, help_not_pressed, TRUE);//通常サイズに戻す
+		Camera::DrawGraph({ 640, 520 }, 1.0, 0.0, help_not_pressed);//通常サイズに戻す
 	}
 
 	if (select_y == 1 && select_x == 1)//ランキングが選択されている場合
 	{
 		if (pressed == 1)
 		{
-			DrawRotaGraph(1000, 520, 1.2, 0.0, ranking_pressed, TRUE);//ボタンを大きくする
+			Camera::DrawGraph({ 1000, 520 }, 1.2, 0.0, ranking_pressed);//ボタンを大きくする
 		}
 		else
 		{
-			DrawRotaGraph(1000, 520, 1.2, 0.0, ranking_not_pressed, TRUE);//ボタンを大きくする
+			Camera::DrawGraph({ 1000, 520 }, 1.2, 0.0, ranking_not_pressed);//ボタンを大きくする
 		}
 	}
 	else
 	{
-		DrawRotaGraph(1000, 520, 1.0, 0.0, ranking_not_pressed, TRUE);//通常サイズに戻す
+		Camera::DrawGraph({ 1000, 520 }, 1.0, 0.0, ranking_not_pressed);//通常サイズに戻す
 	}
 
 	if (select_y == 2)//おわりが選択されている場合
 	{
 		if (pressed == 1)
 		{
-			DrawRotaGraph(640, 640, 1.2, 0.0, end_pressed, TRUE);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 640 }, 1.2, 0.0, end_pressed);//ボタンを大きくする
 		}
 		else
 		{
-			DrawRotaGraph(640, 640, 1.2, 0.0, end_not_pressed, TRUE);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 640 }, 1.2, 0.0, end_not_pressed);//ボタンを大きくする
 		}
 	}
 	else
 	{
-		DrawRotaGraph(640, 640, 1.0, 0.0, end_not_pressed, TRUE);//通常サイズに戻す
+		Camera::DrawGraph({ 640, 640 }, 1.0, 0.0, end_not_pressed);//通常サイズに戻す
 	}
 
-	DrawFormatString(100, 100, GetColor(255, 255, 255), "たいとるはりゅういにまかせました");
-
-	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%d", select_y);*/
-	/*DrawFormatString(100, 100, GetColor(255, 255, 255), "%f", time);*/
+	Camera::Draw();
 }
