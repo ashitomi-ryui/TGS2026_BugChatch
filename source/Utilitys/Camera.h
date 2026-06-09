@@ -19,6 +19,9 @@ class Camera
 private:
 	static Vector2D m_location;	// カメラ座標
 
+	static Vector2D m_screenLocation;	// 画面の位置
+	static float m_screenRatioSize;		// 画面の比率
+
 public:
 	Camera(Vector2D location);
 	~Camera();
@@ -29,7 +32,16 @@ public:
 	void Draw() const;
 
 public:
-	
+
+	/// <summary>
+	/// 線を描画
+	/// </summary>
+	/// <param name="location1">座標1</param>
+	/// <param name="location2">座標2</param>
+	/// <param name="Color">色</param>
+	/// <param name="Thinckness">太さ</param>
+	static void DrawLine(Vector2D location1, Vector2D location2, unsigned int Color, float Thinckness = 1.0f);
+
 	/// <summary>
 	/// ワールド座標に線を描画
 	/// </summary>
@@ -38,7 +50,16 @@ public:
 	/// <param name="Color">色</param>
 	/// <param name="Thinckness">太さ</param>
 	static void DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, float Thinckness = 1.0f);
-	
+
+	/// <summary>
+	/// 三角形を描画
+	/// </summary>
+	/// <param name="location1">座標1</param>
+	/// <param name="location2">座標2</param>
+	/// <param name="location3">座標3</param>
+	/// <param name="Color">色</param>
+	static void DrawTriangle(Vector2D location1, Vector2D location2, Vector2D location3, unsigned int Color);
+
 	/// <summary>
 	/// ワールド座標に三角形を描画
 	/// </summary>
@@ -47,7 +68,15 @@ public:
 	/// <param name="location3">座標3</param>
 	/// <param name="Color">色</param>
 	static void DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D location3, unsigned int Color);
-	
+
+	/// <summary>
+	/// 円を描画
+	/// </summary>
+	/// <param name="location">座標</param>
+	/// <param name="radius">半径</param>
+	/// <param name="Color">色</param>
+	static void DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag = true);
+
 	/// <summary>
 	/// ワールド座標で円を描画
 	/// </summary>
@@ -57,12 +86,31 @@ public:
 	static void DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag = true);
 
 	/// <summary>
+	/// 四角を描画
+	/// </summary>
+	/// <param name="location1">座標1</param>
+	/// <param name="location2">座標2</param>
+	/// <param name="Color">色</param>
+	static void DrawBox(Vector2D location1, Vector2D location2, unsigned int Color);
+
+	/// <summary>
 	/// ワールド座標で四角を描画
 	/// </summary>
 	/// <param name="location1">座標1</param>
 	/// <param name="location2">座標2</param>
 	/// <param name="Color">色</param>
 	static void DrawBoxW(Vector2D location1, Vector2D location2, unsigned int Color);
+
+	/// <summary>
+	/// 画像を描画
+	/// </summary>
+	/// <param name="location">座標</param>
+	/// <param name="ExRote">比率</param>
+	/// <param name="Angle">向き</param>
+	/// <param name="GrHandle">画像情報</param>
+	/// <param name="ReverseXFlag">横反転</param>
+	/// <param name="ReverseYFlage">縦反転</param>
+	static void DrawGraph(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlage = false);
 
 	/// <summary>
 	/// ワールド座標で画像を描画
@@ -74,7 +122,17 @@ public:
 	/// <param name="ReverseXFlag">横反転</param>
 	/// <param name="ReverseYFlage">縦反転</param>
 	static void DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlage = false);
-	
+
+	/// <summary>
+	/// 文章を描画
+	/// </summary>
+	/// <param name="location">座標</param>
+	/// <param name="size">大きさ</param>
+	/// <param name="Color">色</param>
+	/// <param name="FormatString">文字情報</param>
+	/// <param name=""></param>
+	static void DrawFormatString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...);
+
 	/// <summary>
 	/// ワールド座標で文章を描画
 	/// </summary>
@@ -84,6 +142,13 @@ public:
 	/// <param name="FormatString">文字情報</param>
 	/// <param name=""></param>
 	static void DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...);
+
+	/// <summary>
+	/// 画面の比率に合わせて位置を調整する
+	/// </summary>
+	/// <param name="location">位置</param>
+	/// <returns>比率に合わせた位置</returns>
+	static Vector2D FitLocationToScreen(Vector2D location);
 
 	/// <summary>
 	/// 画面内か調べる
