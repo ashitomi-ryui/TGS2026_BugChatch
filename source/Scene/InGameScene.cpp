@@ -208,6 +208,7 @@ eSceneType InGameUpdate(float delta_second)
 
 		break;
 	case 4:
+		timer += delta_second;
 #ifndef _DEBUG
 		if (timer > 60.0f)
 		{
