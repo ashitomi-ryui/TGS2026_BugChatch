@@ -22,6 +22,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 		DxLib_End();//DXライブラリの使用を終了する
 		return -1;
 	}
+
+	Camera::Init();
 	while (ProcessMessage() != -1)
 	{
 		

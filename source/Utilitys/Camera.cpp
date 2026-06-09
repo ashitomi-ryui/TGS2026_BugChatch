@@ -2,11 +2,36 @@
 #include "Camera.h"
 #include <cmath>
 #include <string.h>
+#include <string>
 
 Vector2D Camera::m_location = { 0.0f, 0.0f };
 
 Vector2D Camera::m_screenLocation = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f };
 float Camera::m_screenRatioSize = 1.0f;
+
+
+// ひらがな
+int Camera::word1[D_WORD_HIRAGANA_SIZE] = {};
+
+// その他
+// ァィゥェォッャュョー・！？
+int Camera::word2[D_WORD_SYMBOLS_SIZE] = {};
+
+// 数字
+int Camera::word3[D_WORD_NUMBERS_SIZE] = {};
+
+// 漢字
+// 操作説明終了網振回虫乱獲捕秒合計位匹
+int Camera::word4[D_WORD_KANJI_SIZE] = {};
+
+// 文字データ
+std::vector<std::string> Camera::word1_0Data = {};
+std::vector<std::string> Camera::word1_1Data = {};
+std::vector<std::string> Camera::word1_2Data = {};
+std::vector<std::string> Camera::word2Data = {};
+std::string Camera::word3_0Data = {};
+std::vector<std::string> Camera::word3_1Data = {};
+std::vector<std::string> Camera::word4Data = {};
 
 // コンストラクタ
 Camera::Camera(Vector2D location)
@@ -17,6 +42,62 @@ Camera::Camera(Vector2D location)
 // デストラクタ
 Camera::~Camera()
 {
+}
+
+void Camera::Init()
+{
+	LoadDivGraph("assets/images/OtherObjects/word1.png", 50, 5, 10, 30, 30, word1);
+	LoadDivGraph("assets/images/OtherObjects/word2.png", 15, 5, 3, 30, 30, word2);
+	LoadDivGraph("assets/images/OtherObjects/word3.png", 10, 10, 1, 30, 30, word3);
+	LoadDivGraph("assets/images/OtherObjects/word4.png", 18, 6, 3, 30, 30, word4);
+
+	word1_0Data =
+	{
+		"あ", "い", "う", "え", "お",
+		"か", "き", "く", "け", "こ",
+		"さ", "し", "す", "せ", "そ",
+		"た", "ち", "つ", "て", "と",
+		"な", "に", "ぬ", "ね", "の",
+		"は", "ひ", "ふ", "へ", "ほ",
+		"ま", "み", "む", "め", "も",
+		"や", "ゆ", "よ",
+		"ら", "り", "る", "れ", "ろ",
+		"わ", "を", "ん",
+	};
+	word1_1Data =
+	{
+		"あ", "い", "う", "え", "お",
+		"が", "ぎ", "ぐ", "げ", "ご",
+		"ざ", "じ", "ず", "ぜ", "ぞ",
+		"だ", "ぢ", "づ", "で", "ど",
+		"な", "に", "ぬ", "ね", "の",
+		"ば", "び", "ぶ", "べ", "ぼ",
+		"ぱ", "ぴ", "ぷ", "ぺ", "ぽ",
+	};
+	word1_2Data =
+	{
+		"゛", "゜", "。", "、",
+	};
+
+	word2Data =
+	{
+		"ぁ", "ぃ", "ぅ", "ぇ", "ぉ",
+		"っ", "ゃ", "ゅ", "ょ", "ー",
+		"・", "！", "？",
+	};
+
+	word3_0Data = "0123456789";
+	word3_1Data =
+	{
+		"０", "１", "２", "３", "４", "５", "６", "７", "８", "９",
+	};
+
+	word4Data =
+	{
+		"操", "作", "説", "明", "終", "了",
+		"網", "振", "回", "虫", "乱", "獲",
+		"捕", "秒", "合", "計", "位", "匹",
+	};
 }
 
 // 更新処理
@@ -139,45 +220,167 @@ void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHa
 
 void Camera::DrawFormatString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...)
 {
+	// 変数の当てはめ
+	char buffer[1024];	// 文字列
+	va_list args;
+	va_start(args, FormatString);
+	// FormatStringを基に、続く変数をbufferに当てはめる
+	vsnprintf(buffer, sizeof(buffer), FormatString, args);
+	va_end(args);
+
+
 	location = FitLocationToScreen(location);
 	size *= m_screenRatioSize;
 
-	SetFontSize(size);
-	DxLib::DrawFormatStringF(location.x, location.y, Color, FormatString);
-	SetFontSize(10);
-}
-
-void Camera::DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...)
-{
-	// 長さ
-	int maxLen = -1;
-	int len = 0;
-	// 行数
-	int count = 0;
-	for (int i = 0;FormatString[i] != '\0';i++)
+	float x = 0.0f;
+	int y = 0;
+	int len = strlen(buffer);
+	bool isFound;
+	for (int i = 0;i < len;i++)
 	{
-		if (FormatString[i] == '\n')
+		isFound = false;
+		if (buffer[i] == '\n')
 		{
-			count++;
-			if (maxLen == -1 || maxLen < len)
-				maxLen = len;
-			len = 0;
+			y++;
+			x = 0.0f;
+
+			isFound = true;
 		}
-		else
+		if (!isFound)
 		{
-			len++;
+			for (int j = 0;j < word3_0Data.size();j++)
+			{
+				if (buffer[i] == word3_0Data[j])
+				{
+					x -= 0.2f;
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word3[j], true);
+					x += 0.8f;
+
+					isFound = true;
+					break;
+				}
+			}
+		}
+		if (!isFound)
+		{
+			for(int j=0;j<word1_0Data.size();j++)
+			{
+				if (buffer[i] == word1_0Data[j][0] &&
+					buffer[i + 1] == word1_0Data[j][1])
+				{
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word1[j], true);
+					x++;
+					i++;
+
+					isFound = true;
+				}
+			}
+		}
+		if (!isFound)
+		{
+			for (int j = 0;j < word1_1Data.size();j++)
+			{
+				if (buffer[i] == word1_1Data[j][0] &&
+					buffer[i + 1] == word1_1Data[j][1])
+				{
+					if (j < 30)
+					{
+						DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word1[j], true);
+						DxLib::DrawRotaGraphF(location.x + (x + 0.8f)*size, location.y + y * size, size / 25.0f, 0.0f, word1[46], true);
+					}
+					else
+					{
+						DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word1[j - 5], true);
+						DxLib::DrawRotaGraphF(location.x + (x + 0.8f)*size, location.y + y * size, size / 25.0f, 0.0f, word1[47], true);
+					}
+					x++;
+					i++;
+
+					isFound = true;
+				}
+			}
+		}
+		if (!isFound)
+		{
+			for (int j = 0;j < word1_2Data.size();j++)
+			{
+				if (buffer[i] == word1_2Data[j][0] &&
+					buffer[i + 1] == word1_2Data[j][1])
+				{
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word1[j + 46], true);
+					x++;
+					i++;
+
+					isFound = true;
+				}
+			}
+		}
+		if (!isFound)
+		{
+			for (int j = 0;j < word2Data.size();j++)
+			{
+				if (buffer[i] == word2Data[j][0] &&
+					buffer[i + 1] == word2Data[j][1])
+				{
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word2[j], true);
+					x++;
+					i++;
+
+					isFound = true;
+				}
+			}
+		}
+		if (!isFound)
+		{
+			for (int j = 0;j < word3_1Data.size();j++)
+			{
+				if (buffer[i] == word3_1Data[j][0] &&
+					buffer[i + 1] == word3_1Data[j][1])
+				{
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word3[j], true);
+					x++;
+					i++;
+
+					isFound = true;
+				}
+			}
+		}
+		if (!isFound)
+		{
+			for (int j = 0;j < word4Data.size();j++)
+			{
+				if (buffer[i] == word4Data[j][0] &&
+					buffer[i + 1] == word4Data[j][1])
+				{
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word4[j], true);
+					x++;
+					i++;
+
+					isFound = true;
+				}
+			}
+		}
+		if (!isFound)
+		{
+			x+=0.5;
 		}
 	}
-	if (maxLen == -1)
-		maxLen = (int)strlen(FormatString);
+}
 
-	location.x -= (float)maxLen / 2.0f * size;
-	location.y -= (float)count / 2.0f * size;
+void Camera::DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR * FormatString, ...)
+{
+	// 変数の当てはめ
+	char buffer[1024];	// 文字列
+	va_list args;
+	va_start(args, FormatString);
+	// FormatStringを基に、続く変数をbufferに当てはめる
+	vsnprintf(buffer, sizeof(buffer), FormatString, args);
+	va_end(args);
 
 	location.x += -m_location.x + D_WIN_WIDTH / 2.0f;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2.0f;
 
-	DrawFormatString(location, size, Color, FormatString);
+	DrawFormatString(location, size, Color, buffer);
 }
 
 Vector2D Camera::FitLocationToScreen(Vector2D location)

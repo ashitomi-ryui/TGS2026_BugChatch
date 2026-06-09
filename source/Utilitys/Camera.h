@@ -1,6 +1,8 @@
 #pragma once
 #include "Math.h"
 #include <DxLib.h>
+#include <string>
+#include <vector>
 
 //==========================================================
 // マクロ定義
@@ -14,6 +16,12 @@
 
 #define D_OBJECT_SIZE_RATIO	(2.0f / 3.0f)	// オブジェクトや移動などのサイズ比率
 
+#define D_WORD_HIRAGANA_SIZE	(50)
+#define D_WORD_SYMBOLS_SIZE		(15)
+#define D_WORD_NUMBERS_SIZE		(10)
+#define D_WORD_KANJI_SIZE		(18)
+#define D_WORD_SIZE				(D_WORD_HIRAGANA_SIZE + D_WORD_SYMBOLS_SIZE + D_WORD_NUMBERS_SIZE + D_WORD_KANJI_SIZE)
+
 class Camera
 {
 private:
@@ -22,12 +30,25 @@ private:
 	static Vector2D m_screenLocation;	// 画面の位置
 	static float m_screenRatioSize;		// 画面の比率
 
+	static int word1[D_WORD_HIRAGANA_SIZE];	// ひらがな
+	static int word2[D_WORD_SYMBOLS_SIZE];	// その他
+	static int word3[D_WORD_NUMBERS_SIZE];	// 数字
+	static int word4[D_WORD_KANJI_SIZE];	// 漢字
+
+	static std::vector<std::string> word1_0Data;
+	static std::vector<std::string> word1_1Data;
+	static std::vector<std::string> word1_2Data;
+	static std::vector<std::string> word2Data;
+	static std::string word3_0Data;
+	static std::vector<std::string> word3_1Data;
+	static std::vector<std::string> word4Data;
+	
 public:
 	Camera(Vector2D location);
 	~Camera();
 
 public:
-
+	static void Init();
 	void Update(Vector2D playerLocation);
 	void Draw() const;
 
