@@ -1,6 +1,9 @@
 #include"TitleScene.h"
+#include"RankingScene.h"
 #include"../Utilitys/Input.h"
 #include<DxLib.h>
+
+Ranking title;
 
 int Title::Titlebgm = -1;
 int Title::ChoiceSE = -1;
@@ -62,6 +65,12 @@ int Title::Init()
 	}
 	DecisionSE = LoadSoundMem("assets/Audio/AS_134044_Œˆ’è‰¹.wav");
 	if (DecisionSE == -1)
+	{
+		return FALSE;
+	}
+
+	int rank_title = title.LoadRankData();
+	if (rank_title != TRUE)
 	{
 		return FALSE;
 	}

@@ -19,10 +19,16 @@ int Ranking::Init()
 	title_not_pressed = LoadGraph("assets/images/Ranking/title_off.png");
 	title_pressed = LoadGraph("assets/images/Ranking/title_on.png");
 	back_ground = LoadGraph("assets/images/Ranking/mori.jpg");
-	ranking = LoadGraph("assets/images/Ranking/ranking.png");
+	back_ground2 = LoadGraph("assets/images/Ranking/ranking.png");
 	select_x,pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
+
+	int loadrankdata=LoadRankData();
+	if (loadrankdata != TRUE)
+	{
+		return FALSE;
+	}
 	return TRUE;
 }
 
@@ -85,7 +91,7 @@ void Ranking::Draw()const
 {
 	DrawRotaGraph(640, 400, 2.0, 0.0, back_ground, TRUE);
 
-	DrawRotaGraph(640, 420, 1.4, 0.0, ranking, TRUE);
+	DrawRotaGraph(640, 420, 1.4, 0.0, back_ground2, TRUE);
 
 	if (select_x == 0)
 	{
@@ -118,4 +124,88 @@ void Ranking::Draw()const
 	{
 		DrawRotaGraph(860, 595, 1.0, 0.0, title_not_pressed, TRUE);
 	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		DrawFormatString(100, 100 + 50 * i, GetColor(255, 255, 255), "%d", ranking[i]);
+	}
+}
+
+int Ranking::LoadRankData()
+{
+	FILE* fp = NULL;
+	errno_t result = fopen_s(&fp, "assets/images/Ranking/Ranking_Data.txt", "r");
+
+	if (result != NULL)
+	{
+		return FALSE;
+	}
+
+	for (int i = 0; i < MAX_RANK; i++)
+	{
+		fscanf_s(fp, "%d", &ranking[i]);
+	}
+
+	fclose(fp);
+	return TRUE;
+}
+
+int Ranking::CheckRankData(int p_point)
+{
+	if (p_point > ranking[MAX_RANK - 1])
+	{
+		ranking[MAX_RANK - 1] = p_point;
+
+		if (SortRankData() != TRUE)
+		{
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
+int Ranking::SortRankData()
+{
+	int swap = {};
+
+	for (int i = 0; i < MAX_RANK - 1; i++)
+	{
+		for (int j = i + 1; j < MAX_RANK; j++)
+		{
+			if (ranking[j] > ranking[i])
+			{
+				swap = ranking[i];
+				ranking[i] = ranking[j];
+				ranking[j] = swap;
+			}
+		}
+	}
+
+	if (AddRankData() != TRUE)
+	{
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+int Ranking::AddRankData()
+{
+	FILE* fp = NULL;
+	errno_t result = fopen_s(&fp, "assets/images/Ranking/Ranking_Data.txt", "w");
+
+	if (result != NULL)
+	{
+		return FALSE;
+	}
+
+	for (int i = 0; i < MAX_RANK; i++)
+	{
+		fprintf_s(fp, "%d\n", ranking[i]);
+	}
+
+	fclose(fp);
+
+	return TRUE;
 }

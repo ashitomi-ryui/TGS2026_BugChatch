@@ -1,10 +1,12 @@
 #include<DxLib.h>
 #include"ResultScene.h"
+#include"RankingScene.h"
 
 int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
 int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
 
 Bug bug;
+Ranking result;
 
 Result::Result()
 {
@@ -22,7 +24,7 @@ int Result::Init()
 	title_pressed = LoadGraph("assets/images/Result/title_on.png");
 	ranking_not_pressed = LoadGraph("assets/images/Result/ranking_off.png");
 	ranking_pressed = LoadGraph("assets/images/Result/ranking_on.png");
-	result = LoadGraph("assets/images/Result/result.png");
+	back_ground = LoadGraph("assets/images/Result/result.png");
 
 	select_x, pressed = 0;
 	time = 0.0f;
@@ -61,6 +63,18 @@ int Result::Init()
 			display[i][j] = (p.point[i] / divisor[j]) % 10;
 		}
 		
+	}
+
+	int loadrankdata = result.LoadRankData();
+	if (loadrankdata != TRUE)
+	{
+		return FALSE;
+	}
+
+	int rank_check = result.CheckRankData(p.point[3]);
+	if (rank_check != TRUE)
+	{
+		return FALSE;
 	}
 
 	return TRUE;
@@ -124,7 +138,7 @@ eSceneType Result::Update(float delta_second)
 void Result::Draw()const
 {
 
-	DrawRotaGraph(640, 400, 1.0, 0.0, result, TRUE);
+	DrawRotaGraph(640, 400, 1.0, 0.0, back_ground, TRUE);
 
 	if (select_x == 0)
 	{

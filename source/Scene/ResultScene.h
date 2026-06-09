@@ -16,7 +16,7 @@ private:
 	int title_pressed;
 	int ranking_not_pressed;
 	int ranking_pressed;
-	int result;
+	int back_ground;
 	int number;
 	int numbers[10];
 	int select_x;
