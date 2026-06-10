@@ -304,9 +304,9 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 
 	// カラーコードをRGBに分ける
 	int r = Color / 0x10000;
-	Color %= 0x10000;
+	Color -= r;
 	int g = Color / 0x100;
-	Color %= 0x100;
+	Color -= g;
 	int b = Color;
 
 	// 色を変える
