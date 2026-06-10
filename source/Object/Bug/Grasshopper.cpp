@@ -152,7 +152,7 @@ void Grasshopper::Draw() const
 		m_isTurn = true;
 	}*/
 
-	Camera::DrawStringW(m_location, 25, GetColor(255, 255, 255), "%d", jougai);
+	
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], m_isTurn);
 }
 
