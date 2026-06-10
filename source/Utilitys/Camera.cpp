@@ -58,11 +58,11 @@ Camera::~Camera()
 void Camera::Init()
 {
 	LoadDivGraph("assets/images/OtherObjects/word1.png", 50, 5, 10, 30, 30, word1);
-	LoadDivGraph("assets/images/OtherObjects/word2.png", 15, 5, 3, 30, 30, word2);
-	LoadDivGraph("assets/images/OtherObjects/word3.png", 10, 10, 1, 30, 30, word3);
-	LoadDivGraph("assets/images/OtherObjects/word4.png", 18, 6, 3, 30, 30, word4);
-	LoadDivGraph("assets/images/OtherObjects/word5.png", 18, 6, 3, 30, 30, word5);
-	LoadDivGraph("assets/images/OtherObjects/word6.png", 18, 6, 3, 30, 30, word6);
+	LoadDivGraph("assets/images/OtherObjects/word6.png", 15, 5, 3, 30, 30, word2);
+	LoadDivGraph("assets/images/OtherObjects/word5.png", 50, 5, 10, 30, 30, word3);
+	LoadDivGraph("assets/images/OtherObjects/word2.png", 15, 5, 3, 30, 30, word4);
+	LoadDivGraph("assets/images/OtherObjects/word3.png", 10, 10, 1, 30, 30, word5);
+	LoadDivGraph("assets/images/OtherObjects/word4.png", 18, 6, 3, 30, 30, word6);
 
 	word1_0Data =
 	{
@@ -334,7 +334,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word5_0Data[j])
 				{
 					x -= 0.2f;
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word3[j], true);
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word5[j], true);
 					x += 0.8f;
 
 					isFound = true;
@@ -403,7 +403,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word2Data[j][0] &&
 					buffer[i + 1] == word2Data[j][1])
 				{
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word6[j], true);
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word2[j], true);
 					x++;
 					i++;
 
@@ -419,7 +419,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word3_0Data[j][0] &&
 					buffer[i + 1] == word3_0Data[j][1])
 				{
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word5[j], true);
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word3[j], true);
 					x++;
 					i++;
 
@@ -436,12 +436,12 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				{
 					if (j >= 5)
 					{
-						DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word5[j], true);
+						DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word3[j], true);
 						DxLib::DrawRotaGraphF(location.x + (x + 0.8f) * size, location.y + y * size, size / 25.0f, 0.0f, word1[46], true);
 					}
 					else
 					{
-						DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word5[25 + j], true);
+						DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word3[25 + j], true);
 						DxLib::DrawRotaGraphF(location.x + (x + 0.8f) * size, location.y + y * size, size / 25.0f, 0.0f, word1[47], true);
 					}
 					x++;
@@ -458,7 +458,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word4Data[j][0] &&
 					buffer[i + 1] == word4Data[j][1])
 				{
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word2[j], true);
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word4[j], true);
 					x++;
 					i++;
 
@@ -474,7 +474,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word5_1Data[j][0] &&
 					buffer[i + 1] == word5_1Data[j][1])
 				{
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word3[j], true);
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word5[j], true);
 					x++;
 					i++;
 
@@ -489,7 +489,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word6Data[j][0] &&
 					buffer[i + 1] == word6Data[j][1])
 				{
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word4[j], true);
+					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word6[j], true);
 					x++;
 					i++;
 
