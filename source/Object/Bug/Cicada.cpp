@@ -31,7 +31,7 @@ void Cicada::Init()
 	images[3] = LoadGraph("assets/images/Bugs/Cicada/Fly3.PNG");
 	images[4] = LoadGraph("assets/images/Bugs/Cicada/Fly4.PNG");
 
-	CicadaSE = LoadSoundMem("assets/images/AS_78229_ミンミンゼミ.wav");
+	CicadaSE = LoadSoundMem("assets/Audio/AS_78229_ミンミンゼミ.wav");
 	cicadaGetCount = 0;
 }
 
@@ -277,6 +277,11 @@ void Cicada::Escape(float delta)
 
 void Cicada::Stand(float delta)
 {
+	if (CheckSoundMem(CicadaSE) != TRUE && Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+PlaySoundMem(CicadaSE, DX_PLAYTYPE_BACK);
+	}
+	
 	m_moveSpeed = { 0.0f, 0.0f };
 	if (m_transitionTime <= 0.0f)
 	{
@@ -327,6 +332,7 @@ void Cicada::Move(float delta)
 
 void Cicada::Panic(float delta)
 {
+	
 	// 向きを0.125fπごとに区切った-2.0fπ~2.0fπずらす
 	m_direction += Random::GetRand(-2.0f, 2.0f, 0.125f) * DX_PI_F * delta;
 
