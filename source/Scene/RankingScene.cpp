@@ -26,14 +26,15 @@ int Ranking::Init()
 	time_rug = 0.5f;
 
 	Choicebgm2 = LoadSoundMem("assets/Audio/AS_865704_8bit‚È‘I‘ð‰¹.wav");
-	{
-		return  FALSE;
-	}
-	DecisionSE2 = LoadSoundMem("assets/Audio/AS_134044_Œˆ’è‰¹.wav");
+	if (Choicebgm2 == -1)
 	{
 		return FALSE;
 	}
-
+	DecisionSE2 = LoadSoundMem("assets/Audio/AS_134044_Œˆ’è‰¹.wav");
+	if (DecisionSE2 == -1)
+	{
+		return FALSE;
+	}
 
 	int loadrankdata=LoadRankData();
 	if (loadrankdata != TRUE)
