@@ -24,7 +24,7 @@ float timer;
 int BGM;
 int flowerImage[2] = { -1, -1 };
 
-int sceneChange;
+int changeProduction;	// シーン切替演出
 float shiita;
 
 int InGameInit(void)//各プログラムの初期化
@@ -122,7 +122,7 @@ int InGameInit(void)//各プログラムの初期化
 	ChangeVolumeSoundMem(100, BGM);
 	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
 
-	sceneChange = 0;
+	changeProduction = 0;
 	shiita = 0.0f;
 
 	Camera::SetScreenLocation({ -D_WIN_WIDTH / 4.0f, D_WIN_HEIGHT / 4.0f });
@@ -134,7 +134,7 @@ int InGameInit(void)//各プログラムの初期化
 
 eSceneType InGameUpdate(float delta_second)
 {
-	switch (sceneChange)
+	switch (changeProduction)
 	{
 	case 0:	// ==============================================ゲームスタート
 		shiita -= 2.0f * delta_second;
@@ -147,7 +147,8 @@ eSceneType InGameUpdate(float delta_second)
 		if (loc.x >= D_WIN_WIDTH / 2.0f)
 		{
 			loc.x = D_WIN_WIDTH / 2.0f;
-			sceneChange = 1;
+			// 次の演出
+			changeProduction = 1;
 		}
 
 		Camera::SetScreenLocation(loc);
@@ -166,7 +167,8 @@ eSceneType InGameUpdate(float delta_second)
 		{
 			shiita = -1.0f; // 行き過ぎ防止
 
-			sceneChange = 2;
+			// 次の演出
+			changeProduction = 2;
 			shiita = 0.0f;
 		}
 
@@ -189,7 +191,8 @@ eSceneType InGameUpdate(float delta_second)
 			{
 				shiita = -1.0f; // 行き過ぎ防止
 
-				sceneChange = 3;
+				// 次の演出
+				changeProduction = 3;
 				timer = 0.0f;
 				ratio = 1.0f;
 			}
@@ -208,7 +211,8 @@ eSceneType InGameUpdate(float delta_second)
 
 		if (timer >= 3.0f)
 		{
-			sceneChange = 4;
+			// 次の演出
+			changeProduction = 4;
 			timer = 0.0f;
 		}
 
@@ -217,10 +221,17 @@ eSceneType InGameUpdate(float delta_second)
 	case 4:	// ==============================================ゲームプレイ
 		timer += delta_second;
 #ifndef _DEBUG
-		if (timer > 60.0f)
+		if (timer > 2.0f)
 		{
+			timer = 0.0f;
+
+			// 音を止める
 			StopSoundMem(BGM);
-			sceneChange = 5;
+
+			Grasshopper::StopAudio();
+			
+			// 次の演出
+			changeProduction = 5;
 		}
 #endif
 
@@ -250,10 +261,38 @@ eSceneType InGameUpdate(float delta_second)
 
 		break;
 	case 5:	// ==============================================ゲーム終了
+		timer += delta_second;
 
-		Grasshopper::StopAudio();
+		if (timer > 0.0f)
+		{
+			changeProduction = 6;
+			shiita = 0.0f;
+		}
+		break;
+	case 6:
+		shiita -= 2.0f * delta_second;
 
-		return eResult;	//ゲーム終了時にリザルトに遷移
+		{
+			float ratio = Camera::GetScreenRatioSize();
+			ratio -= ratio * 3.2f * delta_second;
+			if (ratio > 1.0f)
+			{
+				ratio = 1.0f;
+			}
+
+			if (shiita < -1.5f)
+			{
+				return eResult;	//ゲーム終了時にリザルトに遷移
+				timer = 0.0f;
+			}
+
+			//ジャンプの移動処理
+			float height = cosf(shiita * DX_PI_F) * (D_WIN_HEIGHT);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT * 3.0f / 2.0f + (D_WIN_HEIGHT * 3.0f / 2.0f) * shiita - height });
+
+			Camera::SetScreenRatioSize(ratio);
+		}
 		break;
 	}
 
@@ -307,7 +346,7 @@ void InGameDraw(void)
 		dragonfly[id].DrawOnTheFront();
 	}
 
-	switch(sceneChange)
+	switch(changeProduction)
 	{
 	case 3:
 		Camera::DrawString({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "%d", 3 - (int)timer);
