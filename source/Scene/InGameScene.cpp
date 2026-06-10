@@ -251,7 +251,7 @@ eSceneType InGameUpdate(float delta_second)
 		break;
 	case 5:	// ==============================================ゲーム終了
 
-
+		Grasshopper::StopAudio();
 
 		return eResult;	//ゲーム終了時にリザルトに遷移
 		break;
