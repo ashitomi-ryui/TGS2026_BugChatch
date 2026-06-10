@@ -281,6 +281,4 @@ void Title::Draw()const
 	{
 		Camera::DrawGraph({ 640, 640 }, 1.0, 0.0, end_not_pressed);//í èÌÉTÉCÉYÇ…ñﬂÇ∑
 	}
-
-	Camera::Draw();
 }

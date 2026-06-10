@@ -12,6 +12,7 @@
 #include "../Tree.h"
 
 int Cicada::images[5] = { -1,-1,-1,-1,-1 };
+int Cicada::CicadaSE = -1;
 
 Cicada::Cicada() : Bug()
 {
@@ -30,6 +31,7 @@ void Cicada::Init()
 	images[3] = LoadGraph("assets/images/Bugs/Cicada/Fly3.PNG");
 	images[4] = LoadGraph("assets/images/Bugs/Cicada/Fly4.PNG");
 
+	CicadaSE = LoadSoundMem("assets/images/AS_78229_ƒ~ƒ“ƒ~ƒ“ƒ[ƒ~.wav");
 	cicadaGetCount = 0;
 }
 
