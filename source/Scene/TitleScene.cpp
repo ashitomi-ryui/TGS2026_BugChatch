@@ -76,7 +76,7 @@ int Title::Init()
 		return FALSE;
 	}
 	
-    PlaySoundMem(Titlebgm, DX_PLAYTYPE_BACK);
+    PlaySoundMem(Titlebgm, DX_PLAYTYPE_LOOP);
 
 	select_x, select_y, pressed = 0;
 	time = 0.0f; time_rug = 0.5f;
