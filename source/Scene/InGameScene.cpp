@@ -136,7 +136,7 @@ eSceneType InGameUpdate(float delta_second)
 {
 	switch (sceneChange)
 	{
-	case 0:
+	case 0:	// ==============================================ゲームスタート
 		shiita -= 2.0f * delta_second;
 
 		Vector2D loc = Camera::GetScreenLocation();
@@ -151,6 +151,12 @@ eSceneType InGameUpdate(float delta_second)
 		}
 
 		Camera::SetScreenLocation(loc);
+
+		// 木とプレイヤーが重ならないように
+		for (int id = 0;id < D_TREE_MAX;id++)
+		{
+			tree[id].Update(delta_second);
+		}
 
 		break;
 	case 1:
@@ -207,13 +213,14 @@ eSceneType InGameUpdate(float delta_second)
 		}
 
 		break;
-	case 4:
+
+	case 4:	// ==============================================ゲームプレイ
 		timer += delta_second;
 #ifndef _DEBUG
 		if (timer > 60.0f)
 		{
 			StopSoundMem(BGM);
-			return eResult;//ゲーム終了時にタイトルに戻る（仮）
+			sceneChange = 5;
 		}
 #endif
 
@@ -241,10 +248,17 @@ eSceneType InGameUpdate(float delta_second)
 			leaf[id].Update(delta_second);
 		}
 
-		Camera::Update(player.GetPlayerLocation());	// カメラの更新
+		break;
+	case 5:	// ==============================================ゲーム終了
 
+
+
+		return eResult;	//ゲーム終了時にリザルトに遷移
 		break;
 	}
+
+	Camera::Update(player.GetPlayerLocation());	// カメラの更新
+
 	return eInGame;
 }
 
@@ -297,6 +311,12 @@ void InGameDraw(void)
 	{
 	case 3:
 		Camera::DrawString({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "%d", 3 - (int)timer);
+		break;
+	case 4:
+		if (timer <= 1.0f)
+		{
+			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 120.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "スタート！");
+		}
 		break;
 	}
 }
