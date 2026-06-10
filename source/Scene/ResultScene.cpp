@@ -173,6 +173,6 @@ void Result::Draw()const
 		DrawRotaGraph(1000, 600, 1.0, 0.0, ranking_not_pressed, TRUE);
 	}
 
-	Camera::DrawString({ 550,200 }, 50, SetDrawBright(255,255,255), "‚¹‚İ %d•C\n‚Æ‚ñ‚Ú %d•C\n‚Î‚Á‚½ %d•C\n‡Œv %d•C", p.point[0], p.point[1], p.point[2], p.point[3]);
+	Camera::DrawString({ 250,150 }, 100, GetColor(255,255,255), "‚¹‚İ %d•C\n‚Æ‚ñ‚Ú %d•C\n‚Îƒb‚½ %d•C\n‡Œv %d•C", p.point[0], p.point[1], p.point[2], p.point[3]);
 
 }

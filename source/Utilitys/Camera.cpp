@@ -303,11 +303,13 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 	size *= m_screenRatioSize;
 
 	// カラーコードをRGBに分ける
-	int r = Color / 0x10000;
-	Color -= r * 0x10000;
-	int g = Color / 0x100;
-	Color -= g * 0x100;
-	int b = Color;
+	int r, g, b;
+	Color %= 0x1000000;
+	r = Color >> 16;
+	Color -= r << 16;
+	g = Color >> 8;
+	Color -= g << 8;
+	b = Color;
 
 	// 色を変える
 	SetDrawBright(r, g, b);
