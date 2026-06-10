@@ -16,8 +16,9 @@
 
 #define D_OBJECT_SIZE_RATIO	(2.0f / 3.0f)	// オブジェクトや移動などのサイズ比率
 
-#define D_WORD_HIRAGANA_SIZE	(50)
-#define D_WORD_SYMBOLS_SIZE		(15)
+#define D_WORD_KANA_SIZE	(50)
+#define D_WORD_HIRAGANA_SYMBOLS_SIZE	(10)
+#define D_WORD_KATAKANA_SYMBOLS_SIZE	(15)
 #define D_WORD_NUMBERS_SIZE		(10)
 #define D_WORD_KANJI_SIZE		(18)
 
@@ -29,18 +30,25 @@ private:
 	static Vector2D m_screenLocation;	// 画面の位置
 	static float m_screenRatioSize;		// 画面の比率
 
-	static int word1[D_WORD_HIRAGANA_SIZE];	// ひらがな
-	static int word2[D_WORD_SYMBOLS_SIZE];	// その他
-	static int word3[D_WORD_NUMBERS_SIZE];	// 数字
-	static int word4[D_WORD_KANJI_SIZE];	// 漢字
+	static int word1[D_WORD_KANA_SIZE];	// ひらがな
+	static int word2[D_WORD_HIRAGANA_SYMBOLS_SIZE];	// ひらがなとその他
+	static int word3[D_WORD_KANA_SIZE];	// カタカナ
+	static int word4[D_WORD_KATAKANA_SYMBOLS_SIZE];	// カタカナとその他
+	static int word5[D_WORD_NUMBERS_SIZE];	// 数字
+	static int word6[D_WORD_KANJI_SIZE];	// 漢字
 
 	static std::vector<std::string> word1_0Data;
 	static std::vector<std::string> word1_1Data;
 	static std::vector<std::string> word1_2Data;
 	static std::vector<std::string> word2Data;
-	static std::string word3_0Data;
+
+	static std::vector<std::string> word3_0Data;
 	static std::vector<std::string> word3_1Data;
 	static std::vector<std::string> word4Data;
+
+	static std::string word5_0Data;
+	static std::vector<std::string> word5_1Data;
+	static std::vector<std::string> word6Data;
 	
 public:
 	Camera();
@@ -173,7 +181,7 @@ public:
 	/// <param name="Color">色</param>
 	/// <param name="FormatString">文字情報</param>
 	/// <param name=""></param>
-	static void DrawFormatString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...);
+	static void DrawString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...);
 
 	/// <summary>
 	/// ワールド座標で文章を描画
@@ -183,7 +191,7 @@ public:
 	/// <param name="Color">色</param>
 	/// <param name="FormatString">文字情報</param>
 	/// <param name=""></param>
-	static void DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...);
+	static void DrawStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...);
 
 	/// <summary>
 	/// 画面の比率に合わせて位置を調整する

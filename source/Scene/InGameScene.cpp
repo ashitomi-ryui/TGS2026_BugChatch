@@ -296,7 +296,7 @@ void InGameDraw(void)
 	switch(sceneChange)
 	{
 	case 3:
-		Camera::DrawFormatString({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "%d", 3 - (int)timer);
+		Camera::DrawString({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "%d", 3 - (int)timer);
 		break;
 	}
 
