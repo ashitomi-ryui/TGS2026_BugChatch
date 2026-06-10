@@ -25,6 +25,16 @@ int Ranking::Init()
 	time = 0.0f;
 	time_rug = 0.5f;
 
+	Choicebgm2 = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
+	{
+		return  FALSE;
+	}
+	DecisionSE2 = LoadSoundMem("assets/Audio/AS_134044_決定音.wav");
+	{
+		return FALSE;
+	}
+
+
 	int loadrankdata=LoadRankData();
 	if (loadrankdata != TRUE)
 	{
@@ -58,6 +68,7 @@ eSceneType Ranking::Update(float delta_second)
 	{
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
+			PlaySoundMem(Choicebgm2,DX_PLAYTYPE_BACK);
 			if (select_x == 1)
 			{
 				select_x = 0;
@@ -69,6 +80,7 @@ eSceneType Ranking::Update(float delta_second)
 		}
 		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
 		{
+			PlaySoundMem(Choicebgm2, DX_PLAYTYPE_BACK);
 			if (select_x == 0)
 			{
 				select_x = 1;
@@ -81,6 +93,7 @@ eSceneType Ranking::Update(float delta_second)
 
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 		{
+			PlaySoundMem(DecisionSE2, DX_PLAYTYPE_BACK);
 			pressed = TRUE;
 		}
 	}

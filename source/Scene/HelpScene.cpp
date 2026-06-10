@@ -120,6 +120,6 @@ void Help::Draw()const
 		DrawRotaGraph(640, 605, 1.0, 0.0, title_not_pressed, TRUE);
 	}
 
-	Camera::DrawFormatString({ 500,250 }, 50, NULL, "ひだりすてぃっく　きゃらを操作\n　みぎすてぃっく　網を操作", NULL);
+	Camera::DrawString({ 500,250 }, 50, NULL, "ひだりすてぃっく　きゃらを操作\n　みぎすてぃっく　網を操作", NULL);
 }
 
