@@ -299,8 +299,6 @@ void InGameDraw(void)
 		Camera::DrawString({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "%d", 3 - (int)timer);
 		break;
 	}
-
-	Camera::Draw();
 }
 
 Vector2D GetRingLocation()

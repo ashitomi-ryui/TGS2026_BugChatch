@@ -502,6 +502,8 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 			x+=0.5;
 		}
 	}
+
+	SetDrawBright(255, 255, 255);
 }
 
 void Camera::DrawStringW(Vector2D location, int size, unsigned int Color, const TCHAR * FormatString, ...)
