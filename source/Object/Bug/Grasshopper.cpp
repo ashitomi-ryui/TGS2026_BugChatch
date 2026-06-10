@@ -603,3 +603,10 @@ void Grasshopper::CheckOverlap()
 		m_isBack = FALSE;
 	}
 }
+
+void Grasshopper::StopAudio()
+{
+	if (Audio[0] != -1) StopSoundMem(Audio[0]);
+	
+	if (Audio[1] != -1) StopSoundMem(Audio[1]);
+}

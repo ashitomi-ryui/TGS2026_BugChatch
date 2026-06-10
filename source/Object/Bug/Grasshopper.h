@@ -30,6 +30,9 @@ public:
 	virtual void DrawOnTheFront() const;	// 前面に描画
 	virtual void Draw() const override;
 
+
+	static void StopAudio();
+
 	//スポーン
 	void Spawn();
 
