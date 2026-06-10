@@ -279,7 +279,7 @@ void Cicada::Stand(float delta)
 {
 	if (CheckSoundMem(CicadaSE) != TRUE && Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
-PlaySoundMem(CicadaSE, DX_PLAYTYPE_BACK);
+		PlaySoundMem(CicadaSE, DX_PLAYTYPE_BACK);
 	}
 	
 	m_moveSpeed = { 0.0f, 0.0f };
