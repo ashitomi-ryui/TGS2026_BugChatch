@@ -1,5 +1,6 @@
 #include"HelpScene.h"
 #include"../Utilitys/Input.h"
+#include"../Utilitys/Camera.h"
 #include<DxLib.h>
 
 Help::Help()
@@ -87,14 +88,6 @@ void Help::Draw()const
 {
 	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
 
-	DrawRotaGraph(943, 210, 0.8, 0.0, controller, TRUE);
-
-	SetFontSize(58);
-	DrawFormatString(200, 150, GetColor(255, 255, 255), "左手・移動");
-	DrawFormatString(200, 230, GetColor(255, 255, 255), "右手・乱獲");
-	SetFontSize(35);
-	DrawFormatString(850, 360, GetColor(255, 255, 255), "持ち方の例");
-
 	if (select_y == 0)
 	{
 		if (pressed == TRUE)
@@ -126,6 +119,7 @@ void Help::Draw()const
 	{
 		DrawRotaGraph(640, 605, 1.0, 0.0, title_not_pressed, TRUE);
 	}
-	
+
+	Camera::DrawFormatString({ 500,250 }, 50, NULL, "ひだりすてぃっく　きゃらを操作\n　みぎすてぃっく　網を操作", NULL);
 }
 
