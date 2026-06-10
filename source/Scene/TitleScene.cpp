@@ -176,6 +176,7 @@ eSceneType Title::Update(float delta_second)
 		}
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
+			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
 			if (select_y == 0 || select_y == 2)
 			{
 				select_y = 1;
@@ -191,6 +192,7 @@ eSceneType Title::Update(float delta_second)
 		}
 		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
 		{
+			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
 			if (select_x == 0)//一番左が選択されている場合
 			{
 				select_x = 1;//右へ戻す
