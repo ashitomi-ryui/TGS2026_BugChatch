@@ -25,7 +25,7 @@ Grasshopper::Grasshopper() : Bug()
 	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
 	jougai = false;
 
-	
+	m_isTurn = false;
 	Vector2D location = {};
 	m_isJump = false;
 	shiita = 0.0f;
@@ -38,7 +38,7 @@ Grasshopper::Grasshopper() : Bug()
 }
 Grasshopper::~Grasshopper()
 {
-
+	/*StopSoundMem(Audio[0]);*/
 }
 
 void Grasshopper::Init()
@@ -57,7 +57,7 @@ void Grasshopper::Init()
 	images[5] = LoadGraph("assets/images/Bugs/Grasshopper/Jump2.PNG");
 	images[6] = LoadGraph("assets/images/Bugs/Grasshopper/Jump3.PNG");
 
-	
+
 	//SE
 	Audio[0] = LoadSoundMem("assets/Audio/Batta.wav");
 	Audio[1] = LoadSoundMem("assets/Audio/BattaJump.wav");
@@ -69,6 +69,22 @@ void Grasshopper::Init()
 void Grasshopper::Update(float delta)
 {
 	Animation(delta);
+
+	if (jougai == TRUE)
+	{
+		Vector2D center = Vec2Add(nearleaf, Vec2Mult({ D_LEAF_WIDTH, D_LEAF_HEIGHT }, 0.5f));
+		Vector2D diff = Vec2Sub(center, m_location);
+		Vector2D rect_size = { D_LEAF_WIDTH, D_LEAF_HEIGHT };
+		if (fabsf(diff.x) < rect_size.x && fabsf(diff.y) < rect_size.y)
+		{
+			jougai = false;
+		}
+		//if (nearleaf.x < m_location.x && m_location.x < (nearleaf.x + D_LEAF_WIDTH) &&
+		//	nearleaf.y < m_location.y && m_location.y < (nearleaf.y + D_LEAF_HEIGHT))
+		//{
+		//	jougai = FALSE;
+		//}
+	}
 
 	// 出現しているなら
 	if (m_isAppearance)
@@ -93,10 +109,10 @@ void Grasshopper::Update(float delta)
 				Move(delta);
 
 				break;
-			/*case ePanic:
-				Panic(delta);
+				/*case ePanic:
+					Panic(delta);
 
-				break;*/
+					break;*/
 			}
 
 			PerceptionJudgment();
@@ -130,7 +146,13 @@ void Grasshopper::Update(float delta)
 
 void Grasshopper::Draw() const
 {
-	DrawFormatString(10, 100, GetColor(0, 0, 0), "%d", m_animCount);
+	/*bool m_isTurn = false;
+	if (m_Angle >= 3.0)
+	{
+		m_isTurn = true;
+	}*/
+
+	Camera::DrawStringW(m_location, 25, GetColor(255, 255, 255), "%d", jougai);
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], m_isTurn);
 }
 
@@ -171,6 +193,14 @@ void Grasshopper::Spawn()
 
 	// スポーン
 	Set(location);
+	if (GetRand(2) > 1)
+	{
+		m_isTurn = true;
+	}
+	else
+	{
+		m_isTurn = false;
+	}
 }
 
 void Grasshopper::ReSpawn(float delta)
@@ -209,7 +239,7 @@ void Grasshopper::SetDestination(Vector2D location)
 
 		top = Random::GetRand(20.0, 50.0, 0.1f);
 
-		
+
 	}
 	else
 	{
@@ -237,11 +267,11 @@ void Grasshopper::SetDestination(Vector2D location)
 			m_isJump = false;
 		}
 	}
-	
+
 
 }
 
-void Grasshopper::EscapeSetDestination(Vector2D location,Vector2D Plocation)
+void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
 {
 	shiita = 0;
 
@@ -252,7 +282,7 @@ void Grasshopper::EscapeSetDestination(Vector2D location,Vector2D Plocation)
 
 	// 目的地
 	m_destination.x = location.x + cosf(m_direction) * distance;
-	
+
 	m_destination.y = location.y + sinf(m_direction) * distance;
 
 	m_startLocation = location;
@@ -287,14 +317,16 @@ void Grasshopper::Animation(float delta)
 			{
 				m_Angle = 0.0f;    // 左を向く
 			}
+
 			m_isTurn = false;
-			if (m_Angle == 3.0f)
+
+			if (m_Angle >= 3.0f)
 			{
 				m_isTurn = true;
 			}
 		}
 
-		
+
 		if (m_isEscape || m_state == eMove && m_isJump == true)
 		{
 			if (shiita < 0.25f)
@@ -310,7 +342,7 @@ void Grasshopper::Animation(float delta)
 				m_animCount = 6; // 着地前
 			}
 		}
-		
+
 		else if (m_state == eStand)
 		{
 			m_animCount = 0; // 通常時（地面にいる画像）に戻す！
@@ -333,7 +365,7 @@ void Grasshopper::Escape(float delta)
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 	if (escape == FALSE)
 	{
-		EscapeSetDestination(m_location,playerLocation);   
+		EscapeSetDestination(m_location, playerLocation);
 		escape = TRUE;
 	}
 
@@ -378,7 +410,7 @@ void Grasshopper::Escape(float delta)
 		m_transitionTime = Random::GetRand(1.0f, 2.0f, 0.1f);
 		return;
 	}
-	
+
 	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
 	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 }
@@ -388,7 +420,7 @@ void Grasshopper::Stand(float delta)
 	shiita = 0;
 	m_moveSpeed = { 0.0f, 0.0f };
 
-	if (CheckSoundMem(Audio[0]) != TRUE&& Camera::CheckItsOnTheScreen(m_location, m_radius))
+	if (CheckSoundMem(Audio[0]) != TRUE && Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
 		PlaySoundMem(Audio[0], DX_PLAYTYPE_BACK);
 	}
@@ -432,11 +464,7 @@ void Grasshopper::Move(float delta)
 		float height = sinf(shiita * DX_PI_F) * top;
 		m_location.y -= height;
 	}
-	else
-	{
-		
-	}
-	
+
 	// 着地判定（進行度が1.0に達したら終了）
 	if (shiita >= 1.0f)
 	{
@@ -445,21 +473,11 @@ void Grasshopper::Move(float delta)
 		shiita = 0;
 		m_state = eStand;
 		m_transitionTime = Random::GetRand(5.0f, 10.0f, 1.0f);
-		if (jougai == TRUE)
-		{
-			if (Length(Vec2Sub(m_location, m_destination)) < 10.0f &&
-				m_location.x > nearleaf.x - D_LEAF_WIDTH &&
-				m_location.x < nearleaf.x + D_LEAF_WIDTH &&
-				m_location.y > nearleaf.y - D_LEAF_HEIGHT &&
-				m_location.y < nearleaf.y + D_LEAF_HEIGHT)
-			{
-				jougai = FALSE;
-			}
-		}
+
 	}
 
-	
-	
+
+
 	/*Vector2D treeLocation = FindNearestTree(m_location);*/
 	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f)
 	{
@@ -573,15 +591,15 @@ void Grasshopper::CheckOverlap()
 {
 	Vector2D treeLocation = FindNearestTree(m_location);
 
-	if (m_location.x > treeLocation.x - D_TREE_WIDTH / 2.0f &&  
-		m_location.x < treeLocation.x + D_TREE_WIDTH / 2.0f && 
-		m_location.y > treeLocation.y - D_TREE_HEIGHT / 2.0f && 
-		m_location.y < treeLocation.y)                           
+	if (m_location.x > treeLocation.x - D_TREE_WIDTH / 2.0f &&
+		m_location.x < treeLocation.x + D_TREE_WIDTH / 2.0f &&
+		m_location.y > treeLocation.y - D_TREE_HEIGHT / 2.0f &&
+		m_location.y < treeLocation.y)
 	{
-		m_isBack = TRUE;  
+		m_isBack = TRUE;
 	}
 	else
 	{
-		m_isBack = FALSE; 
+		m_isBack = FALSE;
 	}
 }
