@@ -131,7 +131,7 @@ void Ranking::Draw()const
 		DrawFormatString(100, 100 + 50 * i, GetColor(255, 255, 255), "%d", ranking[i]);
 	}*/
 
-	Camera::DrawFormatString({ 500,250 }, 100, 0.0, "1ˆÊ %d•C\n2ˆÊ %d•C\n3ˆÊ %d•C", ranking[0], ranking[1], ranking[2]);
+	Camera::DrawString({ 500,250 }, 100, 0.0, "1ˆÊ %d•C\n2ˆÊ %d•C\n3ˆÊ %d•C", ranking[0], ranking[1], ranking[2]);
 }
 
 int Ranking::LoadRankData()

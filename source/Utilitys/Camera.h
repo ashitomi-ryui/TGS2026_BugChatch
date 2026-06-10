@@ -181,7 +181,7 @@ public:
 	/// <param name="Color">色</param>
 	/// <param name="FormatString">文字情報</param>
 	/// <param name=""></param>
-	static void DrawFormatString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...);
+	static void DrawString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...);
 
 	/// <summary>
 	/// ワールド座標で文章を描画
@@ -191,7 +191,7 @@ public:
 	/// <param name="Color">色</param>
 	/// <param name="FormatString">文字情報</param>
 	/// <param name=""></param>
-	static void DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...);
+	static void DrawStringW(Vector2D location, int size, unsigned int Color, const TCHAR *FormatString, ...);
 
 	/// <summary>
 	/// 画面の比率に合わせて位置を調整する

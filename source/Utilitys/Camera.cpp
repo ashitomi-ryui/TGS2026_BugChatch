@@ -289,7 +289,7 @@ void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHa
 	DrawGraph(location, ExRate, Angle, GrHandle, ReverseXFlag, ReverseYFlage);
 }
 
-void Camera::DrawFormatString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...)
+void Camera::DrawString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...)
 {
 	// ïœêîÇÃìñÇƒÇÕÇﬂ
 	char buffer[1024];	// ï∂éöóÒ
@@ -504,7 +504,7 @@ void Camera::DrawFormatString(Vector2D location, int size, unsigned int Color, c
 	}
 }
 
-void Camera::DrawFormatStringW(Vector2D location, int size, unsigned int Color, const TCHAR * FormatString, ...)
+void Camera::DrawStringW(Vector2D location, int size, unsigned int Color, const TCHAR * FormatString, ...)
 {
 	// ïœêîÇÃìñÇƒÇÕÇﬂ
 	char buffer[1024];	// ï∂éöóÒ
@@ -517,7 +517,7 @@ void Camera::DrawFormatStringW(Vector2D location, int size, unsigned int Color, 
 	location.x += -m_location.x + D_WIN_WIDTH / 2.0f;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2.0f;
 
-	DrawFormatString(location, size, Color, buffer);
+	DrawString(location, size, Color, buffer);
 }
 
 Vector2D Camera::FitLocationToScreen(Vector2D location)
