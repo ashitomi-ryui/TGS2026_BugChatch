@@ -9,6 +9,8 @@ class Ranking
 {
 private:
   
+	int Choicebgm2;
+	int DecisionSE2;
 	int back_ground2;
 	int start_pressed;
 	int start_not_pressed;
