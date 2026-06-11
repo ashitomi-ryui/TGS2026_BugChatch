@@ -97,7 +97,7 @@ void Cicada::Update(float delta)
 
 void Cicada::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
 }
 
 void Cicada::DrawOnTheBack() const
@@ -393,6 +393,7 @@ void Cicada::PerceptionJudgment()
 
 void Cicada::TransitionToEscape()
 {
+	
 	m_isEscape = true;
 	// é@íméûä‘Ç0.1fÇ≤Ç∆Ç…ãÊêÿÇ¡ÇΩ0.0f~1.0fÇ…Ç∑ÇÈ
 	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
@@ -410,4 +411,9 @@ void Cicada::PutInFront()
 	{
 		m_isBack = false;
 	}
+}
+
+void Cicada::StopAudio()
+{
+	if (CicadaSE != -1) StopSoundMem(CicadaSE);
 }

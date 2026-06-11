@@ -27,9 +27,23 @@ int Result::Init()
 	ranking_pressed = LoadGraph("assets/images/Result/ranking_on.png");
 	back_ground = LoadGraph("assets/images/Result/result.png");
 
+
+	ResultBGM = LoadSoundMem("assets/Audio/Result.wav");
+	ChoiceSE3 = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
+	if (ChoiceSE3 == -1)
+	{
+		return FALSE;
+	}
+	DecisionSE3 = LoadSoundMem("assets/Audio/AS_134044_決定音.wav");
+	if (DecisionSE3 == -1)
+	{
+		return FALSE;
+	}
 	select_x, pressed = 0;
 	time = 0.0f;
 	time_rug = 0.5f;
+
+	PlaySoundMem(ResultBGM, DX_PLAYTYPE_LOOP);
 
 	p.point[0] = bug.GetCicadaCount();
 	p.point[1] = bug.GetDragonflyCount();
@@ -106,6 +120,7 @@ eSceneType Result::Update(float delta_second)
 	{
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
 		{
+			PlaySoundMem(ChoiceSE3, DX_PLAYTYPE_BACK);
 			if (select_x == 1)
 			{
 				select_x = 0;
@@ -117,6 +132,7 @@ eSceneType Result::Update(float delta_second)
 		}
 		if (GetLeftStickState_X(false) == ePressed)//左スティックが下に入力された場合
 		{
+			PlaySoundMem(ChoiceSE3, DX_PLAYTYPE_BACK);
 			if (select_x == 0)
 			{
 				select_x = 1;
@@ -129,6 +145,8 @@ eSceneType Result::Update(float delta_second)
 
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 		{
+			PlaySoundMem(DecisionSE3, DX_PLAYTYPE_BACK);
+			StopSoundMem(ResultBGM);
 			pressed = TRUE;
 		}
 	}

@@ -22,6 +22,23 @@ int Help::Init()
 	back_ground = LoadGraph("assets/images/Help/teacher.jpg");
 	controller = LoadGraph("assets/images/Help/controller.jpg");
 
+	HelpBGM = LoadSoundMem("assets/Audio/HelpBGM.wav");
+	if (HelpBGM == -1)
+	{
+		return FALSE;
+	}
+	ChoiceSE2 = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
+	if (ChoiceSE2 == -1)
+	{
+		return FALSE;
+	}
+	DecisionSE2 = LoadSoundMem("assets/Audio/AS_134044_決定音.wav");
+	if (DecisionSE2 == -1)
+	{
+		return FALSE;
+	}
+
+	PlaySoundMem(HelpBGM, DX_PLAYTYPE_LOOP);
 	select_y, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
@@ -54,6 +71,7 @@ eSceneType Help::Update(float delta_second)
 	{
 		if (GetLeftStickState_Y(true) == ePressed)//左スティックが上に入力された場合
 		{
+			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
 			if (select_y == 0)
 			{
 				select_y = 1;
@@ -65,6 +83,7 @@ eSceneType Help::Update(float delta_second)
 		}
 		if (GetLeftStickState_Y(false) == ePressed)//左スティックが下に入力された場合
 		{
+			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
 			if (select_y == 1)
 			{
 				select_y = 0;
@@ -77,6 +96,8 @@ eSceneType Help::Update(float delta_second)
 
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 		{
+			PlaySoundMem(DecisionSE2, DX_PLAYTYPE_BACK);
+			StopSoundMem(HelpBGM);
 			pressed = TRUE;
 		}
 	}
