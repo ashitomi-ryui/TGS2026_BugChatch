@@ -10,6 +10,7 @@
 #include"../Object/Bug/Cicada.h"
 #include"../Object/Bug/Dragonfly.h"
 #include"../Object/Bug/Grasshopper.h"
+#include"../Object/Bug/Bug.h"
 
 #include"../Object/Tree.h"
 #include"../Object/Leaf.h"
@@ -20,7 +21,9 @@ Player player;
 Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
 Grasshopper grasshopper[D_GRASSHOPPER_MAX];
-ICON icon;
+Icon icon;
+Bug score;
+int get[3] = {};
 float timer;
 int BGM;
 int flowerImage[2] = { -1, -1 };
@@ -121,10 +124,14 @@ int InGameInit(void)//各プログラムの初期化
 	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1.PNG");
 	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2.PNG");
 
+	icon.c = LoadGraph("assets/images/UI/CicadaIcon.PNG");
 	icon.d = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
 	icon.g = LoadGraph("assets/images/UI/GrasshopperIcon.PNG");
-	icon.c = LoadGraph("assets/images/UI/CicadaIcon.PNG");
-
+	
+	for (int i = 0; i < 3; i++)
+	{
+		get[i] = 0;
+	}
 	groundImage = LoadGraph("assets/images/OtherObjects/Ground.PNG");
 
 	ChangeVolumeSoundMem(100, BGM);
@@ -228,7 +235,7 @@ eSceneType InGameUpdate(float delta_second)
 	case 4:	// ==============================================ゲームプレイ
 		timer += delta_second;
 #ifndef _DEBUG
-		if (timer > 1.0f)
+		if (timer > 60.0f)
 		{
 			timer = 0.0f;
 
@@ -271,20 +278,46 @@ eSceneType InGameUpdate(float delta_second)
 			leaf[id].Update(delta_second);
 		}
 
+		for (int i = 0; i < 3; i++)
+		{
+			switch (i)
+			{
+			case 0:
+				get[i] = score.GetCicadaCount();
+				break;
+			case 1:
+				get[i] = score.GetDragonflyCount();
+				break;
+			case 2:
+				get[i] = score.GetGrasshopperCount();
+				break;
+			}
+		}
+
 		// 音再生・停止
 		Cicada::PlayAudio();
 
 		break;
-	case 5:	// ==============================================ゲーム終了
+	case 5:// ==============================================ゲーム終了
+		timer += delta_second;
+
+		if (timer > 2.0f)
+		{
+			timer = 0.0;
+			changeProduction = 6;
+		}
+
+		break;
+	case 6:	
 		timer += delta_second;
 
 		if (timer > 0.0f)
 		{
-			changeProduction = 6;
+			changeProduction = 7;
 			shiita = 0.0f;
 		}
 		break;
-	case 6:
+	case 7:
 		shiita -= 2.0f * delta_second;
 
 		{
@@ -377,11 +410,17 @@ void InGameDraw(void)
 		{
 			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 120.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "スタート！");
 		}
-	case 5:
 		Camera::DrawString({ 25,25 }, 40, GetColor(255, 255, 255), "のこり%d秒", 60 - (int)timer);
-		Camera::DrawGraph({ 25,50 }, 1.5, 1.5, 0.0, icon.c);
-		Camera::DrawGraph({ 25,75 }, 1.5, 1.5, 0.0, icon.d);
-		Camera::DrawGraph({ 25,100 }, 1.5, 1.5, 0.0, icon.g);
+		Camera::DrawString({ 75,75 }, 40, GetColor(255, 255, 255), "%d匹", get[0]);
+		Camera::DrawString({ 75,135 }, 40, GetColor(255, 255, 255), "%d匹", get[1]);
+		Camera::DrawString({ 75,195 }, 40, GetColor(255, 255, 255), "%d匹", get[2]);
+
+		Camera::DrawGraph({ 25,75 }, 1.7, 1.7, 0.0, icon.c);
+		Camera::DrawGraph({ 25,135 }, 1.7, 1.7, 0.0, icon.d);
+		Camera::DrawGraph({ 25,195 }, 1.7, 1.7, 0.0, icon.g);
+		break;
+	case 5:
+		Camera::DrawString({ 465,260 }, 100, GetColor(255, 255, 255), "そこまで！");
 		break;
 	}
 
