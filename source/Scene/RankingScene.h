@@ -8,21 +8,24 @@
 class Ranking
 {
 private:
-  
-	int Choicebgm2;
-	int DecisionSE2;
-	int back_ground2;
-	int start_pressed;
-	int start_not_pressed;
-	int title_pressed;
-	int title_not_pressed;
-	int back_ground;
 	int select_x;
 	int pressed;
 	float time;
 	float time_rug;
 private:
 	int ranking[MAX_RANK];
+private:
+	int Choicebgm2;
+	int DecisionSE2;
+	int back_ground2;
+	int back_ground;
+	struct b
+	{
+		int newtral;
+		int select;
+		int pressed;
+	};
+	b b;
 public:
 	Ranking();
 	~Ranking();

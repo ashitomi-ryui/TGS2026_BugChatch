@@ -8,10 +8,6 @@ Ranking::Ranking()
 	Choicebgm2 = -1;
 	DecisionSE2 = -1;
 	back_ground2 = -1;
-	start_pressed = -1;
-	start_not_pressed = -1;
-	title_pressed = -1;
-	title_not_pressed = -1;
 	back_ground = -1;
 	select_x = 0;
 	pressed = 0;
@@ -26,10 +22,9 @@ Ranking::~Ranking()
 
 int Ranking::Init()
 {
-	start_not_pressed = LoadGraph("assets/images/Ranking/start_off.png");
-	start_pressed = LoadGraph("assets/images/Ranking/start_on.png");
-	title_not_pressed = LoadGraph("assets/images/Ranking/title_off.png");
-	title_pressed = LoadGraph("assets/images/Ranking/title_on.png");
+	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
+	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
+	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
 	back_ground = LoadGraph("assets/images/Ranking/mori.jpg");
 	back_ground2 = LoadGraph("assets/images/Ranking/ranking.png");
 	select_x,pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
@@ -123,32 +118,32 @@ void Ranking::Draw()const
 	{
 		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, start_pressed);
+			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, start_not_pressed);
+			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, b.select);
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 410, 595 }, 1.0, 1.0, 0.0, start_not_pressed);
+		Camera::DrawGraph({ 410, 595 }, 1.0, 1.0, 0.0, b.newtral);
 	}
 
 	if (select_x == 1)
 	{
 		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, title_pressed);
+			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, title_not_pressed);
+			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, b.select);
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 860, 595 }, 1.0, 1.0, 0.0, title_not_pressed);
+		Camera::DrawGraph({ 860, 595 }, 1.0, 1.0, 0.0, b.newtral);
 	}
 
 	/*for (int i = 0; i < 3; i++)

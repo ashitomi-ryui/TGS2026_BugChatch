@@ -6,19 +6,23 @@
 class Help
 {
 private:
-	int ChoiceSE2;
-	int DecisionSE2;
-	int HelpBGM;
-	int back_ground;
-	int start_pressed;
-	int start_not_pressed;
-	int title_pressed;
-	int title_not_pressed;
-	int controller;
 	int select_y;
 	int pressed;
 	float time;
 	float time_rug;
+private:
+	int ChoiceSE2;
+	int DecisionSE2;
+	int HelpBGM;
+	int back_ground;
+	int controller;
+	struct b
+	{
+		int newtral;
+		int select;
+		int pressed;
+	};
+	b b;
 public:
 	Help();
 	~Help();

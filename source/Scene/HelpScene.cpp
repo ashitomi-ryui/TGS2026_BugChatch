@@ -15,12 +15,11 @@ Help::~Help()
 
 int Help::Init()
 {
-	start_not_pressed = LoadGraph("assets/images/Help/start_off.png");
-	start_pressed = LoadGraph("assets/images/Help/start_on.png");
-	title_not_pressed = LoadGraph("assets/images/Help/title_off.png");
-	title_pressed = LoadGraph("assets/images/Help/title_on.png");
+	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
+	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
+	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
 	back_ground = LoadGraph("assets/images/Help/teacher.jpg");
-	controller = LoadGraph("assets/images/Help/controller.jpg");
+	controller = LoadGraph("assets/images/UI/Controller.PNG");
 
 	HelpBGM = LoadSoundMem("assets/Audio/HelpBGM.wav");
 	if (HelpBGM == -1)
@@ -107,40 +106,49 @@ eSceneType Help::Update(float delta_second)
 
 void Help::Draw()const
 {
-	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
+	Camera::DrawGraph({ 640,365 }, 1.0, 1.0, 0.0, back_ground);
+	Camera::DrawGraph({ 640,280 }, 1.0, 1.0, 0.0, controller);
+
+	Camera::DrawString({ 360,115 }, 60, GetColor(255, 255, 255), "網で虫をいっぱい捕れ！");
+	Camera::DrawString({ 180,195 }, 55, GetColor(255, 255, 255), "キャラ操作");
+	Camera::DrawString({ 860,375 }, 55, GetColor(255, 255, 255), "網を操作");
 
 	if (select_y == 0)
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(640, 465, 1.2, 0.0, start_pressed, TRUE);
+			Camera::DrawGraph({ 640, 465 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを押された状態にする
 		}
 		else
 		{
-			DrawRotaGraph(640, 465, 1.2, 0.0, start_not_pressed, TRUE);
+			Camera::DrawGraph({ 640, 465 }, 0.7, 0.7, 0.0, b.select);
 		}
+
+		Camera::DrawString({ 561, 460 }, 55, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
-		DrawRotaGraph(640, 465, 1.0, 0.0, start_not_pressed, TRUE);
+		Camera::DrawGraph({ 640, 465 }, 0.6, 0.6, 0.0, b.newtral);
+		Camera::DrawString({ 561, 460 }, 50, GetColor(255, 255, 255), "スタート");
 	}
 	
 	if (select_y == 1)
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(640, 605, 1.2, 0.0, title_pressed, TRUE);
+			Camera::DrawGraph({ 640, 605 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを押された状態にする
 		}
 		else
 		{
-			DrawRotaGraph(640, 605, 1.2, 0.0, title_not_pressed, TRUE);
+			Camera::DrawGraph({ 640, 605 }, 0.7, 0.7, 0.0, b.select);//ボタンを押された状態にする
 		}
+
+		Camera::DrawString({ 561, 600 }, 55, GetColor(255, 255, 255), "タイトル");
 	}
 	else
 	{
-		DrawRotaGraph(640, 605, 1.0, 0.0, title_not_pressed, TRUE);
+		Camera::DrawGraph({ 640, 605 }, 0.6, 0.6, 0.0, b.newtral);//ボタンを押された状態にする
+		Camera::DrawString({ 561, 600 }, 50, GetColor(255, 255, 255), "タイトル");
 	}
-
-	Camera::DrawString({ 500,250 }, 50, GetColor(255,255,255), "ひだりすてぃっく　きゃらを操作\n　みぎすてぃっく　網を操作", NULL);
 }
 
