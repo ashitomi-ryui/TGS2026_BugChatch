@@ -231,18 +231,24 @@ eSceneType InGameUpdate(float delta_second)
 			StopSoundMem(BGM);
 
 			Grasshopper::StopAudio();
+			Cicada::StopAudio();
 			
 			// 次の演出
 			changeProduction = 5;
+
+			break;
 		}
 #endif
 
 		player.Update(delta_second);	// プレイヤーの更新
 
+		Cicada::WithinTheScreenInit();
 		for (int id = 0;id < D_CICADA_MAX;id++)
 		{
 			cicada[id].Update(delta_second);	// セミの更新
 		}
+		Cicada::PlayAudio();
+
 		for (int id = 0;id < D_DRAGONFLY_MAX;id++)
 		{
 			dragonfly[id].Update(delta_second);	// トンボの更新

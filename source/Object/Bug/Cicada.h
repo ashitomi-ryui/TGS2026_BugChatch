@@ -11,6 +11,9 @@ private:
 	static int CicadaSE;
 
 public:
+	static bool isWithinTheScreen;
+
+public:
 	Cicada();
 	~Cicada();
 	
@@ -20,12 +23,17 @@ public:
 	virtual void Draw() const override;
 	virtual void DrawOnTheBack() const override;
 	virtual void DrawOnTheFront() const override;
+
+	static void WithinTheScreenInit();
+	static void PlayAudio();
 	static void StopAudio();
+	
 	/// <summary>
 	/// èoåª
 	/// </summary>
 	void Spawn();
 
+private:
 	/// <summary>
 	/// çƒèoåª
 	/// </summary>

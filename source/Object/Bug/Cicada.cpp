@@ -14,6 +14,8 @@
 int Cicada::images[5] = { -1,-1,-1,-1,-1 };
 int Cicada::CicadaSE = -1;
 
+bool Cicada::isWithinTheScreen = false;
+
 Cicada::Cicada() : Bug()
 {
 	// é@ímîÕàÕ
@@ -37,6 +39,11 @@ void Cicada::Init()
 
 void Cicada::Update(float delta)
 {
+	if (Camera::CheckItsOnTheScreen(m_location, m_radius) == true)
+	{
+		isWithinTheScreen = true;
+	}
+
 	Animation(delta);
 
 	// èoåªÇµÇƒÇ¢ÇÈÇ»ÇÁ
@@ -116,6 +123,19 @@ void Cicada::DrawOnTheFront() const
 	{
 		Draw();
 	}
+}
+
+void Cicada::WithinTheScreenInit()
+{
+	isWithinTheScreen = false;
+}
+
+void Cicada::PlayAudio()
+{
+	if (isWithinTheScreen && CheckSoundMem(CicadaSE) == FALSE)
+		PlaySoundMem(CicadaSE, DX_PLAYTYPE_LOOP);
+	if (!isWithinTheScreen && CheckSoundMem(CicadaSE) == TRUE)
+		StopSoundMem(CicadaSE);
 }
 
 void Cicada::Spawn()
@@ -277,11 +297,6 @@ void Cicada::Escape(float delta)
 
 void Cicada::Stand(float delta)
 {
-	if (CheckSoundMem(CicadaSE) != TRUE && Camera::CheckItsOnTheScreen(m_location, m_radius))
-	{
-		PlaySoundMem(CicadaSE, DX_PLAYTYPE_BACK);
-	}
-	
 	m_moveSpeed = { 0.0f, 0.0f };
 	if (m_transitionTime <= 0.0f)
 	{
@@ -415,5 +430,6 @@ void Cicada::PutInFront()
 
 void Cicada::StopAudio()
 {
-	if (CicadaSE != -1) StopSoundMem(CicadaSE);
+	//StopSoundMem(CicadaSE);
+	if (CheckSoundMem(CicadaSE) == TRUE) StopSoundMem(CicadaSE);
 }
