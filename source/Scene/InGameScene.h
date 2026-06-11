@@ -7,6 +7,12 @@ int InGameInit(void);
 eSceneType InGameUpdate(float delta_second);
 void InGameDraw(void);
 
+struct ICON
+{
+	int d;
+	int g;
+	int c;
+};
 /// <summary>
 /// Å‚à‹ß‚¢–Ø‚ÌÀ•W‚ğæ“¾‚·‚é
 /// </summary>

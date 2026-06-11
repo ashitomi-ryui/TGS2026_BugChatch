@@ -20,6 +20,7 @@ Player player;
 Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
 Grasshopper grasshopper[D_GRASSHOPPER_MAX];
+ICON icon;
 float timer;
 int BGM;
 int flowerImage[2] = { -1, -1 };
@@ -119,6 +120,10 @@ int InGameInit(void)//各プログラムの初期化
 
 	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1.PNG");
 	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2.PNG");
+
+	icon.d = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
+	icon.g = LoadGraph("assets/images/UI/GrasshopperIcon.PNG");
+	icon.c = LoadGraph("assets/images/UI/CicadaIcon.PNG");
 
 	groundImage = LoadGraph("assets/images/OtherObjects/Ground.PNG");
 
@@ -372,8 +377,15 @@ void InGameDraw(void)
 		{
 			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 120.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "スタート！");
 		}
+	case 5:
+		Camera::DrawString({ 25,25 }, 40, GetColor(255, 255, 255), "のこり%d秒", 60 - (int)timer);
+		Camera::DrawGraph({ 25,50 }, 1.5, 1.5, 0.0, icon.c);
+		Camera::DrawGraph({ 25,75 }, 1.5, 1.5, 0.0, icon.d);
+		Camera::DrawGraph({ 25,100 }, 1.5, 1.5, 0.0, icon.g);
 		break;
 	}
+
+	
 }
 
 Vector2D GetRingLocation()
