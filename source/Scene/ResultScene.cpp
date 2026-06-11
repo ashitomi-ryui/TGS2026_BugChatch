@@ -27,7 +27,7 @@ int Result::Init()
 	rank_b.newtral = LoadGraph("assets/images/UI/RankingDefault.PNG");
 	rank_b.select = LoadGraph("assets/images/UI/RankingSelect.PNG");
 	rank_b.pressed = LoadGraph("assets/images/UI/RankingPress.PNG");
-	back_ground = LoadGraph("assets/images/Result/result.png");
+	back_ground = LoadGraph("assets/images/UI/ResultBack.PNG");
 
 	ResultBGM = LoadSoundMem("assets/Audio/Result.wav");
 	ChoiceSE3 = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
@@ -158,41 +158,53 @@ eSceneType Result::Update(float delta_second)
 void Result::Draw()const
 {
 
-	DrawRotaGraph(640, 400, 1.0, 0.0, back_ground, TRUE);
+	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
 
-	if (select_x == 0)
+	float selectSize = 0.84f;
+	float notSelectSize = 0.7f;
+	int selectCharSize = 60;
+	int notSelectCharSize = 50;
+	Vector2D startLoc = { 300.0f, 600.0f };
+	Vector2D titleLoc = { 1000.0f, 600.0f };
+
+	if (select_x == 0)	//タイトルが選択されている場合
 	{
-		if (pressed == TRUE)
+		if (pressed == TRUE)	//ボタンが押されている場合
 		{
-			Camera::DrawGraph({ 300,600 }, 0.7, 0.7, 0.0, b.pressed);
+			//ボタンを押された状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 300,600 }, 0.7, 0.7, 0.0, b.select);
+			//ボタンを押されていない状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
 		}
-
-		Camera::DrawString({ 221, 595 }, 55, GetColor(255, 255, 255), "タイトル");
+		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "タイトル");
 	}
 	else
 	{
-		Camera::DrawGraph({ 300,600 }, 0.6, 0.6, 0.0, b.newtral);
-		Camera::DrawString({ 221, 595 }, 50, GetColor(255, 255, 255), "タイトル");
+		//通常サイズに戻す
+		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
 	}
 
-	if (select_x == 1)
+	if (select_x == 1)	//ランキングが選択されている場合
 	{
 		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 1000,600 }, 0.7, 0.7, 0.0, rank_b.pressed);
+			//ボタンを大きくする
+			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 1000,600 }, 0.7, 0.7, 0.0, rank_b.select);
+			//ボタンを大きくする
+			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.select);
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 1000,600 }, 0.6, 0.6, 0.0, rank_b.newtral);
+		//通常サイズに戻す
+		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, rank_b.newtral);
 	}
 
 	Camera::DrawString({ 250,150 }, 100, GetColor(255,255,255), "とんぼ %d匹\nばッた %d匹\nせみ 　%d匹\n合計 　%d匹", p.point[0], p.point[1], p.point[2], p.point[3]);

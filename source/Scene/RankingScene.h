@@ -3,7 +3,7 @@
 #include"SceneType.h"
 #include"../Utilitys/Input.h"
 
-#define MAX_RANK (3)
+#define MAX_RANK (6)
 
 class Ranking
 {
@@ -17,7 +17,6 @@ private:
 private:
 	int Choicebgm2;
 	int DecisionSE2;
-	int back_ground2;
 	int back_ground;
 	struct b
 	{

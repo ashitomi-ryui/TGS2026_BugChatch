@@ -206,76 +206,97 @@ void Title::Draw()const
 
 	Camera::DrawGraph({ 640,170 }, 1.5, 1.0, 0.0, title_logo);
 
-	if (select_y == 0)//スタートが選択されている場合
+	float selectSize = 0.75f;
+	float notSelectSize = 0.5f;
+	int selectCharSize = 75;
+	int notSelectCharSize = 50;
+
+	Vector2D startLoc = { 640.0f, 400.0f };
+	Vector2D helpLoc = { 640.0f, 520.0f };
+	Vector2D rankingLoc = { 1000.0f, 520.0f };
+	Vector2D endLoc = { 640.0f, 640.0f };
+
+	if (select_y == 0)	//スタートが選択されている場合
 	{
-		if (pressed == 1)//ボタンが押されている場合
+		if (pressed == TRUE)	//ボタンが押されている場合
 		{
-			Camera::DrawGraph({ 640, 400 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを押された状態にする
+			//ボタンを押された状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 400 }, 0.7, 0.7, 0.0, b.select);//ボタンを押されていない状態にする
+			//ボタンを押されていない状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
 		}
-
-		Camera::DrawString({ 561, 395 }, 55, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 400 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
-		Camera::DrawString({ 561, 395 }, 50, GetColor(255, 255, 255), "スタート");
+		//通常サイズに戻す
+		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "スタート");
 	}
 
-	if (select_y == 1 && select_x == 0)//ヘルプが選択されている場合
+	if (select_y == 1 && select_x == 0)	//ヘルプが選択されている場合
 	{
-		if (pressed == 1)
+		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 640, 520 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを大きくする
+			//ボタンを大きくする
+			Camera::DrawGraph(helpLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 520 }, 0.7, 0.7, 0.0, b.select);//ボタンを大きくする
+			//ボタンを大きくする
+			Camera::DrawGraph(helpLoc, selectSize, selectSize, 0.0, b.select);
 		}
 
-		Camera::DrawString({ 580, 515 }, 55, GetColor(255, 255, 255), "ヘルプ");
+		Camera::DrawString({ helpLoc.x - (float)selectCharSize * 1.0f, helpLoc.y }, selectCharSize, GetColor(255, 255, 255), "ヘルプ");
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 520 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
-		Camera::DrawString({ 580, 515 }, 50, GetColor(255, 255, 255), "ヘルプ");
+		//通常サイズに戻す
+		Camera::DrawGraph(helpLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ helpLoc.x - (float)notSelectCharSize * 1.0f, helpLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "ヘルプ");
 	}
 
-	if (select_y == 1 && select_x == 1)//ランキングが選択されている場合
+	if (select_y == 1 && select_x == 1)	//ランキングが選択されている場合
 	{
-		if (pressed == 1)
+		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 1000, 520 }, 0.7, 0.7, 0.0, rank_b.pressed);//ボタンを大きくする
+			//ボタンを大きくする
+			Camera::DrawGraph(rankingLoc, selectSize, selectSize, 0.0, rank_b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 1000, 520 }, 0.7, 0.7, 0.0, rank_b.select);//ボタンを大きくする
+			//ボタンを大きくする
+			Camera::DrawGraph(rankingLoc, selectSize, selectSize, 0.0, rank_b.select);
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 1000, 520 }, 0.6, 0.6, 0.0, rank_b.newtral);//通常サイズに戻す
+		//通常サイズに戻す
+		Camera::DrawGraph(rankingLoc, notSelectSize, notSelectSize, 0.0, rank_b.newtral);
 	}
 
-	if (select_y == 2)//おわりが選択されている場合
+	if (select_y == 2)	//おわりが選択されている場合
 	{
-		if (pressed == 1)
+		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 640, 640 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを大きくする
+			//ボタンを大きくする
+			Camera::DrawGraph(endLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 640 }, 0.7, 0.7, 0.0, b.select);//ボタンを大きくする
+			//ボタンを大きくする
+			Camera::DrawGraph(endLoc, selectSize, selectSize, 0.0, b.select);
 		}
 
-		Camera::DrawString({ 590, 635 }, 55, GetColor(255, 255, 255), "おわり");
+		Camera::DrawString({ endLoc.x - (float)selectCharSize * 1.0f, endLoc.y }, selectCharSize, GetColor(255, 255, 255), "おわり");
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 640 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
-		Camera::DrawString({ 590, 635 }, 50, GetColor(255, 255, 255), "おわり");
+		//通常サイズに戻す
+		Camera::DrawGraph(endLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ endLoc.x - (float)notSelectCharSize * 1.0f, endLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "おわり");
 	}
 }

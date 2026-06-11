@@ -7,7 +7,6 @@ Ranking::Ranking()
 {
 	Choicebgm2 = -1;
 	DecisionSE2 = -1;
-	back_ground2 = -1;
 	back_ground = -1;
 	select_x = 0;
 	pressed = 0;
@@ -25,8 +24,7 @@ int Ranking::Init()
 	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
 	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
 	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
-	back_ground = LoadGraph("assets/images/Ranking/mori.jpg");
-	back_ground2 = LoadGraph("assets/images/Ranking/ranking.png");
+	back_ground = LoadGraph("assets/images/UI/RankingBack.PNG");
 	select_x,pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
@@ -110,51 +108,80 @@ eSceneType Ranking::Update(float delta_second)
 
 void Ranking::Draw()const
 {
-	Camera::DrawGraph({ 640, 400 }, 2.0, 2.0, 0.0, back_ground);
+	Camera::DrawGraph({ 640, 360 }, 1.0, 1.0, 0.0, back_ground);
 
-	Camera::DrawGraph({ 640, 420 }, 1.4, 1.4, 0.0, back_ground2);
+	float selectSize = 0.84f;
+	float notSelectSize = 0.7f;
+	int selectCharSize = 60;
+	int notSelectCharSize = 50;
+	Vector2D startLoc = { 350.0f, 600.0f };
+	Vector2D titleLoc = { 1000.0f, 600.0f };
 
-	if (select_x == 0)
+	if (select_x == 0)	//スタートが選択されている場合
 	{
-		if (pressed == TRUE)
+		if (pressed == TRUE)	//ボタンが押されている場合
 		{
-			Camera::DrawGraph({ 410, 595 }, 0.7, 0.7, 0.0, b.pressed);
+			//ボタンを押された状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 410, 595 }, 0.7, 0.7, 0.0, b.select);
+			//ボタンを押されていない状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
 		}
-
-		Camera::DrawString({ 331, 590 }, 55, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
-		Camera::DrawGraph({ 410, 595 }, 0.6, 0.6, 0.0, b.newtral);
-		Camera::DrawString({ 331, 590 }, 50, GetColor(255, 255, 255), "スタート");
+		//通常サイズに戻す
+		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "スタート");
 	}
 
-	if (select_x == 1)
+	if (select_x == 1)	//タイトルが選択されている場合
 	{
 		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 860, 595 }, 0.7, 0.7, 0.0, b.pressed);
+			//ボタンを大きくする
+			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 860, 595 }, 0.7, 0.7, 0.0, b.select);
+			//ボタンを大きくする
+			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, b.select);
 		}
 
-		Camera::DrawString({ 781, 590 }, 55, GetColor(255, 255, 255), "タイトル");
+		Camera::DrawString({ titleLoc.x - (float)selectCharSize * 1.5f, titleLoc.y }, selectCharSize, GetColor(255, 255, 255), "タイトル");
 	}
 	else
 	{
-		Camera::DrawGraph({ 860, 595 }, 0.6, 0.6, 0.0, b.newtral);
-		Camera::DrawString({ 781, 590 }, 50, GetColor(255, 255, 255), "タイトル");
+		//通常サイズに戻す
+		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ titleLoc.x - (float)notSelectCharSize * 1.5f, titleLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
 	}
 
-	Camera::DrawString({ 480,250 }, 100, GetColor(255, 255, 160), "1位 %d匹", ranking[0]);
-	Camera::DrawString({ 480,350 }, 100, GetColor(120, 120, 120), "2位 %d匹", ranking[1]);
-	Camera::DrawString({ 480,450 }, 100, GetColor(180, 120, 20), "3位 %d匹", ranking[2]);
+	unsigned int color;
+	for (int i = 0;i < MAX_RANK;i++)
+	{
+		switch (i)
+		{
+		case 0:
+			color = GetColor(255, 255, 120);
+			break;
+		case 1:
+			color = GetColor(200, 200, 200);
+			break;
+		case 2:
+			color = GetColor(180, 120, 20);
+			break;
+		default:
+			color = GetColor(100, 100, 100);
+			break;
+		}
+
+		Camera::DrawString({ (float)(150 + (i / 3) * 600), (float)(115 + (i % 3) * 120) },
+			100, color, "%d位 %3d匹", i + 1, ranking[i]);
+	}
 }
 
 int Ranking::LoadRankData()

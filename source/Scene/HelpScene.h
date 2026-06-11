@@ -6,7 +6,7 @@
 class Help
 {
 private:
-	int select_y;
+	int select_x;
 	int pressed;
 	float time;
 	float time_rug;

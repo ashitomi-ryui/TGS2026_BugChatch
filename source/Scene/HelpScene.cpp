@@ -18,7 +18,7 @@ int Help::Init()
 	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
 	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
 	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
-	back_ground = LoadGraph("assets/images/Help/teacher.jpg");
+	back_ground = LoadGraph("assets/images/UI/HelpBack.PNG");
 	controller = LoadGraph("assets/images/UI/Controller.PNG");
 
 	HelpBGM = LoadSoundMem("assets/Audio/HelpBGM.wav");
@@ -38,7 +38,7 @@ int Help::Init()
 	}
 
 	PlaySoundMem(HelpBGM, DX_PLAYTYPE_LOOP);
-	select_y, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
+	select_x, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
 
@@ -55,7 +55,7 @@ eSceneType Help::Update(float delta_second)
 	}
 	if (time >= time_rug)
 	{
-		switch (select_y)
+		switch (select_x)
 		{
 		case 0:
 			return eInGame;
@@ -68,28 +68,28 @@ eSceneType Help::Update(float delta_second)
 
 	if (pressed == 0)
 	{
-		if (GetLeftStickState_Y(true) == ePressed)//左スティックが上に入力された場合
+		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
 		{
 			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
-			if (select_y == 0)
+			if (select_x == 0)
 			{
-				select_y = 1;
+				select_x = 1;
 			}
 			else
 			{
-				select_y = 0;
+				select_x = 0;
 			}
 		}
-		if (GetLeftStickState_Y(false) == ePressed)//左スティックが下に入力された場合
+		if (GetLeftStickState_X(false) == ePressed)//左スティックが下に入力された場合
 		{
 			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
-			if (select_y == 1)
+			if (select_x == 1)
 			{
-				select_y = 0;
+				select_x = 0;
 			}
 			else
 			{
-				select_y = 1;
+				select_x = 1;
 			}
 		}
 
@@ -107,48 +107,59 @@ eSceneType Help::Update(float delta_second)
 void Help::Draw()const
 {
 	Camera::DrawGraph({ 640,365 }, 1.0, 1.0, 0.0, back_ground);
-	Camera::DrawGraph({ 640,280 }, 1.0, 1.0, 0.0, controller);
+	Camera::DrawGraph({ 640,230 }, 1.0, 1.0, 0.0, controller);
 
-	Camera::DrawString({ 360,115 }, 60, GetColor(255, 255, 255), "網で虫をいっぱい捕れ！");
-	Camera::DrawString({ 180,195 }, 55, GetColor(255, 255, 255), "キャラ操作");
-	Camera::DrawString({ 860,375 }, 55, GetColor(255, 255, 255), "網を操作");
+	Camera::DrawString({ 200,130 }, 55, GetColor(255, 255, 255), "キャラ操作");
+	Camera::DrawString({ 850,320 }, 55, GetColor(255, 255, 255), "網を操作");
 
-	if (select_y == 0)
+	float selectSize = 0.84f;
+	float notSelectSize = 0.7f;
+	int selectCharSize = 60;
+	int notSelectCharSize = 50;
+	Vector2D startLoc = { 350.0f, 600.0f };
+	Vector2D titleLoc = { 1000.0f, 600.0f };
+
+	if (select_x == 0)	//スタートが選択されている場合
 	{
-		if (pressed == TRUE)
+		if (pressed == TRUE)	//ボタンが押されている場合
 		{
-			Camera::DrawGraph({ 640, 465 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを押された状態にする
+			//ボタンを押された状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 465 }, 0.7, 0.7, 0.0, b.select);
+			//ボタンを押されていない状態にする
+			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
 		}
-
-		Camera::DrawString({ 561, 460 }, 55, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 465 }, 0.6, 0.6, 0.0, b.newtral);
-		Camera::DrawString({ 561, 460 }, 50, GetColor(255, 255, 255), "スタート");
+		//通常サイズに戻す
+		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "スタート");
 	}
-	
-	if (select_y == 1)
+
+	if (select_x == 1)	//タイトルが選択されている場合
 	{
 		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 640, 605 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを押された状態にする
+			//ボタンを大きくする
+			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 605 }, 0.7, 0.7, 0.0, b.select);//ボタンを押された状態にする
+			//ボタンを大きくする
+			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, b.select);
 		}
 
-		Camera::DrawString({ 561, 600 }, 55, GetColor(255, 255, 255), "タイトル");
+		Camera::DrawString({ titleLoc.x - (float)selectCharSize * 1.5f, titleLoc.y }, selectCharSize, GetColor(255, 255, 255), "タイトル");
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 605 }, 0.6, 0.6, 0.0, b.newtral);//ボタンを押された状態にする
-		Camera::DrawString({ 561, 600 }, 50, GetColor(255, 255, 255), "タイトル");
+		//通常サイズに戻す
+		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+		Camera::DrawString({ titleLoc.x - (float)notSelectCharSize * 1.5f, titleLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
 	}
 }
 
