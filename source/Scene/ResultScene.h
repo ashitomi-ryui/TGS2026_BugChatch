@@ -12,20 +12,29 @@
 class Result
 {
 private:
-	int title_not_pressed;
-	int title_pressed;
-	int ranking_not_pressed;
-	int ranking_pressed;
-	int back_ground;
-	int number;
-	int numbers[10];
 	int select_x;
 	int pressed;
 	float time;
 	float time_rug;
+private:
 	int ChoiceSE3;
 	int DecisionSE3;
 	int ResultBGM;
+	int back_ground;
+	struct b
+	{
+		int newtral;
+		int select;
+		int pressed;
+	};
+	struct rank_b
+	{
+		int newtral;
+		int select;
+		int pressed;
+	};
+	b b;
+	rank_b rank_b;
 private:
 	struct point
 	{
@@ -35,7 +44,6 @@ private:
 	static int divisor[DISPLAY_LIMIT];
 	static int display[DISPLAY_LIMIT][DISPLAY_LIMIT];
 	point p;
-
 public:
 	Result();
 	~Result();

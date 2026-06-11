@@ -118,38 +118,39 @@ void Ranking::Draw()const
 	{
 		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, b.pressed);
+			Camera::DrawGraph({ 410, 595 }, 0.7, 0.7, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, b.select);
+			Camera::DrawGraph({ 410, 595 }, 0.7, 0.7, 0.0, b.select);
 		}
+
+		Camera::DrawString({ 331, 590 }, 55, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
-		Camera::DrawGraph({ 410, 595 }, 1.0, 1.0, 0.0, b.newtral);
+		Camera::DrawGraph({ 410, 595 }, 0.6, 0.6, 0.0, b.newtral);
+		Camera::DrawString({ 331, 590 }, 50, GetColor(255, 255, 255), "スタート");
 	}
 
 	if (select_x == 1)
 	{
 		if (pressed == TRUE)
 		{
-			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, b.pressed);
+			Camera::DrawGraph({ 860, 595 }, 0.7, 0.7, 0.0, b.pressed);
 		}
 		else
 		{
-			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, b.select);
+			Camera::DrawGraph({ 860, 595 }, 0.7, 0.7, 0.0, b.select);
 		}
+
+		Camera::DrawString({ 781, 590 }, 55, GetColor(255, 255, 255), "タイトル");
 	}
 	else
 	{
-		Camera::DrawGraph({ 860, 595 }, 1.0, 1.0, 0.0, b.newtral);
+		Camera::DrawGraph({ 860, 595 }, 0.6, 0.6, 0.0, b.newtral);
+		Camera::DrawString({ 781, 590 }, 50, GetColor(255, 255, 255), "タイトル");
 	}
-
-	/*for (int i = 0; i < 3; i++)
-	{
-		DrawFormatString(100, 100 + 50 * i, GetColor(255, 255, 255), "%d", ranking[i]);
-	}*/
 
 	Camera::DrawString({ 480,250 }, 100, GetColor(255, 255, 160), "1位 %d匹", ranking[0]);
 	Camera::DrawString({ 480,350 }, 100, GetColor(120, 120, 120), "2位 %d匹", ranking[1]);

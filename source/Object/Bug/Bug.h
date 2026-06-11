@@ -2,9 +2,9 @@
 #include"../../Utilitys/Math.h"
 #include "../Player.h"
 
-#define D_GRASSHOPPER_MAX	(1)	// バッタの数
-#define D_CICADA_MAX		(10)	// セミの数
-#define D_DRAGONFLY_MAX		(10)	// トンボの数
+#define D_GRASSHOPPER_MAX	(20)	// バッタの数
+#define D_CICADA_MAX		(20)	// セミの数
+#define D_DRAGONFLY_MAX		(5)	// トンボの数
 
 class Bug
 {

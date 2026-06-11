@@ -21,12 +21,13 @@ Result::~Result()
 
 int Result::Init()
 {
-	title_not_pressed = LoadGraph("assets/images/Result/title_off.png");
-	title_pressed = LoadGraph("assets/images/Result/title_on.png");
-	ranking_not_pressed = LoadGraph("assets/images/Result/ranking_off.png");
-	ranking_pressed = LoadGraph("assets/images/Result/ranking_on.png");
+	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
+	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
+	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
+	rank_b.newtral = LoadGraph("assets/images/UI/RankingDefault.PNG");
+	rank_b.select = LoadGraph("assets/images/UI/RankingSelect.PNG");
+	rank_b.pressed = LoadGraph("assets/images/UI/RankingPress.PNG");
 	back_ground = LoadGraph("assets/images/Result/result.png");
-
 
 	ResultBGM = LoadSoundMem("assets/Audio/Result.wav");
 	ChoiceSE3 = LoadSoundMem("assets/Audio/AS_865704_8bit‚È‘I‘ð‰¹.wav");
@@ -45,10 +46,10 @@ int Result::Init()
 
 	PlaySoundMem(ResultBGM, DX_PLAYTYPE_LOOP);
 
-	p.point[0] = bug.GetCicadaCount();
-	p.point[1] = bug.GetDragonflyCount();
-	p.point[2] = bug.GetGrasshopperCount();
-	p.point[3] = p.point[0] + p.point[1] + p.point[2];
+	p.point[0] = bug.GetDragonflyCount();
+	p.point[1] = bug.GetGrasshopperCount();
+	p.point[2] = bug.GetCicadaCount();
+	p.point[3] = p.point[0] + p.point[1] + p.point[2]; 
 
 	for (int i = 0; i < DISPLAY_LIMIT; i++)
 	{
@@ -163,34 +164,37 @@ void Result::Draw()const
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(300, 600, 1.2, 0.0, title_pressed, TRUE);
+			Camera::DrawGraph({ 300,600 }, 0.7, 0.7, 0.0, b.pressed);
 		}
 		else
 		{
-			DrawRotaGraph(300, 600, 1.2, 0.0, title_not_pressed, TRUE);
+			Camera::DrawGraph({ 300,600 }, 0.7, 0.7, 0.0, b.select);
 		}
+
+		Camera::DrawString({ 221, 595 }, 55, GetColor(255, 255, 255), "ƒ^ƒCƒgƒ‹");
 	}
 	else
 	{
-		DrawRotaGraph(300, 600, 1.0, 0.0, title_not_pressed, TRUE);
+		Camera::DrawGraph({ 300,600 }, 0.6, 0.6, 0.0, b.newtral);
+		Camera::DrawString({ 221, 595 }, 50, GetColor(255, 255, 255), "ƒ^ƒCƒgƒ‹");
 	}
 
 	if (select_x == 1)
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(1000, 600, 1.2, 0.0, ranking_pressed, TRUE);
+			Camera::DrawGraph({ 1000,600 }, 0.7, 0.7, 0.0, rank_b.pressed);
 		}
 		else
 		{
-			DrawRotaGraph(1000, 600, 1.2, 0.0, ranking_not_pressed, TRUE);
+			Camera::DrawGraph({ 1000,600 }, 0.7, 0.7, 0.0, rank_b.select);
 		}
 	}
 	else
 	{
-		DrawRotaGraph(1000, 600, 1.0, 0.0, ranking_not_pressed, TRUE);
+		Camera::DrawGraph({ 1000,600 }, 0.6, 0.6, 0.0, rank_b.newtral);
 	}
 
-	Camera::DrawString({ 250,150 }, 100, GetColor(255,255,255), "‚¹‚Ý %d•C\n‚Æ‚ñ‚Ú %d•C\n‚Îƒb‚½ %d•C\n‡Œv %d•C", p.point[0], p.point[1], p.point[2], p.point[3]);
+	Camera::DrawString({ 250,150 }, 100, GetColor(255,255,255), "‚Æ‚ñ‚Ú %d•C\n‚Îƒb‚½ %d•C\n‚¹‚Ý @%d•C\n‡Œv @%d•C", p.point[0], p.point[1], p.point[2], p.point[3]);
 
 }
