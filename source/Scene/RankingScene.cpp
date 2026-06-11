@@ -153,7 +153,7 @@ void Ranking::Draw()const
 int Ranking::LoadRankData()
 {
 	FILE* fp = NULL;
-	errno_t result = fopen_s(&fp, "assets/images/Ranking/Ranking_Data.txt", "r");
+	errno_t result = fopen_s(&fp, "assets/dat/Ranking_Data.txt", "r");
 
 	if (result != NULL)
 	{
@@ -212,7 +212,7 @@ int Ranking::SortRankData()
 int Ranking::AddRankData()
 {
 	FILE* fp = NULL;
-	errno_t result = fopen_s(&fp, "assets/images/Ranking/Ranking_Data.txt", "w");
+	errno_t result = fopen_s(&fp, "assets/dat/Ranking_Data.txt", "w");
 
 	if (result != NULL)
 	{
