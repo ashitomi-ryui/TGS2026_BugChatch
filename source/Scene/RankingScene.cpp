@@ -5,7 +5,18 @@
 
 Ranking::Ranking()
 {
-
+	Choicebgm2 = -1;
+	DecisionSE2 = -1;
+	back_ground2 = -1;
+	start_pressed = -1;
+	start_not_pressed = -1;
+	title_pressed = -1;
+	title_not_pressed = -1;
+	back_ground = -1;
+	select_x = 0;
+	pressed = 0;
+	time = 0.0f;
+	time_rug = 0.0f;
 }
 
 Ranking::~Ranking()
