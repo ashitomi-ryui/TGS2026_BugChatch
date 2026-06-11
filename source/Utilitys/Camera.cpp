@@ -284,8 +284,8 @@ void Camera::DrawGraph(Vector2D location, double ExRateX, double ExRateY, double
 
 	Vector2D location1;
 	Vector2D location2;
-	location1 = { xSize * (float)ExRateX / -2.0f, ySize * (float)ExRateY / -2.0f };
-	location2 = { xSize * (float)ExRateX / 2.0f, ySize * (float)ExRateY / 2.0f };
+	location1 = Vec2Add(location, { xSize * (float)ExRateX / -2.0f, ySize * (float)ExRateY / -2.0f });
+	location2 = Vec2Add(location, { xSize * (float)ExRateX / 2.0f, ySize * (float)ExRateY / 2.0f });
 
 	DxLib::DrawExtendGraphF(location1.x, location1.y, location2.x, location2.y, GrHandle, true);
 }
