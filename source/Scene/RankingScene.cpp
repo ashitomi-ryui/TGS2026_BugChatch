@@ -104,40 +104,40 @@ eSceneType Ranking::Update(float delta_second)
 
 void Ranking::Draw()const
 {
-	DrawRotaGraph(640, 400, 2.0, 0.0, back_ground, TRUE);
+	Camera::DrawGraph({ 640, 400 }, 2.0, 2.0, 0.0, back_ground);
 
-	DrawRotaGraph(640, 420, 1.4, 0.0, back_ground2, TRUE);
+	Camera::DrawGraph({ 640, 420 }, 1.4, 1.4, 0.0, back_ground2);
 
 	if (select_x == 0)
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(410, 595, 1.2, 0.0, start_pressed, TRUE);
+			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, start_pressed);
 		}
 		else
 		{
-			DrawRotaGraph(410, 595, 1.2, 0.0, start_not_pressed, TRUE);
+			Camera::DrawGraph({ 410, 595 }, 1.2, 1.2, 0.0, start_not_pressed);
 		}
 	}
 	else
 	{
-		DrawRotaGraph(410, 595, 1.0, 0.0, start_not_pressed, TRUE);
+		Camera::DrawGraph({ 410, 595 }, 1.0, 1.0, 0.0, start_not_pressed);
 	}
 
 	if (select_x == 1)
 	{
 		if (pressed == TRUE)
 		{
-			DrawRotaGraph(860, 595, 1.2, 0.0, title_pressed, TRUE);
+			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, title_pressed);
 		}
 		else
 		{
-			DrawRotaGraph(860, 595, 1.2, 0.0, title_not_pressed, TRUE);
+			Camera::DrawGraph({ 860, 595 }, 1.2, 1.2, 0.0, title_not_pressed);
 		}
 	}
 	else
 	{
-		DrawRotaGraph(860, 595, 1.0, 0.0, title_not_pressed, TRUE);
+		Camera::DrawGraph({ 860, 595 }, 1.0, 1.0, 0.0, title_not_pressed);
 	}
 
 	/*for (int i = 0; i < 3; i++)
