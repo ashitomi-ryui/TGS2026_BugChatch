@@ -239,16 +239,15 @@ eSceneType InGameUpdate(float delta_second)
 			break;
 		}
 #endif
+		// 画面内にいるかの初期化
+		Cicada::WithinTheScreenInit();
 
 		player.Update(delta_second);	// プレイヤーの更新
 
-		Cicada::WithinTheScreenInit();
 		for (int id = 0;id < D_CICADA_MAX;id++)
 		{
 			cicada[id].Update(delta_second);	// セミの更新
 		}
-		Cicada::PlayAudio();
-
 		for (int id = 0;id < D_DRAGONFLY_MAX;id++)
 		{
 			dragonfly[id].Update(delta_second);	// トンボの更新
@@ -266,6 +265,9 @@ eSceneType InGameUpdate(float delta_second)
 		{
 			leaf[id].Update(delta_second);
 		}
+
+		// 音再生・停止
+		Cicada::PlayAudio();
 
 		break;
 	case 5:	// ==============================================ゲーム終了
