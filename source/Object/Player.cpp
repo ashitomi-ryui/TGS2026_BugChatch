@@ -183,43 +183,43 @@ void Player::Draw() const
 			// 網を表示
 			DrawNet(ringLocation);
 			// 腕を表示
-			Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
+			Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
 		}
 		// 虫網を持つ手が前なら
 		else
 		{
 			// 腕を表示
-			Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
+			Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
 		}
 	}
 	// 虫網を持っていないなら
 	else
 	{
 		// 構えていない虫網を表示
-		Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, (0.2f - 0.4f * (int)m_reverseFlag) * DX_PI_F, m_netImage, m_reverseFlag);
+		Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, (0.2f - 0.4f * (int)m_reverseFlag) * DX_PI_F, m_netImage, m_reverseFlag);
 
 		// 腕を表示
-		Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
+		Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
 	}
 
 	// 半径表示
 	Camera::DrawCircleW(m_location, m_radius, 0x777777, false);
 
 	// 脚表示
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_legImage[m_legSubscript], m_reverseFlag);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_legImage[m_legSubscript], m_reverseFlag);
 	// 体表示
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_bodyImage, m_reverseFlag);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_bodyImage, m_reverseFlag);
 	// 顔表示
 	// 虫網を持っているかつ、虫網を持つ手が後ろなら
 	if(m_holdingFlag && isBackHolding)
 	{
 		// 後ろ向きの顔を表示
-		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[3], m_reverseFlag);
+		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[3], m_reverseFlag);
 	}
 	else
 	{
 		// 前向きの顔を表示
-		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[m_headSubscript], m_reverseFlag);
+		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_headImage[m_headSubscript], m_reverseFlag);
 	}
 
 	// 前の腕表示
@@ -229,7 +229,7 @@ void Player::Draw() const
 		// 虫網を持つ手が後ろなら
 		if (isBackHolding)
 		{
-			Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
+			Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
 		}
 		// 虫網を持つ手が前なら
 		else
@@ -240,7 +240,7 @@ void Player::Draw() const
 			Camera::DrawLineW(frontArmLocation, ringLocation, 0x007700, stickThickness);
 			Camera::DrawLineW(frontArmLocation, ringLocation, 0x00ff00, stickThickness - 2.0f);
 			// 腕を表示
-			Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
+			Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, stickRotate + 1.0f * DX_PI_F, m_armImage);
 			// 網を表示
 			DrawNet(ringLocation);
 		}
@@ -249,7 +249,7 @@ void Player::Draw() const
 	else
 	{
 		// 腕を表示
-		Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
+		Camera::DrawGraphW(frontArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
 	}
 }
 

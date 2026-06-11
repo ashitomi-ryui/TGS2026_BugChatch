@@ -58,7 +58,7 @@ int InGameInit(void)//各プログラムの初期化
 		do
 		{
 			// ランダム
-			int r = Random::GetRand();
+			int r = (int)Random::GetRand();
 			// 座標を画面内のランダムに
 			location.x = D_TREE_WIDTH + (float)(r % (int)(D_STAGE_WIDTH - D_TREE_WIDTH * 2.0f));
 			location.y = D_TREE_HEIGHT + (float)(r % (int)(D_STAGE_HEIGHT - D_TREE_HEIGHT * 2.0f));
@@ -81,11 +81,10 @@ int InGameInit(void)//各プログラムの初期化
 		Vector2D location = { 0.0f, 0.0f };		// スポーン座標
 		Vector2D nearestTree = { 0.0f, 0.0f };	// 最も近い木
 		Vector2D nearestLeaf = { 0.0f, 0.0f };	// 最も近い草
-		float installationRadius;
 		do
 		{
 			// ランダム
-			int r = Random::GetRand();
+			int r = (int)Random::GetRand();
 			// 座標を画面内のランダムに
 			location.x = D_LEAF_WIDTH + (float)(r % (int)(D_STAGE_WIDTH - D_LEAF_WIDTH * 2.0f));
 			location.y = D_LEAF_HEIGHT + (float)(r % (int)(D_STAGE_HEIGHT - D_LEAF_HEIGHT * 2.0f));
@@ -310,7 +309,7 @@ void InGameDraw(void)
 	{
 		for (float j = 0;j < D_STAGE_HEIGHT;j += 30.0f * 3.0f * D_OBJECT_SIZE_RATIO)
 		{
-			Camera::DrawGraphW({ i, j }, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, groundImage);
+			Camera::DrawGraphW({ i, j }, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, groundImage);
 		}
 	}
 
