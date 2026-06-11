@@ -426,7 +426,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word2Data[j][0] &&
 					buffer[i + 1] == word2Data[j][1])
 				{
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word2[j], true);
+					DxLib::DrawRotaGraphF(location.x + (x + 0.2f) * size, location.y + y * size, size / 25.0f, 0.0f, word2[j], true);
 					x++;
 					i++;
 
@@ -481,7 +481,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 				if (buffer[i] == word4Data[j][0] &&
 					buffer[i + 1] == word4Data[j][1])
 				{
-					DxLib::DrawRotaGraphF(location.x + x * size, location.y + y * size, size / 25.0f, 0.0f, word4[j], true);
+					DxLib::DrawRotaGraphF(location.x + (x + 0.2f) * size, location.y + y * size, size / 25.0f, 0.0f, word4[j], true);
 					x++;
 					i++;
 
