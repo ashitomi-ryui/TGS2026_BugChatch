@@ -11,6 +11,7 @@ private:
 	static int DecisionSE;
 private:
 	static int back_ground;
+	static int title_logo;
 	static int select_x;
 	static int select_y;
 	static int pressed;

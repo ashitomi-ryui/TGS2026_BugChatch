@@ -10,6 +10,7 @@ int Title::Titlebgm = -1;
 int Title::ChoiceSE = -1;
 int Title::DecisionSE = -1;
 int Title::back_ground = -1;
+int Title::title_logo = -1;
 
 int Title::select_x = 0;
 int Title::select_y = 0;
@@ -30,7 +31,8 @@ Title::~Title()
 
 int Title::Init()
 {
-	back_ground = LoadGraph("assets/images/UI/mori.jpg");
+	back_ground = LoadGraph("assets/images/OtherObjects/Ground.PNG");
+	title_logo = LoadGraph("assets/images/UI/TitleLogo.PNG");
 	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
 	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
 	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
@@ -200,69 +202,72 @@ eSceneType Title::Update(float delta_second)
 
 void Title::Draw()const
 {
-	Camera::DrawGraph({ 640, 360 }, 1.0, 1.0, 0.0, back_ground);
+	Camera::DrawGraph({ 640, 360 }, 25.0, 12.0, 0.0, back_ground);
+
+	Camera::DrawGraph({ 640,170 }, 1.5, 1.0, 0.0, title_logo);
 
 	if (select_y == 0)//スタートが選択されている場合
 	{
 		if (pressed == 1)//ボタンが押されている場合
 		{
-			Camera::DrawGraph({ 640, 400 }, 1.2, 1.2, 0.0, b.pressed);//ボタンを押された状態にする
+			Camera::DrawGraph({ 640, 400 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを押された状態にする
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 400 }, 1.2, 1.2, 0.0, b.select);//ボタンを押されていない状態にする
+			Camera::DrawGraph({ 640, 400 }, 0.7, 0.7, 0.0, b.select);//ボタンを押されていない状態にする
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 400 }, 1.0, 1.0, 0.0, b.newtral);//通常サイズに戻す
+		Camera::DrawGraph({ 640, 400 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
+		Camera::DrawString({ 640 - 50 * 1.5, 390 }, 50, GetColor(255, 255, 255), "スタート");
 	}
 
 	if (select_y == 1 && select_x == 0)//ヘルプが選択されている場合
 	{
 		if (pressed == 1)
 		{
-			Camera::DrawGraph({ 640, 520 }, 1.2, 1.2, 0.0, b.pressed);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 520 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを大きくする
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 520 }, 1.2, 1.2, 0.0, b.select);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 520 }, 0.7, 0.7, 0.0, b.select);//ボタンを大きくする
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 520 }, 1.0, 1.0, 0.0, b.newtral);//通常サイズに戻す
+		Camera::DrawGraph({ 640, 520 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
 	}
 
 	if (select_y == 1 && select_x == 1)//ランキングが選択されている場合
 	{
 		if (pressed == 1)
 		{
-			Camera::DrawGraph({ 1000, 520 }, 1.2, 1.2, 0.0, rank_b.pressed);//ボタンを大きくする
+			Camera::DrawGraph({ 1000, 520 }, 0.7, 0.7, 0.0, rank_b.pressed);//ボタンを大きくする
 		}
 		else
 		{
-			Camera::DrawGraph({ 1000, 520 }, 1.2, 1.2, 0.0, rank_b.select);//ボタンを大きくする
+			Camera::DrawGraph({ 1000, 520 }, 0.7, 0.7, 0.0, rank_b.select);//ボタンを大きくする
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 1000, 520 }, 1.0, 1.0, 0.0, rank_b.newtral);//通常サイズに戻す
+		Camera::DrawGraph({ 1000, 520 }, 0.6, 0.6, 0.0, rank_b.newtral);//通常サイズに戻す
 	}
 
 	if (select_y == 2)//おわりが選択されている場合
 	{
 		if (pressed == 1)
 		{
-			Camera::DrawGraph({ 640, 640 }, 1.2, 1.2, 0.0, b.pressed);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 640 }, 0.7, 0.7, 0.0, b.pressed);//ボタンを大きくする
 		}
 		else
 		{
-			Camera::DrawGraph({ 640, 640 }, 1.2, 1.2, 0.0, b.select);//ボタンを大きくする
+			Camera::DrawGraph({ 640, 640 }, 0.7, 0.7, 0.0, b.select);//ボタンを大きくする
 		}
 	}
 	else
 	{
-		Camera::DrawGraph({ 640, 640 }, 1.0, 1.0, 0.0, b.newtral);//通常サイズに戻す
+		Camera::DrawGraph({ 640, 640 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
 	}
 }
