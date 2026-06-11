@@ -36,7 +36,7 @@ void Tree::Set(Vector2D location)
 void Tree::Update(float delta)
 {
 	m_animTime += delta;
-	if (m_animTime > 0.2f)
+	if (m_animTime > 0.5f)
 	{
 		m_animTime = 0.0f;
 		m_animCount++;
