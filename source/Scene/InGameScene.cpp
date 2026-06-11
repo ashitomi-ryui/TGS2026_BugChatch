@@ -23,6 +23,7 @@ Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 float timer;
 int BGM;
 int flowerImage[2] = { -1, -1 };
+int groundImage = -1;
 
 int changeProduction;	// シーン切替演出
 float shiita;
@@ -119,6 +120,9 @@ int InGameInit(void)//各プログラムの初期化
 
 	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1");
 	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2");
+
+	groundImage = LoadGraph("assets/images/OtherObjects/Ground.PNG");
+
 	ChangeVolumeSoundMem(100, BGM);
 	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
 
@@ -127,7 +131,6 @@ int InGameInit(void)//各プログラムの初期化
 
 	Camera::SetScreenLocation({ -D_WIN_WIDTH / 4.0f, D_WIN_HEIGHT / 4.0f });
 	Camera::SetScreenRatioSize(0.2f);
-
 
 	return TRUE;
 }
@@ -303,7 +306,13 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
-	DrawBox(0, 0, (int)D_WIN_WIDTH, (int)D_WIN_HEIGHT, 0x008800, true);
+	for (float i = 0;i < D_STAGE_WIDTH;i += 30.0f * 3.0f * D_OBJECT_SIZE_RATIO)
+	{
+		for (float j = 0;j < D_STAGE_HEIGHT;j += 30.0f * 3.0f * D_OBJECT_SIZE_RATIO)
+		{
+			Camera::DrawGraphW({ i, j }, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, groundImage);
+		}
+	}
 
 	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
