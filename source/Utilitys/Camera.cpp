@@ -272,20 +272,30 @@ void Camera::DrawBoxW(Vector2D location1, Vector2D location2, unsigned int Color
 	DrawBoxW(location1, location2, Color);
 }
 
-void Camera::DrawGraph(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlage)
+void Camera::DrawGraph(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlage)
 {
 	location = FitLocationToScreen(location);
-	ExRate *= m_screenRatioSize;
+	ExRateX *= m_screenRatioSize;
+	ExRateY *= m_screenRatioSize;
 
-	DxLib::DrawRotaGraphF(location.x, location.y, ExRate, Angle, GrHandle, true, ReverseXFlag, ReverseYFlage);
+	float xSize = 0.0f;
+	float ySize = 0.0f;
+	GetGraphSizeF(GrHandle, &xSize, &ySize);
+
+	Vector2D location1;
+	Vector2D location2;
+	location1 = { xSize * (float)ExRateX / -2.0f, ySize * (float)ExRateY / -2.0f };
+	location2 = { xSize * (float)ExRateX / 2.0f, ySize * (float)ExRateY / 2.0f };
+
+	DxLib::DrawExtendGraphF(location1.x, location1.y, location2.x, location2.y, GrHandle, true);
 }
 
-void Camera::DrawGraphW(Vector2D location, double ExRate, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlage)
+void Camera::DrawGraphW(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlage)
 {
 	location.x += -m_location.x + D_WIN_WIDTH / 2.0f;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2.0f;
 
-	DrawGraph(location, ExRate, Angle, GrHandle, ReverseXFlag, ReverseYFlage);
+	DrawGraph(location, ExRateX, ExRateY, Angle, GrHandle, ReverseXFlag, ReverseYFlage);
 }
 
 void Camera::DrawString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...)
