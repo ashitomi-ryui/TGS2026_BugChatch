@@ -57,12 +57,12 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	LoadDivGraph("assets/images/Character/word1.png", 50, 5, 10, 30, 30, word1);
-	LoadDivGraph("assets/images/Character/word2.png", 15, 5, 3, 30, 30, word2);
-	LoadDivGraph("assets/images/Character/word3.png", 50, 5, 10, 30, 30, word3);
-	LoadDivGraph("assets/images/Character/word4.png", 15, 5, 3, 30, 30, word4);
-	LoadDivGraph("assets/images/Character/word5.png", 10, 10, 1, 30, 30, word5);
-	LoadDivGraph("assets/images/Character/word6.png", 18, 6, 3, 30, 30, word6);
+	LoadDivGraph("assets/images/Character/word1.png", D_WORD_KANA_SIZE, 5, 10, 30, 30, word1);
+	LoadDivGraph("assets/images/Character/word2.png", D_WORD_HIRAGANA_SYMBOLS_SIZE, 5, 2, 30, 30, word2);
+	LoadDivGraph("assets/images/Character/word3.png", D_WORD_KANA_SIZE, 5, 10, 30, 30, word3);
+	LoadDivGraph("assets/images/Character/word4.png", D_WORD_KATAKANA_SYMBOLS_SIZE, 5, 3, 30, 30, word4);
+	LoadDivGraph("assets/images/Character/word5.png", D_WORD_NUMBERS_SIZE, 10, 1, 30, 30, word5);
+	LoadDivGraph("assets/images/Character/word6.png", D_WORD_KANJI_SIZE, 6, 3, 30, 30, word6);
 
 	word1_0Data =
 	{
