@@ -41,18 +41,15 @@ Title::~Title()
 
 int Title::Init()
 {
-	start_not_pressed = LoadGraph("assets/images/Title/start_off.png");
-	start_pressed = LoadGraph("assets/images/Title/start_on.png");
-	help_not_pressed = LoadGraph("assets/images/Title/help_off.png");
-	help_pressed = LoadGraph("assets/images/Title/help_on.png");
-	end_not_pressed = LoadGraph("assets/images/Title/end_off.png");
-	end_pressed = LoadGraph("assets/images/Title/end_on.png");
-	ranking_not_pressed = LoadGraph("assets/images/Title/ranking_off.png");
-	ranking_pressed = LoadGraph("assets/images/Title/ranking_on.png");
+	start_not_pressed = LoadGraph("assets/images/UI/start_off.png");
+	start_pressed = LoadGraph("assets/images/UI/start_on.png");
+	help_not_pressed = LoadGraph("assets/images/UI/help_off.png");
+	help_pressed = LoadGraph("assets/images/UI/help_on.png");
+	end_not_pressed = LoadGraph("assets/images/UI/end_off.png");
+	end_pressed = LoadGraph("assets/images/UI/end_on.png");
+	ranking_not_pressed = LoadGraph("assets/images/UI/ranking_off.png");
+	ranking_pressed = LoadGraph("assets/images/UI/ranking_on.png");
 	back_ground = LoadGraph("assets/images/Title/mori.jpg");
-
-	LoadDivGraph("assets/images/OtherObjects/word1.png", 50, 5, 10, 30, 30, word1);
-	LoadDivGraph("assets/images/OtherObjects/word3.png",10,10,1,30,30,word3);
 
 	Titlebgm = LoadSoundMem("assets/Audio/Title.wav");
 	if (Titlebgm == -1)
