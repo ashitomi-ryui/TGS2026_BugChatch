@@ -216,11 +216,13 @@ void Title::Draw()const
 		{
 			Camera::DrawGraph({ 640, 400 }, 0.7, 0.7, 0.0, b.select);//ボタンを押されていない状態にする
 		}
+
+		Camera::DrawString({ 561, 395 }, 55, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
 		Camera::DrawGraph({ 640, 400 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
-		Camera::DrawString({ 640 - 50 * 1.5, 390 }, 50, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ 561, 395 }, 50, GetColor(255, 255, 255), "スタート");
 	}
 
 	if (select_y == 1 && select_x == 0)//ヘルプが選択されている場合
@@ -233,10 +235,13 @@ void Title::Draw()const
 		{
 			Camera::DrawGraph({ 640, 520 }, 0.7, 0.7, 0.0, b.select);//ボタンを大きくする
 		}
+
+		Camera::DrawString({ 580, 515 }, 55, GetColor(255, 255, 255), "ヘルプ");
 	}
 	else
 	{
 		Camera::DrawGraph({ 640, 520 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
+		Camera::DrawString({ 580, 515 }, 50, GetColor(255, 255, 255), "ヘルプ");
 	}
 
 	if (select_y == 1 && select_x == 1)//ランキングが選択されている場合
@@ -265,9 +270,12 @@ void Title::Draw()const
 		{
 			Camera::DrawGraph({ 640, 640 }, 0.7, 0.7, 0.0, b.select);//ボタンを大きくする
 		}
+
+		Camera::DrawString({ 590, 635 }, 55, GetColor(255, 255, 255), "おわり");
 	}
 	else
 	{
 		Camera::DrawGraph({ 640, 640 }, 0.6, 0.6, 0.0, b.newtral);//通常サイズに戻す
+		Camera::DrawString({ 590, 635 }, 50, GetColor(255, 255, 255), "おわり");
 	}
 }
