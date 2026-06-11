@@ -13,14 +13,14 @@ private:
 public:
 	Cicada();
 	~Cicada();
-
+	
 public:
 	static void Init();
 	virtual void Update(float delta) override;
 	virtual void Draw() const override;
 	virtual void DrawOnTheBack() const override;
 	virtual void DrawOnTheFront() const override;
-
+	static void StopAudio();
 	/// <summary>
 	/// èoåª
 	/// </summary>

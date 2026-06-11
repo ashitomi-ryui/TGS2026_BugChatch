@@ -113,7 +113,7 @@ void Dragonfly::Update(float delta)
 
 void Dragonfly::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], m_isFlip, false);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], m_isFlip, false);
 
 #ifdef _DEBUG
 	//if (m_isEscape)

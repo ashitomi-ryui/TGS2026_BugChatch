@@ -153,7 +153,7 @@ void Grasshopper::Draw() const
 	}*/
 
 	
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], m_isTurn);
+	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], m_isTurn);
 }
 
 void Grasshopper::DrawOnTheBack() const
@@ -266,6 +266,10 @@ void Grasshopper::SetDestination(Vector2D location)
 		{
 			m_isJump = false;
 		}
+
+		
+
+
 	}
 
 

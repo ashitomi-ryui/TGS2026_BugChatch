@@ -23,6 +23,9 @@ private:
 	int pressed;
 	float time;
 	float time_rug;
+	int ChoiceSE3;
+	int DecisionSE3;
+	int ResultBGM;
 private:
 	struct point
 	{
