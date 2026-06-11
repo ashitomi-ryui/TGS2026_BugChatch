@@ -57,12 +57,12 @@ Camera::~Camera()
 
 void Camera::Init()
 {
-	LoadDivGraph("assets/images/OtherObjects/word1.png", 50, 5, 10, 30, 30, word1);
-	LoadDivGraph("assets/images/OtherObjects/word6.png", 15, 5, 3, 30, 30, word2);
-	LoadDivGraph("assets/images/OtherObjects/word5.png", 50, 5, 10, 30, 30, word3);
-	LoadDivGraph("assets/images/OtherObjects/word2.png", 15, 5, 3, 30, 30, word4);
-	LoadDivGraph("assets/images/OtherObjects/word3.png", 10, 10, 1, 30, 30, word5);
-	LoadDivGraph("assets/images/OtherObjects/word4.png", 18, 6, 3, 30, 30, word6);
+	LoadDivGraph("assets/images/Character/word1.png", 50, 5, 10, 30, 30, word1);
+	LoadDivGraph("assets/images/Character/word2.png", 15, 5, 3, 30, 30, word2);
+	LoadDivGraph("assets/images/Character/word3.png", 50, 5, 10, 30, 30, word3);
+	LoadDivGraph("assets/images/Character/word4.png", 15, 5, 3, 30, 30, word4);
+	LoadDivGraph("assets/images/Character/word5.png", 10, 10, 1, 30, 30, word5);
+	LoadDivGraph("assets/images/Character/word6.png", 18, 6, 3, 30, 30, word6);
 
 	word1_0Data =
 	{
