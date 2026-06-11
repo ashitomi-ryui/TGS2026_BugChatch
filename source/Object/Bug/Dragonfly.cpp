@@ -184,6 +184,7 @@ void Dragonfly::Spawn()
 	Vector2D location = FindNearestLeaf(RandomLocationOnTheScreen());
 
 	// スポーン位置
+	 location = FindNearestTree(location);
 	// ランダムに座標をずらす
 	location.x += Random::GetRand((D_LEAF_WIDTH / 2.0f), -(D_LEAF_WIDTH / 4.0f));
 	location.y += Random::GetRand((D_LEAF_HEIGHT / 4.0f), -(D_LEAF_HEIGHT / 4.0f));
