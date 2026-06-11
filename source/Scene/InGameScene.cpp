@@ -117,8 +117,8 @@ int InGameInit(void)//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 		grasshopper[id].Spawn();
 	}
 
-	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1");
-	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2");
+	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1.PNG");
+	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2.PNG");
 
 	groundImage = LoadGraph("assets/images/OtherObjects/Ground.PNG");
 
