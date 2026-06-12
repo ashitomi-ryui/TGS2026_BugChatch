@@ -21,6 +21,8 @@ private:
 	int DecisionSE3;
 	int ResultBGM;
 	int back_ground;
+	int bugIcon[3];
+
 	struct b
 	{
 		int newtral;

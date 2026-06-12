@@ -28,6 +28,9 @@ int Result::Init()
 	rank_b.select = LoadGraph("assets/images/UI/RankingSelect.PNG");
 	rank_b.pressed = LoadGraph("assets/images/UI/RankingPress.PNG");
 	back_ground = LoadGraph("assets/images/UI/ResultBack.PNG");
+	bugIcon[0] = LoadGraph("assets/images/UI/CicadaIcon.PNG");
+	bugIcon[1] = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
+	bugIcon[2] = LoadGraph("assets/images/UI/GrasshopperIcon.PNG");
 
 	ResultBGM = LoadSoundMem("assets/Audio/Result.wav");
 	ChoiceSE3 = LoadSoundMem("assets/Audio/AS_865704_8bit‚È‘I‘ð‰¹.wav");
@@ -46,9 +49,9 @@ int Result::Init()
 
 	PlaySoundMem(ResultBGM, DX_PLAYTYPE_LOOP);
 
-	p.point[0] = bug.GetDragonflyCount();
-	p.point[1] = bug.GetGrasshopperCount();
-	p.point[2] = bug.GetCicadaCount();
+	p.point[0] = bug.GetCicadaCount();
+	p.point[1] = bug.GetDragonflyCount();
+	p.point[2] = bug.GetGrasshopperCount();
 	p.point[3] = p.point[0] + p.point[1] + p.point[2]; 
 
 	for (int i = 0; i < DISPLAY_LIMIT; i++)
@@ -207,6 +210,11 @@ void Result::Draw()const
 		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, rank_b.newtral);
 	}
 
-	Camera::DrawString({ 250,150 }, 100, GetColor(255,255,255), "‚Æ‚ñ‚Ú %d•C\n‚Îƒb‚½ %d•C\n‚¹‚Ý @%d•C\n‡Œv @%d•C", p.point[0], p.point[1], p.point[2], p.point[3]);
+	for (int i = 0;i < 3;i++)
+	{
+		Camera::DrawGraph({ 200.0f + (i * 320.0f), 150.0f }, 3.0f, 3.0f, 0.0f, bugIcon[i]);
+		Camera::DrawString({ 220.0f + (i * 320.0f), 150.0f }, 75, GetColor(255, 255, 255), "@%d•C", p.point[i]);
+	}
+	Camera::DrawString({ 400, 250 }, 100, GetColor(255,255,255), "‡Œv@%d•C", p.point[3]);
 
 }
