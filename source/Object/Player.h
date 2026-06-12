@@ -26,6 +26,8 @@ private:
 	float m_ringRadius;		// リングの大きさ最大値
 	float m_stickAngle;		// 棒の角度
 
+	float m_netRadius;	// 網の終点の半径
+
 	float m_tiltStick;		// スティックの倒しこみ（ 1 ～ -1 ）
 	float m_oldTiltStick;	// 前のスティックの倒しこみ（ 0 ～ 1 ）
 

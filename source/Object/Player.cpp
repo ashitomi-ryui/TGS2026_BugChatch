@@ -33,6 +33,8 @@ Player::Player()
 
 	m_stickAngle = 0.0f;	// 棒の角度
 
+	m_netRadius = 0.0f;	// 網の終点の半径
+
 	// スティックの倒しこみ（ 1 ～ -1 ）
 	m_tiltStick = 0.0f;
 	m_oldTiltStick = 0.0f;
@@ -80,6 +82,8 @@ void Player::Init()
 	m_ringThickness = m_ringRadius;
 
 	m_stickAngle = 0.0f;	// 棒の角度
+
+	m_netRadius = 0.0f;	// 網の終点の半径
 
 	// スティックの倒しこみ（ 1 ～ -1 ）
 	m_tiltStick = 0.0f;
@@ -202,9 +206,6 @@ void Player::Draw() const
 		Camera::DrawGraphW(backArmLocation, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_armImage);
 	}
 
-	// 半径表示
-	Camera::DrawCircleW(m_location, m_radius, 0x777777, false);
-
 	// 脚表示
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_legImage[m_legSubscript], m_reverseFlag);
 	// 体表示
@@ -282,6 +283,27 @@ void Player::DrawNet(Vector2D ringLocation) const
 	Camera::DrawTriangleW(point[1], point[3], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[2], point[1], m_netLocation, 0xffffff);
 	Camera::DrawTriangleW(point[3], point[0], m_netLocation, 0xffffff);
+
+	float angle = VecATan2(ringLocation, m_netLocation);
+	Camera::DrawCircleW(m_netLocation, m_netRadius, 0xffffff);//, true, angle - 0.5f * DX_PI_F, angle + 0.5f * DX_PI_F);
+	for (int i = 0;i < 4;i++)
+	{
+		float len = Length(Vec2Sub(m_netLocation, point[i]));
+		Vector2D p[2];
+
+		angle = VecATan2(m_netLocation, point[i]);
+		float value = atanf(len / m_netRadius);
+
+		for (int j = 0;j < 2;j++)
+		{
+			p[j] = m_netLocation;
+			p[j].x += sinf(angle + value) * (m_netRadius);
+			p[j].y -= cosf(angle + value) * (m_netRadius);
+			value *= -1;
+		}
+
+		Camera::DrawTriangleW(point[i], p[0], p[1], 0xffffff);
+	}
 }
 
 void Player::Animation(float delta)
@@ -599,29 +621,34 @@ void Player::Net(float delta)
 		// 網の最端位置の移動
 		Vector2D ringLocation = Vec2Add(m_location, m_ringVector);	// リングの位置
 		float netAngle;		// 網の向き
-		float netDistance;	// 網の距離
+		float ringDistance;	// 網からリングへの距離
+		float ringUnderDistance;	// 網からリングの下への距離
 
 		// 重力で落ちる表現
 		Vector2D ringUnderLocation = { ringLocation.x, ringLocation.y + m_netLength };
 		// 網からリングの下への向き
 		netAngle = VecATan2(m_netLocation, ringUnderLocation);
-		// 網からリングの下への距離
-		netDistance = Length(Vec2Sub(m_netLocation, ringUnderLocation));
-
-		// 移動
-		FixGradually(m_netLocation.x, m_netLocation.x + sinf(netAngle) * netDistance, netDistance * delta);
-		FixGradually(m_netLocation.y, m_netLocation.y - cosf(netAngle) * netDistance, netDistance * delta);
-
-		// 網の長さ制限
 		// 網からリングへの距離
-		netDistance = Length(Vec2Sub(m_netLocation, ringLocation));
-		if (netDistance > m_netLength)
+		ringDistance = Length(Vec2Sub(m_netLocation, ringLocation));
+		// 網からリングの下への距離
+		ringUnderDistance = Length(Vec2Sub(m_netLocation, ringUnderLocation));
+
+		
+		// 移動
+		FixGradually(m_netLocation.x, m_netLocation.x + sinf(netAngle) * ringUnderDistance, ringUnderDistance * delta);
+		FixGradually(m_netLocation.y, m_netLocation.y - cosf(netAngle) * ringUnderDistance, ringUnderDistance * delta);
+
+		m_netRadius = (1.0f - Length(Vec2Sub(m_netLocation, ringLocation)) / m_netLength) * m_ringRadius * D_OBJECT_SIZE_RATIO;
+		
+		
+		// 網の長さ制限
+		if (ringDistance > m_netLength)
 		{
 			// 網からリングへの向き
 			netAngle = VecATan2(m_netLocation, ringLocation);
 
-			m_netLocation.x += sinf(netAngle) * (netDistance - m_netLength);
-			m_netLocation.y -= cosf(netAngle) * (netDistance - m_netLength);
+			m_netLocation.x += sinf(netAngle) * (ringDistance - m_netLength);
+			m_netLocation.y -= cosf(netAngle) * (ringDistance - m_netLength);
 		}
 	}
 }
