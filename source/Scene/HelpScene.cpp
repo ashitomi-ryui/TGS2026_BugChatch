@@ -97,6 +97,7 @@ eSceneType Help::Update(float delta_second)
 		{
 			PlaySoundMem(DecisionSE2, DX_PLAYTYPE_BACK);
 			StopSoundMem(HelpBGM);
+
 			pressed = TRUE;
 		}
 	}

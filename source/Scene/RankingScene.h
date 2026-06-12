@@ -15,7 +15,7 @@ private:
 private:
 	int ranking[MAX_RANK];
 private:
-	int RankingBGM;
+	int RankingBGM2;
 	int Choicebgm2;
 	int DecisionSE2;
 	int back_ground;

@@ -113,6 +113,7 @@ int ChangeScene(eSceneType new_scene_type)
 		break;
 	case eHelp:
 		result = h.Init();
+		break;
 	case eRanking:
 		result = rank.Init();
 		break;
