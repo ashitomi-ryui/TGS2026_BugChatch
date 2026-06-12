@@ -14,6 +14,7 @@ protected:
 	static int cicadaGetCount;
 	static int dragonflyGetCount;
 	static int grasshopperGetCount;
+	static int HitSE;
 
 	bool m_isAppearance;	// oŒ»‚µ‚Ä‚¢‚é‚©
 	bool m_isEscape;		// “¦‚°‚Ä‚¢‚é‚©
@@ -49,6 +50,7 @@ public:
 	~Bug();
 
 public:
+	static void Init();
 	virtual void Set(Vector2D location);	// ‰Šú‰»
 	virtual void Update(float delta);		// XV
 	virtual void Draw() const;				// •`‰æ

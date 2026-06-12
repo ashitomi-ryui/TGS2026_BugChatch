@@ -123,6 +123,7 @@ void Grasshopper::Update(float delta)
 		// “–‚½‚è”»’è
 		if (HitCheck())
 		{
+			PlaySoundMem(HitSE, DX_PLAYTYPE_BACK);
 			grasshopperGetCount += 1;
 			m_isAppearance = false;
 			// ‘JˆÚŽžŠÔ‚ð1.0f•b‚É‚·‚é

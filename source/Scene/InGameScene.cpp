@@ -36,7 +36,7 @@ int InGameInit(void)//各プログラムの初期化
 {
 	Bug::SetPlayer(&player);
 	Tree::SetPlayer(&player);
-
+	Bug::Init();
 	Tree::Init();
 	Leaf::Init();
 	Cicada::Init();
@@ -134,7 +134,7 @@ int InGameInit(void)//各プログラムの初期化
 	}
 	groundImage = LoadGraph("assets/images/OtherObjects/Ground.PNG");
 
-	ChangeVolumeSoundMem(100, BGM);
+	ChangeVolumeSoundMem(230, BGM);
 	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
 
 	changeProduction = 0;

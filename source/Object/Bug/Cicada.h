@@ -9,6 +9,7 @@ class Cicada : public Bug
 private:
 	static int images[5];
 	static int CicadaSE;
+	
 
 public:
 	static bool isWithinTheScreen;

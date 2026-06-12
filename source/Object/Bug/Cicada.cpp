@@ -35,6 +35,7 @@ void Cicada::Init()
 
 	CicadaSE = LoadSoundMem("assets/Audio/AS_78229_ƒ~ƒ“ƒ~ƒ“ƒ[ƒ~.wav");
 	cicadaGetCount = 0;
+	
 }
 
 void Cicada::Update(float delta)
@@ -87,6 +88,7 @@ void Cicada::Update(float delta)
 		// “–‚½‚è”»’è
 		if (HitCheck())
 		{
+			PlaySoundMem(HitSE, DX_PLAYTYPE_BACK);
 			cicadaGetCount += 1;
 			m_isAppearance = false;
 			// ‘JˆÚŽžŠÔ‚ð1.0f•b‚É‚·‚é

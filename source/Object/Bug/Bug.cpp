@@ -11,6 +11,7 @@ Player* Bug::targetPlayer;
 int Bug::cicadaGetCount = 0;
 int Bug::dragonflyGetCount = 0;
 int Bug::grasshopperGetCount = 0;
+int Bug::HitSE = -1;
 
 Bug::Bug()
 {
@@ -35,9 +36,15 @@ Bug::Bug()
 	m_transitionTime = 0.0f;
 	m_animTime = 0.0f;
 	m_animCount = 0;
+	
 }
 Bug::~Bug()
 {
+}
+
+void Bug::Init()
+{
+	HitSE = LoadSoundMem("assets/Audio/HitSE.wav");
 }
 
 void Bug::Set(Vector2D location)
