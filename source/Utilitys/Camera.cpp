@@ -45,6 +45,8 @@ std::string Camera::word5_0Data = {};
 std::vector<std::string> Camera::word5_1Data = {};
 std::vector<std::string> Camera::word6Data = {};
 
+int Camera::circle = 0.0f;
+
 // コンストラクタ
 Camera::Camera()
 {
@@ -139,6 +141,8 @@ void Camera::Init()
 		"網", "振", "回", "虫", "乱", "獲",
 		"捕", "秒", "合", "計", "位", "匹",
 	};
+
+	circle = LoadGraph("assets/images/Circle.PNG");
 
 	m_location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f };
 }
@@ -238,20 +242,49 @@ void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D loca
 	DrawTriangle(location1, location2, location3, Color);
 }
 
-void Camera::DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag)
+void Camera::DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag, float startAngle, float endAngle)
 {
 	location = FitLocationToScreen(location);
 	radius *= m_screenRatioSize;
 
-	DxLib::DrawCircle((int)location.x, (int)location.y, (int)radius, Color, FillFlag);
+	// 枠線だけなら
+	if (!FillFlag)
+	{
+		DxLib::DrawCircle((int)location.x, (int)location.y, (int)radius, Color, false);
+		// 処理を終了する
+		return;
+	}
+
+	float scale = radius / 640.0f;
+
+	startAngle /= DX_PI;
+	startAngle *= 50.0f;
+	endAngle /= DX_PI;
+	endAngle *= 50.0f;
+
+	// カラーコードをRGBに分ける
+	int r, g, b;
+	Color %= 0x1000000;
+	r = Color >> 16;
+	Color -= r << 16;
+	g = Color >> 8;
+	Color -= g << 8;
+	b = Color;
+
+	// 色を変える
+	SetDrawBright(r, g, b);
+
+	DxLib::DrawCircleGaugeF(location.x, location.y, (double)endAngle, circle, (double)startAngle, (double)scale);
+
+	SetDrawBright(255, 255, 255);
 }
 
-void Camera::DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag)
+void Camera::DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag, float startAngle, float endAngle)
 {
 	location.x += -m_location.x + D_WIN_WIDTH / 2.0f;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2.0f;
 
-	DrawCircle(location, radius, Color, FillFlag);
+	DrawCircle(location, radius, Color, FillFlag, startAngle, endAngle);
 }
 
 void Camera::DrawBox(Vector2D location1, Vector2D location2, unsigned int Color)
