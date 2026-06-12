@@ -11,6 +11,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 	ChangeWindowMode(TRUE);
 	SetGraphMode((int)D_WIN_WIDTH, (int)D_WIN_HEIGHT, 32);
+	SetMainWindowText("キャッチ・アンド・ハント");
 	if (DxLib_Init() == -1)
 	{
 		return -1;
