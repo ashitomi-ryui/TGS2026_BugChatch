@@ -56,11 +56,8 @@ public:
 	//
 	void Move(float delta);
 
-	//
-	void Panic(float delta);
-
-	////’ÊíˆÚ“®
-	//void Patrol(float delta);
+	//–Ø‚ÌÕ“Ë”»’è
+	bool CheckTreeCollision(Vector2D current_loc);
 
 	//@’m”»’è
 	void PerceptionJudgment();
