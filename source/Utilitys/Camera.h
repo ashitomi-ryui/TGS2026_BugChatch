@@ -49,6 +49,8 @@ private:
 	static std::string word5_0Data;
 	static std::vector<std::string> word5_1Data;
 	static std::vector<std::string> word6Data;
+
+	static int circle;
 	
 public:
 	Camera();
@@ -125,15 +127,21 @@ public:
 	/// <param name="location">À•W</param>
 	/// <param name="radius">”¼Œa</param>
 	/// <param name="Color">F</param>
-	static void DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag = true);
-
+	/// <param name="FillFlag">‰~‚Ì’†‚ğ–„‚ß‚é‚©</param>
+	/// <param name="startAngle">‰~ŒÊ‚ÌŠJnŠp“x</param>
+	/// <param name="endAngle">‰~ŒÊ‚ÌI—¹Šp“x</param>
+	static void DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag = true, float startAngle = 0.0f * DX_PI_F, float endAngle = 2.0f * DX_PI_F);
+	
 	/// <summary>
 	/// ƒ[ƒ‹ƒhÀ•W‚Å‰~‚ğ•`‰æ
 	/// </summary>
 	/// <param name="location">À•W</param>
 	/// <param name="radius">”¼Œa</param>
 	/// <param name="Color">F</param>
-	static void DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag = true);
+	/// <param name="FillFlag">‰~‚Ì’†‚ğ–„‚ß‚é‚©</param>
+	/// <param name="startAngle">‰~ŒÊ‚ÌŠJnŠp“x</param>
+	/// <param name="endAngle">‰~ŒÊ‚ÌI—¹Šp“x</param>
+	static void DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag = true, float startAngle = 0.0f * DX_PI_F, float endAngle = 2.0f * DX_PI_F);
 
 	/// <summary>
 	/// lŠp‚ğ•`‰æ
