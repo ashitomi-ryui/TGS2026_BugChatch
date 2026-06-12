@@ -146,13 +146,6 @@ void Grasshopper::Update(float delta)
 
 void Grasshopper::Draw() const
 {
-	/*bool m_isTurn = false;
-	if (m_Angle >= 3.0)
-	{
-		m_isTurn = true;
-	}*/
-
-	
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], m_isTurn);
 }
 
@@ -218,18 +211,107 @@ void Grasshopper::SetDestination(Vector2D location)
 {
 	shiita = 0;
 
-	if (jougai == TRUE)
-	{
-		// 近くの草を目的地にする
-		nearleaf = FindNearestLeaf(location);
+	bool isRouteBlocked = false; // ルート上に木があるかどうかのフラグ
+	int retryCount = 0;          // 無限ループ防止用のカウンター
+	const int MAX_RETRY = 10;    // 最大10回まで再抽選する
 
-		m_direction = atan2f((nearleaf.y - m_location.y), (nearleaf.x - m_location.x));
+	do
+	{
+		isRouteBlocked = false;
+
+		if (jougai == TRUE)
+		{
+			
+			// 近くの草を目的地にする
+			nearleaf = FindNearestLeaf(location);
+
+			m_direction = atan2f((nearleaf.y - m_location.y), (nearleaf.x - m_location.x));
+
+			//移動距離
+			float distance = Random::GetRand(50.0f, 300.0f, 10.0f);
+
+			// 目的地
+			m_destination.x = location.x + cosf(m_direction) * distance;
+			m_destination.y = location.y + sinf(m_direction) * distance;
+
+			m_startLocation = location;
+
+			// 速さ
+			m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
+
+			top = Random::GetRand(20.0, 50.0, 0.1f);
+
+
+		}
+		else
+		{
+			//向き
+			m_direction = Random::GetRand(0.0f, 2.0f, 0.1f) * DX_PI_F;
+
+			//移動距離
+			float distance = Random::GetRand(50.0f, 300.0f, 1.0f);
+
+			// 目的地
+			m_destination.x = location.x + cosf(m_direction) * distance;
+			m_destination.y = location.y + sinf(m_direction) * distance;
+
+			m_startLocation = location;
+			// 速さ
+			m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
+			if (distance > 200.0f)
+			{
+				m_isJump = true;
+
+				top = Random::GetRand(20.0, 50.0, 0.1f);
+			}
+			else
+			{
+				m_isJump = false;
+			}
+
+			
+		}
+
+		for (float t = 0.1f; t <= 1.0f; t += 0.1f)
+		{
+			Vector2D test_loc;
+			test_loc.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * t;
+			test_loc.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * t;
+
+			
+			if (CheckTreeCollision(test_loc))
+			{
+				isRouteBlocked = true; 
+				break;                 
+			}
+		}
+
+		retryCount++;
+
+	} while (isRouteBlocked && retryCount < MAX_RETRY);
+
+
+}
+
+void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
+{
+	shiita = 0;
+	bool isRouteBlocked = false; // ルート上に木があるかどうかのフラグ
+	int retryCount = 0;          // 無限ループ防止用のカウンター
+	const int MAX_RETRY = 10;    // 最大10回まで再抽選する
+
+	do
+	{
+		isRouteBlocked = false;
+
+		m_direction = atan2f((location.y - Plocation.y), (location.x - Plocation.x));
 
 		//移動距離
-		float distance = Random::GetRand(50.0f, 300.0f, 10.0f);
+		float distance = Random::GetRand(150.0f, 400.0f, 0.1f);
 
 		// 目的地
 		m_destination.x = location.x + cosf(m_direction) * distance;
+
 		m_destination.y = location.y + sinf(m_direction) * distance;
 
 		m_startLocation = location;
@@ -239,63 +321,23 @@ void Grasshopper::SetDestination(Vector2D location)
 
 		top = Random::GetRand(20.0, 50.0, 0.1f);
 
-
-	}
-	else
-	{
-		//向き
-		m_direction = Random::GetRand(0.0f, 2.0f, 0.1f) * DX_PI_F;
-
-		//移動距離
-		float distance = Random::GetRand(50.0f, 300.0f, 1.0f);
-
-		// 目的地
-		m_destination.x = location.x + cosf(m_direction) * distance;
-		m_destination.y = location.y + sinf(m_direction) * distance;
-
-		m_startLocation = location;
-		// 速さ
-		m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
-		if (distance > 200.0f)
+		for (float t = 0.1f; t <= 1.0f; t += 0.1f)
 		{
-			m_isJump = true;
+			Vector2D test_loc;
+			test_loc.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * t;
+			test_loc.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * t;
 
-			top = Random::GetRand(20.0, 50.0, 0.1f);
-		}
-		else
-		{
-			m_isJump = false;
+			
+			if (CheckTreeCollision(test_loc))
+			{
+				isRouteBlocked = true; 
+				break;                
+			}
 		}
 
-		
+		retryCount++;
 
-
-	}
-
-
-}
-
-void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
-{
-	shiita = 0;
-
-	m_direction = atan2f((location.y - Plocation.y), (location.x - Plocation.x));
-
-	//移動距離
-	float distance = Random::GetRand(150.0f, 400.0f, 0.1f);
-
-	// 目的地
-	m_destination.x = location.x + cosf(m_direction) * distance;
-
-	m_destination.y = location.y + sinf(m_direction) * distance;
-
-	m_startLocation = location;
-
-	// 速さ
-	m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
-
-	top = Random::GetRand(20.0, 50.0, 0.1f);
-
+	} while (isRouteBlocked && retryCount < MAX_RETRY);
 }
 
 
@@ -494,56 +536,31 @@ void Grasshopper::Move(float delta)
 	}
 }
 
-//void Grasshopper::Panic(float delta)
-//{
-//	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
-//	if (escape == FALSE)
-//	{
-//		EscapeSetDestination(m_location, playerLocation);
-//		escape = TRUE;
-//	}
-//
-//
-//	shiita += m_moveSpeed.x * delta;
-//
-//
-//	if (shiita >= 1.0f)
-//	{
-//		shiita = 1.0f;
-//		m_location = m_destination;
-//		escape = FALSE;// 行き過ぎ防止
-//		// 遷移時間が0以下なら
-//		if (m_transitionTime <= 0.0f)
-//		{
-//			// 巡回状態へ
-//			m_state = eMove;
-//			
-//			SetDestination(m_location);
-//		}
-//	}
-//
-//	/*Vector2D treeLocation = FindNearestTree(m_location);
-//	if (m_location.x + m_radius > treeLocation.x - D_LEAF_WIDTH ||
-//		m_location.x - m_radius < treeLocation.x + D_LEAF_WIDTH ||
-//		m_location.y + m_radius > treeLocation.y - D_LEAF_HEIGHT/2 ||
-//		m_location.y - m_radius < treeLocation.y + D_LEAF_HEIGHT/2)
-//	{
-//		m_isBack = TRUE;
-//	}*/
-//
-//
-//	//ジャンプの移動処理
-//	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
-//	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
-//
-//	//AIニキ
-//	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
-//	// sinf(shiita * DX_PI_F) は shiitaが 0.0(始点) -> 0.5(頂点) -> 1.0(終点) で 0 -> 1 -> 0 と変化します
-//	// ※ 2Dゲームで上がマイナス方向なら引く、プラス方向なら足す
-//	float height = sinf(shiita * DX_PI_F) * top;
-//	m_location.y -= height;
-//}
+bool Grasshopper::CheckTreeCollision(Vector2D current_loc)
+{
+	Vector2D treeLocation = FindNearestTree(current_loc);
 
+	// 木の全体のサイズから「幹」のサイズを割り出す
+	float trunkWidth = D_TREE_WIDTH*0.3f;   // 横幅は全体の30%
+	float trunkHeight = D_TREE_HEIGHT*0.4; // 縦幅は全体の40%
+
+	float trunkLeft = treeLocation.x + (D_TREE_WIDTH / 2.0f) - (trunkWidth / 2.0f);
+	float trunkRight = treeLocation.x + (D_TREE_WIDTH / 2.0f) + (trunkWidth / 2.0f);
+
+	float trunkTop = treeLocation.y + D_TREE_HEIGHT - trunkHeight;
+	float trunkBottom = treeLocation.y + D_TREE_HEIGHT;
+
+	// 足元の座標（current_loc）が、幹の範囲に入っているか？
+	if (current_loc.x > trunkLeft &&
+		current_loc.x < trunkRight &&
+		current_loc.y > trunkTop &&
+		current_loc.y < trunkBottom)
+	{
+		return true; 
+	}
+
+	return false; 
+}
 
 void Grasshopper::PerceptionJudgment()
 {
@@ -585,11 +602,6 @@ void Grasshopper::TransitionToEscape()
 	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
 	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 }
-
-//void Grasshopper::PutInFront()
-//{
-//	
-//}
 
 void Grasshopper::CheckOverlap()
 {
