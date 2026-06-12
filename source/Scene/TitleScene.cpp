@@ -61,7 +61,9 @@ int Title::Init()
 	{
 		return FALSE;
 	}
-	
+	ChangeVolumeSoundMem(150, ChoiceSE);
+	ChangeVolumeSoundMem(150, DecisionSE);
+	ChangeVolumeSoundMem(130, Titlebgm);
     PlaySoundMem(Titlebgm, DX_PLAYTYPE_LOOP);
 
 	select_x, select_y, pressed = 0;
