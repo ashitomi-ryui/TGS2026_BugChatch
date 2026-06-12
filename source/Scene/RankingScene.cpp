@@ -28,7 +28,11 @@ int Ranking::Init()
 	select_x,pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
 	time = 0.0f;
 	time_rug = 0.5f;
-
+	RankingBGM = LoadSoundMem("assets/Audio/AS_52281_RankingBGM.wav");
+	if (RankingBGM == -1)
+	{
+		return FALSE;
+	}
 	Choicebgm2 = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
 	if (Choicebgm2 == -1)
 	{
@@ -40,6 +44,8 @@ int Ranking::Init()
 		return FALSE;
 	}
 
+	ChangeVolumeSoundMem(100, RankingBGM);
+	PlaySoundMem(RankingBGM, DX_PLAYTYPE_LOOP);
 	int loadrankdata=LoadRankData();
 	if (loadrankdata != TRUE)
 	{
@@ -99,6 +105,7 @@ eSceneType Ranking::Update(float delta_second)
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
 		{
 			PlaySoundMem(DecisionSE2, DX_PLAYTYPE_BACK);
+			StopSoundMem(RankingBGM);
 			pressed = TRUE;
 		}
 	}
