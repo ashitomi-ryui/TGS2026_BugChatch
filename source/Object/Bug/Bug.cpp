@@ -71,8 +71,6 @@ void Bug::Set(Vector2D location)
 	m_moveSpeed = { 0.0f, 0.0f };
 	// –Ú“I’n
 	m_destination = { 0.0f, 0.0f };
-	// ‚‚³
-	m_height = 0.0f;
 	// @’mŠÔ
 	m_detectionTime = 0.0f;
 	// ‘JˆÚŠÔ‚ğ0.1f‚²‚Æ‚É‹æØ‚Á‚½0.0f~10.0f‚É‚·‚é
