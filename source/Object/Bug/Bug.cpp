@@ -211,6 +211,11 @@ bool Bug::GetIsAppearance() const
 	return m_isAppearance;
 }
 
+bool Bug::GetIsBack() const
+{
+	return m_isBack;
+}
+
 int Bug::GetCicadaCount() const
 {
 	return cicadaGetCount;

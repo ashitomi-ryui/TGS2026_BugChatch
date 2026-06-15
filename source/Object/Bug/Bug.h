@@ -105,6 +105,7 @@ public:
 	Vector2D GetLocation() const;
 	float GetHeight() const;
 	bool GetIsAppearance() const;
+	bool GetIsBack() const;
 
 	int GetCicadaCount() const;
 	int GetDragonflyCount() const;

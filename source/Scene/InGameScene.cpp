@@ -57,7 +57,6 @@ int InGameInit(void)//各プログラムの初期化
 	Grasshopper::Init();
 	Dragonfly::Init();
 	player.Init();
-	shadow.player.Set(player.GetPlayerLocation(), player.GetPlayerRadius(), true);
 	
 	BGM = LoadSoundMem("assets/Audio/AS_1468345_Main.wav");
 	if (BGM == -1)
@@ -126,17 +125,14 @@ int InGameInit(void)//各プログラムの初期化
 	{
 		// スポーン
 		cicada[id].Spawn();
-		shadow.cicada[id].Set(cicada[id].GetLocation(), cicada[id].GetHeight(), cicada[id].GetIsAppearance());
 	}
 	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
 	{
 		dragonfly[id].Spawn();
-		shadow.dragonfly[id].Set(dragonfly[id].GetLocation(), dragonfly[id].GetHeight(), dragonfly[id].GetIsAppearance());
 	}
 	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].Spawn();
-		shadow.grasshopper[id].Set(grasshopper[id].GetLocation(), grasshopper[id].GetHeight(), grasshopper[id].GetIsAppearance());
 	}
 
 	for (int id = 0; id < D_EFFECT_MAX; id++)
@@ -303,21 +299,6 @@ eSceneType InGameUpdate(float delta_second)
 			leaf[id].Update(delta_second);
 		}
 
-		// 影の更新
-		shadow.player.Set(player.GetPlayerLocation(), player.GetPlayerRadius(), true);
-		for (int id = 0; id < D_CICADA_MAX; id++)
-		{
-			shadow.cicada[id].Set(cicada[id].GetLocation(), cicada[id].GetHeight(), cicada[id].GetIsAppearance());
-		}
-		for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
-		{
-			shadow.grasshopper[id].Set(grasshopper[id].GetLocation(), grasshopper[id].GetHeight(), grasshopper[id].GetIsAppearance());
-		}
-		for (int id = 0; id < D_DRAGONFLY_MAX; id++)
-		{
-			shadow.dragonfly[id].Set(dragonfly[id].GetLocation(), dragonfly[id].GetHeight(), dragonfly[id].GetIsAppearance());
-		}
-
 		for (int i = 0; i < 3; i++)
 		{
 			switch (i)
@@ -383,6 +364,21 @@ eSceneType InGameUpdate(float delta_second)
 		}
 		break;
 	}
+	
+	// 影の更新
+	shadow.player.Set(player.GetPlayerLocation(), player.GetPlayerRadius(), true, false);
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		shadow.cicada[id].Set(cicada[id].GetLocation(), cicada[id].GetHeight(), cicada[id].GetIsAppearance(), cicada[id].GetIsBack());
+	}
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	{
+		shadow.grasshopper[id].Set(grasshopper[id].GetLocation(), grasshopper[id].GetHeight(), grasshopper[id].GetIsAppearance(), grasshopper[id].GetIsBack());
+	}
+	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
+	{
+		shadow.dragonfly[id].Set(dragonfly[id].GetLocation(), dragonfly[id].GetHeight(), dragonfly[id].GetIsAppearance(), dragonfly[id].GetIsBack());
+	}
 
 	Camera::Update(player.GetPlayerLocation());	// カメラの更新
 
@@ -391,12 +387,52 @@ eSceneType InGameUpdate(float delta_second)
 
 void InGameDraw(void)
 {
+	// 背景の表示
 	for (float i = 0;i < D_STAGE_WIDTH;i += 30.0f * 3.0f * D_OBJECT_SIZE_RATIO)
 	{
 		for (float j = 0;j < D_STAGE_HEIGHT;j += 30.0f * 3.0f * D_OBJECT_SIZE_RATIO)
 		{
 			Camera::DrawGraphW({ i, j }, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, groundImage);
 		}
+	}
+
+	// 後ろに影を表示
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	{
+		shadow.grasshopper[id].DrawOnTheBack();
+	}
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		shadow.cicada[id].DrawOnTheBack();
+	}
+	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
+	{
+		shadow.dragonfly[id].DrawOnTheBack();
+	}
+
+	// 後ろに虫を表示
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	{
+		grasshopper[id].DrawOnTheBack();
+	}
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		cicada[id].DrawOnTheBack();
+	}
+	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
+	{
+		dragonfly[id].DrawOnTheBack();
+	}
+
+	// 草の表示
+	for (int id = 0; id < D_LEAF_MAX; id++)
+	{
+		leaf[id].Draw();
+	}
+	// 木の表示
+	for (int id = 0;id < D_TREE_MAX;id++)
+	{
+		tree[id].Draw(id);
 	}
 
 	// 影の表示
@@ -414,47 +450,26 @@ void InGameDraw(void)
 		shadow.dragonfly[id].Draw();
 	}
 
-	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
-	{
-		grasshopper[id].DrawOnTheBack();
-	}
-
-	for (int id = 0; id < D_CICADA_MAX; id++)
-	{
-		cicada[id].DrawOnTheBack();
-	}
-
-	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
-	{
-		dragonfly[id].DrawOnTheBack();
-	}
-
-	for (int id = 0; id < D_LEAF_MAX; id++)
-	{
-		leaf[id].Draw();
-	}
-	for (int id = 0;id < D_TREE_MAX;id++)
-	{
-		tree[id].Draw(id);
-	}
-
+	// プレイヤーの表示
 	player.Draw();
 
+	// バッタの表示
 	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].DrawOnTheFront();
 	}
-
+	// セミの表示
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		cicada[id].DrawOnTheFront();
 	}
-
+	// トンボの表示
 	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
 	{
 		dragonfly[id].DrawOnTheFront();
 	}
 
+	// エフェクトの表示
 	for (int id = 0; id < D_EFFECT_MAX; id++)
 	{
 		effect[id].Draw();
@@ -470,6 +485,8 @@ void InGameDraw(void)
 		{
 			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 120.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "スタート！");
 		}
+
+		// スコアの表示
 		Camera::DrawString({ 25,25 }, 40, GetColor(255, 255, 255), "のこり%d秒", 60 - (int)timer);
 		Camera::DrawString({ 75,75 }, 40, GetColor(255, 255, 255), "%d匹", get[0]);
 		Camera::DrawString({ 75,135 }, 40, GetColor(255, 255, 255), "%d匹", get[1]);

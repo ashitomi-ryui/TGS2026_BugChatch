@@ -8,6 +8,7 @@ Shadow::Shadow()
 {
 	m_location = {};
 	m_isDisplay = false;
+	m_isBack = false;
 }
 
 Shadow::~Shadow()
@@ -19,18 +20,33 @@ void Shadow::Init()
 	m_image = LoadGraph("assets/images/OtherObjects/Shadow.PNG");
 }
 
-void Shadow::Set(Vector2D location, float height, bool isDisplay)
+void Shadow::Set(Vector2D location, float height, bool isDisplay, bool isBack)
 {
 	m_location = location;
 	m_location.y += height;
 
 	m_isDisplay = isDisplay;
+	m_isBack;
 }
 
 void Shadow::Draw() const
 {
-	if (m_isDisplay)
+	if(!m_isBack)
 	{
-		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_image);
+		if (m_isDisplay)
+		{
+			Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_image);
+		}
+	}
+}
+
+void Shadow::DrawOnTheBack() const
+{
+	if (m_isBack)
+	{
+		if (m_isDisplay)
+		{
+			Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_image);
+		}
 	}
 }
