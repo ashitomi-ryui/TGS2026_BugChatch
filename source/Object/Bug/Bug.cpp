@@ -187,7 +187,6 @@ bool Bug::HitCheck()
 	float len = Length(Vec2Sub(m_location, netLocation));
 	if (len < netRadius)
 	{
-		SetEffect(m_location);
 		return true;
 	}
 
