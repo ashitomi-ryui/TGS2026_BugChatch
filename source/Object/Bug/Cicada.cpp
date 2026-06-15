@@ -93,6 +93,8 @@ void Cicada::Update(float delta)
 			m_isAppearance = false;
 			// 遷移時間を1.0f秒にする
 			m_transitionTime = 1.0f;
+
+			SetEffect(m_location, GetColor(200,150,40));
 		}
 	}
 	else
@@ -151,6 +153,8 @@ void Cicada::Spawn()
 	location.x += Random::GetRand((D_TREE_WIDTH / 2.0f), -(D_TREE_WIDTH / 4.0f));
 	location.y += Random::GetRand((D_TREE_HEIGHT / 2.0f), -(D_TREE_HEIGHT / 4.0f));
 
+	m_height = D_OBJECT_SIZE_RATIO;
+
 	// スポーン
 	Set(location);
 }
@@ -196,6 +200,7 @@ void Cicada::Animation(float delta)
 				m_animTime = 0.0f;
 				m_animCount = m_animCount % 4 + 1;
 			}
+			m_height = D_OBJECT_SIZE_RATIO * 75.0f;
 
 			// 画像の向きを徐々に移動方向に向ける
 			GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
@@ -215,6 +220,7 @@ void Cicada::Animation(float delta)
 						m_animCount = (m_animCount + 1) % 5;
 					}
 				}
+				m_height = D_OBJECT_SIZE_RATIO * 25.0f;
 
 				// 画像の向きを徐々に上に向ける
 				GraduallyTurn(m_Angle, 0.0f, 2.0f * DX_PI_F * delta);
@@ -227,6 +233,7 @@ void Cicada::Animation(float delta)
 					m_animTime = 0.0f;
 					m_animCount = m_animCount % 4 + 1;
 				}
+				m_height = D_OBJECT_SIZE_RATIO * 75.0f;
 
 				// 画像の向きを徐々に移動方向に向ける
 				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
@@ -239,6 +246,7 @@ void Cicada::Animation(float delta)
 					m_animTime = 0.0f;
 					m_animCount = m_animCount % 4 + 1;
 				}
+				m_height = D_OBJECT_SIZE_RATIO * 75.0f;
 
 				// 画像の向きを徐々に移動方向に向ける
 				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
