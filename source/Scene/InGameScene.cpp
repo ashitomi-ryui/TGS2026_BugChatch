@@ -11,6 +11,7 @@
 #include"../Object/Bug/Dragonfly.h"
 #include"../Object/Bug/Grasshopper.h"
 #include"../Object/Bug/Bug.h"
+#include"../Object/Effect.h"
 
 #include"../Object/Tree.h"
 #include"../Object/Leaf.h"
@@ -21,6 +22,7 @@ Player player;
 Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
 Grasshopper grasshopper[D_GRASSHOPPER_MAX];
+Effect effect[D_EFFECT_MAX];
 Icon icon;
 Bug score;
 int get[3] = {};
@@ -36,6 +38,7 @@ int InGameInit(void)//各プログラムの初期化
 	Bug::SetPlayer(&player);
 	Tree::SetPlayer(&player);
 	Bug::Init();
+	Effect::Init();
 	Tree::Init();
 	Leaf::Init();
 	Cicada::Init();
@@ -118,6 +121,11 @@ int InGameInit(void)//各プログラムの初期化
 	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].Spawn();
+	}
+
+	for (int id = 0; id < D_EFFECT_MAX; id++)
+	{
+		effect[id].SetHidden();
 	}
 
 	icon.c = LoadGraph("assets/images/UI/CicadaIcon.PNG");
@@ -265,6 +273,11 @@ eSceneType InGameUpdate(float delta_second)
 			grasshopper[id].Update(delta_second);	// バッタの更新
 		}
 
+		for (int id = 0; id < D_EFFECT_MAX; id++)
+		{
+			effect[id].Update(delta_second);	// エフェクトの更新
+		}
+
 		for (int id = 0;id < D_TREE_MAX;id++)
 		{
 			tree[id].Update(delta_second);
@@ -396,6 +409,11 @@ void InGameDraw(void)
 		dragonfly[id].DrawOnTheFront();
 	}
 
+	for (int id = 0; id < D_EFFECT_MAX; id++)
+	{
+		effect[id].Draw();
+	}
+
 	switch(changeProduction)
 	{
 	case 3:
@@ -501,4 +519,17 @@ Vector2D FindNearestLeaf(Vector2D location)
 		return { -100.0f,-100.0f };
 
 	return leaf[nearestId].GetLocation();
+}
+
+void SetEffect(Vector2D location, unsigned int color)
+{
+	for (int id = 0; id < D_EFFECT_MAX; id++)
+	{
+		if (!effect[id].GetIsDisplay())
+		{
+			effect[id].Set(location, color);
+			break;
+		}
+	}
+
 }

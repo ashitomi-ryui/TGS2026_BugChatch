@@ -21,3 +21,5 @@ struct Icon
 Vector2D FindNearestTree(Vector2D location);
 
 Vector2D FindNearestLeaf(Vector2D location);
+
+void SetEffect(Vector2D location, unsigned int color = 0xffff00);

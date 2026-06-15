@@ -21,7 +21,7 @@ public:
 	~Effect();
 public:
 	static void Init();
-	void Set(Vector2D location, unsigned int color = 0xffff00);
+	void Set(Vector2D location, unsigned int color);
 	void Update(float delta);
 	void Draw()const;
 

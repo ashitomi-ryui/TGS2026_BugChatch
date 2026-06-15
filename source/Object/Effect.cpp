@@ -44,7 +44,7 @@ void Effect::Update(float delta)
 	if(m_isDisplay)
 	{
 		m_animTime += delta;
-		if (m_animTime >= 0.02f)
+		if (m_animTime >= 0.05f)
 		{
 			m_animCount++;
 			m_animTime = 0.0f;
@@ -62,7 +62,7 @@ void Effect::Draw() const
 {
 	if(m_isDisplay)
 	{
-		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_images[m_animCount]);
+		Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, m_images[m_animCount], false, false, m_color);
 	}
 }
 
