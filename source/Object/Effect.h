@@ -2,7 +2,7 @@
 
 #include"../Utilitys/Math.h"
 
-#define D_EFFECT_MAX		(20)
+#define D_EFFECT_MAX		(10)
 
 class Effect
 {
