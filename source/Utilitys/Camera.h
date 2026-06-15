@@ -168,7 +168,8 @@ public:
 	/// <param name="GrHandle">‰æ‘œî•ñ</param>
 	/// <param name="ReverseXFlag">‰¡”½“]</param>
 	/// <param name="ReverseYFlage">c”½“]</param>
-	static void DrawGraph(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlag = false);
+	/// <param name="Color">F</param>
+	static void DrawGraph(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlag = false, unsigned int Color = 0xffffff);
 
 	/// <summary>
 	/// ƒ[ƒ‹ƒhÀ•W‚Å‰æ‘œ‚ğ•`‰æ
@@ -179,7 +180,8 @@ public:
 	/// <param name="GrHandle">‰æ‘œî•ñ</param>
 	/// <param name="ReverseXFlag">‰¡”½“]</param>
 	/// <param name="ReverseYFlage">c”½“]</param>
-	static void DrawGraphW(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlag = false);
+	/// <param name="Color">F</param>
+	static void DrawGraphW(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag = false, bool ReverseYFlag = false, unsigned int Color = 0xffffff);
 
 	/// <summary>
 	/// •¶Í‚ğ•`‰æ

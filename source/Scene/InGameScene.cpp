@@ -26,7 +26,6 @@ Bug score;
 int get[3] = {};
 float timer;
 int BGM;
-int flowerImage[2] = { -1, -1 };
 int groundImage = -1;
 
 int changeProduction;	// シーン切替演出
@@ -120,9 +119,6 @@ int InGameInit(void)//各プログラムの初期化
 	{
 		grasshopper[id].Spawn();
 	}
-
-	flowerImage[0] = LoadGraph("assets/images/OtherObjects/Flower1.PNG");
-	flowerImage[1] = LoadGraph("assets/images/OtherObjects/Flower2.PNG");
 
 	icon.c = LoadGraph("assets/images/UI/CicadaIcon.PNG");
 	icon.d = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
@@ -376,7 +372,7 @@ void InGameDraw(void)
 
 	for (int id = 0; id < D_LEAF_MAX; id++)
 	{
-		leaf[id].Draw(id);
+		leaf[id].Draw();
 	}
 	for (int id = 0;id < D_TREE_MAX;id++)
 	{

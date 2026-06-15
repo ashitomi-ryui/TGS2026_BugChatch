@@ -305,11 +305,23 @@ void Camera::DrawBoxW(Vector2D location1, Vector2D location2, unsigned int Color
 	DrawBoxW(location1, location2, Color);
 }
 
-void Camera::DrawGraph(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlag)
+void Camera::DrawGraph(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlag, unsigned int Color)
 {
 	location = FitLocationToScreen(location);
 	ExRateX *= m_screenRatioSize;
 	ExRateY *= m_screenRatioSize;
+
+	// カラーコードをRGBに分ける
+	int r, g, b;
+	Color %= 0x1000000;
+	r = Color >> 16;
+	Color -= r << 16;
+	g = Color >> 8;
+	Color -= g << 8;
+	b = Color;
+
+	// 色を変える
+	SetDrawBright(r, g, b);
 
 	if (ExRateX == ExRateY)
 	{
@@ -333,14 +345,16 @@ void Camera::DrawGraph(Vector2D location, double ExRateX, double ExRateY, double
 
 		DxLib::DrawExtendGraphF(location1.x, location1.y, location2.x, location2.y, GrHandle, true);
 	}
+
+	SetDrawBright(255, 255, 255);
 }
 
-void Camera::DrawGraphW(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlag)
+void Camera::DrawGraphW(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlag, unsigned int Color)
 {
 	location.x += -m_location.x + D_WIN_WIDTH / 2.0f;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2.0f;
 
-	DrawGraph(location, ExRateX, ExRateY, Angle, GrHandle, ReverseXFlag, ReverseYFlag);
+	DrawGraph(location, ExRateX, ExRateY, Angle, GrHandle, ReverseXFlag, ReverseYFlag, Color);
 }
 
 void Camera::DrawString(Vector2D location, int size, unsigned int Color, const TCHAR* FormatString, ...)

@@ -1,7 +1,6 @@
 #include<DxLib.h>
 #include"Leaf.h"
 #include"../Utilitys/Camera.h"
-#include"../Scene/InGameScene.h"
 
 static Player* targetPlayer;     //ÉvÉåÉCÉÑÅ[èÓïÒ
 
@@ -46,7 +45,7 @@ void Leaf::Update(float delta)
 
 }
 
-void Leaf::Draw(int id)const
+void Leaf::Draw()const
 {
 	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, images[m_animCount]);
 }

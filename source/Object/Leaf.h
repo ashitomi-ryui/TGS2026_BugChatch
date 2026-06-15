@@ -24,7 +24,7 @@ public:
 	static void Init();
 	void Set(Vector2D location);
 	void Update(float delta);
-	void Draw(int id)const;
+	void Draw()const;
 
 public:
 	/// <summary>
