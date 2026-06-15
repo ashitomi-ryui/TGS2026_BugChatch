@@ -12,6 +12,7 @@
 #include"../Object/Bug/Grasshopper.h"
 #include"../Object/Bug/Bug.h"
 #include"../Object/Effect.h"
+#include"../Object/Shadow.h"
 
 #include"../Object/Tree.h"
 #include"../Object/Leaf.h"
@@ -23,6 +24,16 @@ Cicada cicada[D_CICADA_MAX];
 Dragonfly dragonfly[D_DRAGONFLY_MAX];
 Grasshopper grasshopper[D_GRASSHOPPER_MAX];
 Effect effect[D_EFFECT_MAX];
+
+struct ObjectShadow
+{
+	Shadow player;
+	Shadow cicada[D_CICADA_MAX];
+	Shadow dragonfly[D_DRAGONFLY_MAX];
+	Shadow grasshopper[D_GRASSHOPPER_MAX];
+};
+ObjectShadow shadow;
+
 Icon icon;
 Bug score;
 int get[3] = {};
@@ -39,12 +50,14 @@ int InGameInit(void)//各プログラムの初期化
 	Tree::SetPlayer(&player);
 	Bug::Init();
 	Effect::Init();
+	Shadow::Init();
 	Tree::Init();
 	Leaf::Init();
 	Cicada::Init();
 	Grasshopper::Init();
 	Dragonfly::Init();
 	player.Init();
+	shadow.player.Set(player.GetPlayerLocation(), player.GetPlayerRadius(), true);
 	
 	BGM = LoadSoundMem("assets/Audio/AS_1468345_Main.wav");
 	if (BGM == -1)
@@ -113,14 +126,17 @@ int InGameInit(void)//各プログラムの初期化
 	{
 		// スポーン
 		cicada[id].Spawn();
+		shadow.cicada[id].Set(cicada[id].GetLocation(), cicada[id].GetHeight(), cicada[id].GetIsAppearance());
 	}
 	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
 	{
 		dragonfly[id].Spawn();
+		shadow.dragonfly[id].Set(dragonfly[id].GetLocation(), dragonfly[id].GetHeight(), dragonfly[id].GetIsAppearance());
 	}
 	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].Spawn();
+		shadow.grasshopper[id].Set(grasshopper[id].GetLocation(), grasshopper[id].GetHeight(), grasshopper[id].GetIsAppearance());
 	}
 
 	for (int id = 0; id < D_EFFECT_MAX; id++)
@@ -128,9 +144,9 @@ int InGameInit(void)//各プログラムの初期化
 		effect[id].SetHidden();
 	}
 
-	icon.c = LoadGraph("assets/images/UI/CicadaIcon.PNG");
-	icon.d = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
-	icon.g = LoadGraph("assets/images/UI/GrasshopperIcon.PNG");
+	icon.cicada = LoadGraph("assets/images/UI/CicadaIcon.PNG");
+	icon.dragonfly = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
+	icon.grasshopper = LoadGraph("assets/images/UI/GrasshopperIcon.PNG");
 	
 	for (int i = 0; i < 3; i++)
 	{
@@ -287,6 +303,21 @@ eSceneType InGameUpdate(float delta_second)
 			leaf[id].Update(delta_second);
 		}
 
+		// 影の更新
+		shadow.player.Set(player.GetPlayerLocation(), player.GetPlayerRadius(), true);
+		for (int id = 0; id < D_CICADA_MAX; id++)
+		{
+			shadow.cicada[id].Set(cicada[id].GetLocation(), cicada[id].GetHeight(), cicada[id].GetIsAppearance());
+		}
+		for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+		{
+			shadow.grasshopper[id].Set(grasshopper[id].GetLocation(), grasshopper[id].GetHeight(), grasshopper[id].GetIsAppearance());
+		}
+		for (int id = 0; id < D_DRAGONFLY_MAX; id++)
+		{
+			shadow.dragonfly[id].Set(dragonfly[id].GetLocation(), dragonfly[id].GetHeight(), dragonfly[id].GetIsAppearance());
+		}
+
 		for (int i = 0; i < 3; i++)
 		{
 			switch (i)
@@ -368,6 +399,21 @@ void InGameDraw(void)
 		}
 	}
 
+	// 影の表示
+	shadow.player.Draw();
+	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
+	{
+		shadow.grasshopper[id].Draw();
+	}
+	for (int id = 0; id < D_CICADA_MAX; id++)
+	{
+		shadow.cicada[id].Draw();
+	}
+	for (int id = 0; id < D_DRAGONFLY_MAX; id++)
+	{
+		shadow.dragonfly[id].Draw();
+	}
+
 	for (int id = 0; id < D_GRASSHOPPER_MAX; id++)
 	{
 		grasshopper[id].DrawOnTheBack();
@@ -429,9 +475,9 @@ void InGameDraw(void)
 		Camera::DrawString({ 75,135 }, 40, GetColor(255, 255, 255), "%d匹", get[1]);
 		Camera::DrawString({ 75,195 }, 40, GetColor(255, 255, 255), "%d匹", get[2]);
 
-		Camera::DrawGraph({ 25,75 }, 1.7, 1.7, 0.0, icon.c);
-		Camera::DrawGraph({ 25,135 }, 1.7, 1.7, 0.0, icon.d);
-		Camera::DrawGraph({ 25,195 }, 1.7, 1.7, 0.0, icon.g);
+		Camera::DrawGraph({ 25,75 }, 1.7, 1.7, 0.0, icon.cicada);
+		Camera::DrawGraph({ 25,135 }, 1.7, 1.7, 0.0, icon.dragonfly);
+		Camera::DrawGraph({ 25,195 }, 1.7, 1.7, 0.0, icon.grasshopper);
 		break;
 	case 5:
 		Camera::DrawString({ 465,260 }, 100, GetColor(255, 255, 255), "そこまで！");
@@ -439,26 +485,6 @@ void InGameDraw(void)
 	}
 
 	
-}
-
-Vector2D GetRingLocation()
-{
-	return player.GetRingLocation();
-}
-
-float GetPlayerMaxSpeed()
-{
-	return player.GetMaxSpeed();
-}
-
-Vector2D GetPlayerLocation()
-{
-	return player.GetPlayerLocation();
-}
-
-void PlayerLocationMove(Vector2D vector)
-{
-	player.PlayerLocationMove(vector);
 }
 
 Vector2D FindNearestTree(Vector2D location)

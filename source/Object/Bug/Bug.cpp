@@ -32,6 +32,7 @@ Bug::Bug()
 	m_Angle = 0.0f;
 	m_moveSpeed = { 0.0f, 0.0f };
 	m_destination = { 0.0f, 0.0f };
+	m_height = 0.0f;
 	m_detectionRange = 0.0f;
 	m_detectionTime = 0.0f;
 	m_transitionTime = 0.0f;
@@ -70,6 +71,8 @@ void Bug::Set(Vector2D location)
 	m_moveSpeed = { 0.0f, 0.0f };
 	// –Ú“I’n
 	m_destination = { 0.0f, 0.0f };
+	// ‚‚³
+	m_height = 0.0f;
 	// @’mŠÔ
 	m_detectionTime = 0.0f;
 	// ‘JˆÚŠÔ‚ğ0.1f‚²‚Æ‚É‹æØ‚Á‚½0.0f~10.0f‚É‚·‚é
@@ -191,6 +194,21 @@ bool Bug::HitCheck()
 	}
 
 	return false;
+}
+
+Vector2D Bug::GetLocation() const
+{
+	return m_location;
+}
+
+float Bug::GetHeight() const
+{
+	return m_height;
+}
+
+bool Bug::GetIsAppearance() const
+{
+	return m_isAppearance;
 }
 
 int Bug::GetCicadaCount() const

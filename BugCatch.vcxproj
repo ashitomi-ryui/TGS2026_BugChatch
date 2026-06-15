@@ -147,6 +147,7 @@
     <ClCompile Include="source\Object\Leaf.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
     <ClCompile Include="source\Object\Bug\Cicada.cpp" />
+    <ClCompile Include="source\Object\Shadow.cpp" />
     <ClCompile Include="source\Object\Tree.cpp" />
     <ClCompile Include="source\Scene\HelpScene.cpp" />
     <ClCompile Include="source\Scene\InGameScene.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="source\Object\Leaf.h" />
     <ClInclude Include="source\Object\Player.h" />
     <ClInclude Include="source\Object\Bug\Cicada.h" />
+    <ClInclude Include="source\Object\Shadow.h" />
     <ClInclude Include="source\Object\Tree.h" />
     <ClInclude Include="source\Scene\HelpScene.h" />
     <ClInclude Include="source\Scene\InGameScene.h" />

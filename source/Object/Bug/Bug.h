@@ -36,6 +36,7 @@ protected:
 	float m_Angle;			// 画像の向き
 	Vector2D m_moveSpeed;	// 動き
 	Vector2D m_destination;	// 目的地
+	float m_height;			// 高さ
 
 	float m_detectionRange;	// 察知範囲（半径）
 
@@ -101,6 +102,10 @@ protected:
 	virtual bool HitCheck();
 
 public:
+	Vector2D GetLocation() const;
+	float GetHeight() const;
+	bool GetIsAppearance() const;
+
 	int GetCicadaCount() const;
 	int GetDragonflyCount() const;
 	int GetGrasshopperCount() const;

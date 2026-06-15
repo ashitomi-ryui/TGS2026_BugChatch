@@ -1,6 +1,7 @@
 #include "DxLib.h"
 
 #include "Player.h"
+#include "../Scene/InGameScene.h"
 #include "../Utilitys/Camera.h"
 #include "../Utilitys/Random.h"
 

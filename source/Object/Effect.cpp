@@ -1,7 +1,6 @@
 #include<DxLib.h>
 #include "Effect.h"
 #include"../Utilitys/Camera.h"
-#include"../Scene/InGameScene.h"
 
 int Effect::m_images[4] = {};
 
@@ -22,10 +21,10 @@ Effect::~Effect()
 
 void Effect::Init()
 {
-	m_images[0] = LoadGraph("assets/images/OtherObjects/Effect/Effect1.png");
-	m_images[1] = LoadGraph("assets/images/OtherObjects/Effect/Effect2.png");
-	m_images[2] = LoadGraph("assets/images/OtherObjects/Effect/Effect3.png");
-	m_images[3] = LoadGraph("assets/images/OtherObjects/Effect/Effect4.png");
+	m_images[0] = LoadGraph("assets/images/OtherObjects/Effect/Effect1.PNG");
+	m_images[1] = LoadGraph("assets/images/OtherObjects/Effect/Effect2.PNG");
+	m_images[2] = LoadGraph("assets/images/OtherObjects/Effect/Effect3.PNG");
+	m_images[3] = LoadGraph("assets/images/OtherObjects/Effect/Effect4.PNG");
 }
 
 void Effect::Set(Vector2D location, unsigned int color)

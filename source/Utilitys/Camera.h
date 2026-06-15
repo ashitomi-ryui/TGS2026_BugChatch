@@ -130,7 +130,7 @@ public:
 	/// <param name="FillFlag">‰~‚Ì’†‚ğ–„‚ß‚é‚©</param>
 	/// <param name="startAngle">‰~ŒÊ‚ÌŠJnŠp“x</param>
 	/// <param name="endAngle">‰~ŒÊ‚ÌI—¹Šp“x</param>
-	static void DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag = true, float startAngle = 0.0f * DX_PI_F, float endAngle = 2.0f * DX_PI_F);
+	static void DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag = true, float yRatio = 1.0f, float startAngle = 0.0f * DX_PI_F, float endAngle = 2.0f * DX_PI_F);
 	
 	/// <summary>
 	/// ƒ[ƒ‹ƒhÀ•W‚Å‰~‚ğ•`‰æ
@@ -141,7 +141,7 @@ public:
 	/// <param name="FillFlag">‰~‚Ì’†‚ğ–„‚ß‚é‚©</param>
 	/// <param name="startAngle">‰~ŒÊ‚ÌŠJnŠp“x</param>
 	/// <param name="endAngle">‰~ŒÊ‚ÌI—¹Šp“x</param>
-	static void DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag = true, float startAngle = 0.0f * DX_PI_F, float endAngle = 2.0f * DX_PI_F);
+	static void DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag = true, float yRatio = 1.0f, float startAngle = 0.0f * DX_PI_F, float endAngle = 2.0f * DX_PI_F);
 
 	/// <summary>
 	/// lŠp‚ğ•`‰æ

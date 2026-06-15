@@ -242,7 +242,7 @@ void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D loca
 	DrawTriangle(location1, location2, location3, Color);
 }
 
-void Camera::DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag, float startAngle, float endAngle)
+void Camera::DrawCircle(Vector2D location, float radius, unsigned int Color, bool FillFlag, float yRatio, float startAngle, float endAngle)
 {
 	location = FitLocationToScreen(location);
 	radius *= m_screenRatioSize;
@@ -279,12 +279,12 @@ void Camera::DrawCircle(Vector2D location, float radius, unsigned int Color, boo
 	SetDrawBright(255, 255, 255);
 }
 
-void Camera::DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag, float startAngle, float endAngle)
+void Camera::DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag, float yRatio, float startAngle, float endAngle)
 {
 	location.x += -m_location.x + D_WIN_WIDTH / 2.0f;
 	location.y += -m_location.y + D_WIN_HEIGHT / 2.0f;
 
-	DrawCircle(location, radius, Color, FillFlag, startAngle, endAngle);
+	DrawCircle(location, radius, Color, FillFlag, yRatio, startAngle, endAngle);
 }
 
 void Camera::DrawBox(Vector2D location1, Vector2D location2, unsigned int Color)
