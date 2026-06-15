@@ -26,7 +26,7 @@ void Shadow::Set(Vector2D location, float height, bool isDisplay, bool isBack)
 	m_location.y += height;
 
 	m_isDisplay = isDisplay;
-	m_isBack;
+	m_isBack = isBack;
 }
 
 void Shadow::Draw() const
