@@ -88,8 +88,6 @@ void SceneDraw(void)
 		DrawString(0, 10, "こいつはくせぇ", 0xFFFFFF);//デフォルト描画
 		break;
 	}
-
-	Camera::Draw();
 }
 
 int ChangeScene(eSceneType new_scene_type)

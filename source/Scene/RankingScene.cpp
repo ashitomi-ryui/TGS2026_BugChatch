@@ -3,6 +3,8 @@
 #include"../Utilitys/Camera.h"
 #include<DxLib.h>
 
+int Ranking::netImage = -1;
+
 Ranking::Ranking()
 {
 	Choicebgm2 = -1;
@@ -10,9 +12,10 @@ Ranking::Ranking()
 	RankingBGM2 = -1;
 	back_ground = -1;
 	select_x = 0;
-	pressed = 0;		
-	time = 0.0f;
-	time_rug = 0.0f;
+	pressed = 0;
+
+	shiita = 0.0f;
+	changeProduction = 0;
 }
 
 Ranking::~Ranking()
@@ -26,9 +29,8 @@ int Ranking::Init()
 	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
 	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
 	back_ground = LoadGraph("assets/images/UI/RankingBack.PNG");
+	netImage = LoadGraph("assets/images/Player/BugNet.PNG");
 	select_x,pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
-	time = 0.0f;
-	time_rug = 0.5f;
 	RankingBGM2 = LoadSoundMem("assets/Audio/AS_52281_RankingBGM.wav");
 	if (RankingBGM2 == -1)
 	{
@@ -52,35 +54,45 @@ int Ranking::Init()
 	{
 		return FALSE;
 	}
+
+	shiita = 0.0f;
+	changeProduction = 0;
+
+	Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT });
+	Camera::SetScreenRatioSize(0.0f);
+
 	return TRUE;
 }
 
 eSceneType Ranking::Update(float delta_second)
 {
-	time += delta_second;
+	switch (changeProduction)
+	{
+	case 0:	// =========================================================================入る演出
 
-	if (pressed == FALSE)
-	{
-		time_rug += delta_second;
-	}
-	if (time >= time_rug)
-	{
-		switch (select_x)
+		shiita += 1.5f * delta_second;
+
+		if (shiita > 1.0f)
 		{
-		case 0:
-			return eInGame;
-			break;
-		case 1:
-			return eTitle;
-			break;
+			shiita = 1.0f; // 行き過ぎ防止
+
+			changeProduction++;
 		}
-	}
-	
-	if (pressed == 0)
-	{
+
+		//ジャンプの移動処理
+		{
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT * 1.0f / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / -6.0f + (D_WIN_WIDTH * 2.0f / 3.0f) * shiita,
+				D_WIN_HEIGHT + (D_WIN_HEIGHT / -2.0f) * shiita - height });
+		}
+		Camera::SetScreenRatioSize(shiita * shiita);
+
+		break;
+	case 1:	// ============================================================================選択
+
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
-			PlaySoundMem(Choicebgm2,DX_PLAYTYPE_BACK);
+			PlaySoundMem(Choicebgm2, DX_PLAYTYPE_BACK);
 			if (select_x == 1)
 			{
 				select_x = 0;
@@ -107,8 +119,67 @@ eSceneType Ranking::Update(float delta_second)
 		{
 			PlaySoundMem(DecisionSE2, DX_PLAYTYPE_BACK);
 			StopSoundMem(RankingBGM2);
+
+			changeProduction++;
+			shiita = 0.0f;
+
 			pressed = TRUE;
 		}
+
+		break;
+	case 2:	// =======================================================次への演出
+
+		shiita += 2.0f * delta_second;
+
+		// 次へ
+		if (shiita > 0.6f)
+		{
+			changeProduction++;
+		}
+
+		{
+			//ジャンプの移動処理
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
+		}
+		Camera::SetScreenRatioSize(1.0f - shiita);
+
+		break;
+	case 3:
+
+		shiita += 2.0f * delta_second;
+
+		// 終了
+		if (shiita > 1.6f)
+		{
+			// 選択したシーンへ遷移
+			switch (select_x)
+			{
+			case 0:
+				return eInGame;
+				break;
+			case 1:
+				return eTitle;
+				break;
+			}
+		}
+
+		if (shiita <= 1.0f)
+		{
+			//ジャンプの移動処理
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
+			Camera::SetScreenRatioSize(1.0f - shiita);
+		}
+		else
+		{
+			Camera::SetScreenLocation({ -10.0f, -10.0f });
+			Camera::SetScreenRatioSize(0.0f);
+		}
+
+		break;
 	}
 
 	return eRanking;
@@ -189,6 +260,18 @@ void Ranking::Draw()const
 
 		Camera::DrawString({ (float)(150 + (i / 3) * 600), (float)(115 + (i % 3) * 120) },
 			100, color, "%d位 %3d匹", i + 1, ranking[i]);
+	}
+
+	Camera::Draw();
+
+	if (changeProduction == 3)
+	{
+		Vector2D location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 750.0f };
+		float angle = 0.5f - (shiita - 0.6f) * 1.5f;
+		angle *= DX_PI_F;
+		location.x += sinf(angle) * 500.0f;
+		location.y -= cosf(angle) * 500.0f;
+		DrawRotaGraphF(location.x, location.y, 15.0f, angle, netImage, true);
 	}
 }
 

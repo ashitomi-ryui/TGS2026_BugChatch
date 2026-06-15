@@ -14,14 +14,15 @@ class Result
 private:
 	int select_x;
 	int pressed;
-	float time;
-	float time_rug;
 private:
 	int ChoiceSE3;
 	int DecisionSE3;
 	int ResultBGM;
 	int back_ground;
 	int bugIcon[3];
+
+	static int netImage;
+
 
 	struct b
 	{
@@ -46,6 +47,10 @@ private:
 	static int divisor[DISPLAY_LIMIT];
 	static int display[DISPLAY_LIMIT][DISPLAY_LIMIT];
 	point p;
+
+	float shiita;
+	int changeProduction;	// ÉVÅ[Éìêÿë÷ââèo
+
 public:
 	Result();
 	~Result();

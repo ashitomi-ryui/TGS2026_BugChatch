@@ -3,9 +3,13 @@
 #include"../Utilitys/Camera.h"
 #include<DxLib.h>
 
+
+int Help::netImage = -1;
+
 Help::Help()
 {
-	
+	shiita = 0.0f;
+	changeProduction = 0;
 }
 
 Help::~Help()
@@ -20,6 +24,7 @@ int Help::Init()
 	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
 	back_ground = LoadGraph("assets/images/UI/HelpBack.PNG");
 	controller = LoadGraph("assets/images/UI/Controller.PNG");
+	netImage = LoadGraph("assets/images/Player/BugNet.PNG");
 
 	HelpBGM = LoadSoundMem("assets/Audio/HelpBGM.wav");
 	if (HelpBGM == -1)
@@ -39,35 +44,42 @@ int Help::Init()
 
 	PlaySoundMem(HelpBGM, DX_PLAYTYPE_LOOP);
 	select_x, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
-	time = 0.0f;
-	time_rug = 0.5f;
+	
+	shiita = 0.0f;
+	changeProduction = 0;
+
+	Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT });
+	Camera::SetScreenRatioSize(0.0f);
 
 	return TRUE;
 }
 
 eSceneType Help::Update(float delta_second)
 {
-	time += delta_second;
+	switch (changeProduction)
+	{
+	case 0:	// =========================================================================入る演出
 
-	if (pressed == FALSE)//決定ボタンが押されていない場合
-	{
-		time_rug += delta_second;
-	}
-	if (time >= time_rug)
-	{
-		switch (select_x)
+		shiita += 1.5f * delta_second;
+
+		if (shiita > 1.0f)
 		{
-		case 0:
-			return eInGame;
-			break;
-		case 1:
-			return eTitle;
-			break;
-		}
-	}
+			shiita = 1.0f; // 行き過ぎ防止
 
-	if (pressed == 0)
-	{
+			changeProduction++;
+		}
+
+		//ジャンプの移動処理
+		{
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT * 1.0f / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / -6.0f + (D_WIN_WIDTH * 2.0f / 3.0f) * shiita,
+				D_WIN_HEIGHT + (D_WIN_HEIGHT / -2.0f) * shiita - height });
+		}
+		Camera::SetScreenRatioSize(shiita * shiita);
+
+		break;
+	case 1:	// ============================================================================選択
+
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
 		{
 			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
@@ -98,8 +110,66 @@ eSceneType Help::Update(float delta_second)
 			PlaySoundMem(DecisionSE2, DX_PLAYTYPE_BACK);
 			StopSoundMem(HelpBGM);
 
+			changeProduction++;
+			shiita = 0.0f;
+
 			pressed = TRUE;
 		}
+
+		break;
+	case 2:	// =======================================================次への演出
+
+		shiita += 2.0f * delta_second;
+
+		// 次へ
+		if (shiita > 0.6f)
+		{
+			changeProduction++;
+		}
+
+		{
+			//ジャンプの移動処理
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
+		}
+		Camera::SetScreenRatioSize(1.0f - shiita);
+
+		break;
+	case 3:
+
+		shiita += 2.0f * delta_second;
+
+		// 終了
+		if (shiita > 1.6f)
+		{
+			// 選択したシーンへ遷移
+			switch (select_x)
+			{
+			case 0:
+				return eInGame;
+				break;
+			case 1:
+				return eTitle;
+				break;
+			}
+		}
+
+		if (shiita <= 1.0f)
+		{
+			//ジャンプの移動処理
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
+			Camera::SetScreenRatioSize(1.0f - shiita);
+		}
+		else
+		{
+			Camera::SetScreenLocation({ -10.0f, -10.0f });
+			Camera::SetScreenRatioSize(0.0f);
+		}
+
+		break;
 	}
 
 	return eHelp;
@@ -161,6 +231,18 @@ void Help::Draw()const
 		//通常サイズに戻す
 		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
 		Camera::DrawString({ titleLoc.x - (float)notSelectCharSize * 1.5f, titleLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
+	}
+
+	Camera::Draw();
+
+	if (changeProduction == 3)
+	{
+		Vector2D location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 750.0f };
+		float angle = 0.5f - (shiita - 0.6f) * 1.5f;
+		angle *= DX_PI_F;
+		location.x += sinf(angle) * 500.0f;
+		location.y -= cosf(angle) * 500.0f;
+		DrawRotaGraphF(location.x, location.y, 15.0f, angle, netImage, true);
 	}
 }
 

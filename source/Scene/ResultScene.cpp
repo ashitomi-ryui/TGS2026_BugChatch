@@ -3,6 +3,8 @@
 #include"RankingScene.h"
 #include"../Utilitys/Camera.h"
 
+int Result::netImage = -1;
+
 int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
 int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
 
@@ -11,7 +13,8 @@ Ranking result;
 
 Result::Result()
 {
-	
+	shiita = 0.0f;
+	changeProduction = 0;
 }
 
 Result::~Result()
@@ -31,6 +34,7 @@ int Result::Init()
 	bugIcon[0] = LoadGraph("assets/images/UI/CicadaIcon.PNG");
 	bugIcon[1] = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
 	bugIcon[2] = LoadGraph("assets/images/UI/GrasshopperIcon.PNG");
+	netImage = LoadGraph("assets/images/Player/BugNet.PNG");
 
 	ResultBGM = LoadSoundMem("assets/Audio/Result.wav");
 	ChoiceSE3 = LoadSoundMem("assets/Audio/AS_865704_8bitな選択音.wav");
@@ -44,8 +48,6 @@ int Result::Init()
 		return FALSE;
 	}
 	select_x, pressed = 0;
-	time = 0.0f;
-	time_rug = 0.5f;
 
 	PlaySoundMem(ResultBGM, DX_PLAYTYPE_LOOP);
 
@@ -96,32 +98,41 @@ int Result::Init()
 		return FALSE;
 	}
 
+	shiita = 0.0f;
+	changeProduction = 0;
+
+	Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT });
+	Camera::SetScreenRatioSize(0.0f);
+
 	return TRUE;
 }
 
 eSceneType Result::Update(float delta_second)
 {
-	time += delta_second;
+	switch (changeProduction)
+	{
+	case 0:	// =========================================================================入る演出
 
-	if (pressed == FALSE)
-	{
-		time_rug += delta_second;
-	}
-	if (time >= time_rug)
-	{
-		switch (select_x)
+		shiita += 1.5f * delta_second;
+
+		if (shiita > 1.0f)
 		{
-		case 0:
-			return eTitle;
-			break;
-		case 1:
-			return eRanking;
-			break;
-		}
-	}
+			shiita = 1.0f; // 行き過ぎ防止
 
-	if (pressed == 0)
-	{
+			changeProduction++;
+		}
+
+		//ジャンプの移動処理
+		{
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT * 1.0f / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / -6.0f + (D_WIN_WIDTH * 2.0f / 3.0f) * shiita,
+				D_WIN_HEIGHT + (D_WIN_HEIGHT / -2.0f) * shiita - height });
+		}
+		Camera::SetScreenRatioSize(shiita * shiita);
+
+		break;
+	case 1:	// ============================================================================選択
+
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
 		{
 			PlaySoundMem(ChoiceSE3, DX_PLAYTYPE_BACK);
@@ -151,8 +162,67 @@ eSceneType Result::Update(float delta_second)
 		{
 			PlaySoundMem(DecisionSE3, DX_PLAYTYPE_BACK);
 			StopSoundMem(ResultBGM);
+
+			changeProduction++;
+			shiita = 0.0f;
+
 			pressed = TRUE;
 		}
+
+		break;
+	case 2:	// =======================================================次への演出
+
+		shiita += 2.0f * delta_second;
+
+		// 次へ
+		if (shiita > 0.6f)
+		{
+			changeProduction++;
+		}
+
+		{
+			//ジャンプの移動処理
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
+		}
+		Camera::SetScreenRatioSize(1.0f - shiita);
+
+		break;
+	case 3:
+
+		shiita += 2.0f * delta_second;
+
+		// 終了
+		if (shiita > 1.6f)
+		{
+			// 選択したシーンへ遷移
+			switch (select_x)
+			{
+			case 0:
+				return eTitle;
+				break;
+			case 1:
+				return eRanking;
+				break;
+			}
+		}
+
+		if (shiita <= 1.0f)
+		{
+			//ジャンプの移動処理
+			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
+			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
+				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
+			Camera::SetScreenRatioSize(1.0f - shiita);
+		}
+		else
+		{
+			Camera::SetScreenLocation({ -10.0f, -10.0f });
+			Camera::SetScreenRatioSize(0.0f);
+		}
+
+		break;
 	}
 
 	return eResult;
@@ -161,7 +231,7 @@ eSceneType Result::Update(float delta_second)
 void Result::Draw()const
 {
 
-	DrawRotaGraph(640, 360, 1.0, 0.0, back_ground, TRUE);
+	Camera::DrawGraph({ 640, 360 }, 1.0, 1.0, 0.0, back_ground, TRUE);
 
 	float selectSize = 0.84f;
 	float notSelectSize = 0.7f;
@@ -217,4 +287,15 @@ void Result::Draw()const
 	}
 	Camera::DrawString({ 400, 250 }, 100, GetColor(255,255,255), "合計　%d匹", p.point[3]);
 
+	Camera::Draw();
+
+	if (changeProduction == 3)
+	{
+		Vector2D location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 750.0f };
+		float angle = 0.5f - (shiita - 0.6f) * 1.5f;
+		angle *= DX_PI_F;
+		location.x += sinf(angle) * 500.0f;
+		location.y -= cosf(angle) * 500.0f;
+		DrawRotaGraphF(location.x, location.y, 15.0f, angle, netImage, true);
+	}
 }

@@ -9,15 +9,19 @@ private:
 	static int Titlebgm;
 	static int ChoiceSE;
 	static int DecisionSE;
-private:
+	
 	static int back_ground;
 	static int title_logo;
+
+	static int netImage;
+
 	static int select_x;
 	static int select_y;
 	static int pressed;
-	static float time;
-	static float time_rug;
+
 	float shiita;
+	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o
+
 private:
 	struct b
 	{

@@ -501,7 +501,7 @@ void InGameDraw(void)
 		break;
 	}
 
-	
+	Camera::Draw();
 }
 
 Vector2D FindNearestTree(Vector2D location)

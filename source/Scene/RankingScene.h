@@ -10,8 +10,6 @@ class Ranking
 private:
 	int select_x;
 	int pressed;
-	float time;
-	float time_rug;
 private:
 	int ranking[MAX_RANK];
 private:
@@ -19,6 +17,9 @@ private:
 	int Choicebgm2;
 	int DecisionSE2;
 	int back_ground;
+
+	static int netImage;
+
 	struct b
 	{
 		int newtral;
@@ -26,6 +27,10 @@ private:
 		int pressed;
 	};
 	b b;
+
+	float shiita;
+	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o
+
 public:
 	Ranking();
 	~Ranking();

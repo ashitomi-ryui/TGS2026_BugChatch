@@ -8,14 +8,15 @@ class Help
 private:
 	int select_x;
 	int pressed;
-	float time;
-	float time_rug;
 private:
 	int ChoiceSE2;
 	int DecisionSE2;
 	int HelpBGM;
 	int back_ground;
 	int controller;
+
+	static int netImage;
+
 	struct b
 	{
 		int newtral;
@@ -23,6 +24,10 @@ private:
 		int pressed;
 	};
 	b b;
+
+	float shiita;
+	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o
+
 public:
 	Help();
 	~Help();
