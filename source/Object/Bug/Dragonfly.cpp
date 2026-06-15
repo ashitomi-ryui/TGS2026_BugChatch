@@ -53,6 +53,12 @@ void Dragonfly::Update(float delta)
 	// 出現しているなら
 	if (m_isAppearance)
 	{
+		// 木の裏にいる
+		if (m_isBack)
+		{
+			PutInFront();
+		}
+
 		// 逃げているなら
 		if (m_isEscape)
 		{
@@ -101,6 +107,8 @@ void Dragonfly::Update(float delta)
 			m_isAppearance = false;
 			// 遷移時間を1.0f秒にする
 			m_transitionTime = 1.0f;
+
+			SetEffect(m_location,0xffff00);
 		}
 	}
 	else
@@ -190,8 +198,14 @@ void Dragonfly::Spawn()
 	location.x += Random::GetRand((D_LEAF_WIDTH / 2.0f), -(D_LEAF_WIDTH / 4.0f));
 	location.y += Random::GetRand((D_LEAF_HEIGHT / 4.0f), -(D_LEAF_HEIGHT / 4.0f));
 	
+	// 高さ
+	m_height = 25.0f * D_OBJECT_SIZE_RATIO;
+
 	// スポーン
 	Set(location);
+
+	m_isBack = true;
+	m_state = eMove;
 }
 
 void Dragonfly::ReSpawn(float delta)
@@ -267,6 +281,8 @@ void Dragonfly::Animation(float delta)
 		{
 			m_animTime = 0.0f;
 			m_animCount = (m_animCount + 1) % 2;
+
+			m_height = 75.0f * D_OBJECT_SIZE_RATIO;
 		}
 	}
 	// 逃げていないなら
@@ -277,6 +293,8 @@ void Dragonfly::Animation(float delta)
 		case eStand:
 			// 画像の切り替え
 			m_animCount = 0;
+
+			m_height = 25.0f * D_OBJECT_SIZE_RATIO;
 
 			break;
 		case eMove:
@@ -295,6 +313,8 @@ void Dragonfly::Animation(float delta)
 				}
 			}
 
+			m_height = 75.0f * D_OBJECT_SIZE_RATIO;
+
 			break;
 		case ePanic:
 			// 画像の切り替え
@@ -303,6 +323,8 @@ void Dragonfly::Animation(float delta)
 				m_animTime = 0.0f;
 				m_animCount = (m_animCount + 1) % 2;
 			}
+
+			m_height = 75.0f * D_OBJECT_SIZE_RATIO;
 
 			break;
 		}
@@ -673,3 +695,16 @@ void Dragonfly::TransitionToEscape()
 	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 }
 
+void Dragonfly::PutInFront()
+{
+	Vector2D treeLocation = FindNearestTree(m_location);
+
+	// その木から離れたら、前面に置く
+	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
+		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
+		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
+		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
+	{
+		m_isBack = false;
+	}
+}
