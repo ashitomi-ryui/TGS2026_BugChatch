@@ -100,4 +100,9 @@ public:
 	/// “¦‚°ó‘Ô‚Ö‚Ì‘JˆÚ
 	/// </summary>
 	void TransitionToEscape();
+
+	/// <summary>
+	/// ‘O–Ê‚É’u‚­
+	/// </summary>
+	void PutInFront();
 };
