@@ -1,6 +1,7 @@
 #pragma once
 
 #include"SceneType.h"
+#include"../Object/Cage.h"
 #include"../Utilitys/Input.h"
 #include"../Object/Bug/Bug.h"
 #include"../Object/Bug/Cicada.h"
@@ -39,14 +40,14 @@ private:
 	b b;
 	rank_b rank_b;
 private:
-	struct point
+	static struct point
 	{
 		int point[DISPLAY_LIMIT];
 		int size[DISPLAY_LIMIT];
 	};
 	static int divisor[DISPLAY_LIMIT];
 	static int display[DISPLAY_LIMIT][DISPLAY_LIMIT];
-	point p;
+	static point p;
 
 	bool isRankIn;
 	float colorHue;	// Ô0`—Î1`Â2`Ô3
@@ -63,6 +64,12 @@ public:
 	int Init();
 	eSceneType Update(float delta_second);
 	void Draw()const;
+
+	/// <summary>
+	/// ƒ|ƒCƒ“ƒg‚ğ’Ç‰Á‚·‚é
+	/// </summary>
+	/// <param name="type">’‚Ìí—Ş</param>
+	static void AddPoint(Cage::Type type);
 };
 
 

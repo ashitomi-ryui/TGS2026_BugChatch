@@ -1,22 +1,30 @@
 #include "Cage.h"
 
 #include <DxLib.h>
-#include"Bug/Bug.h"
-#include"../Utilitys/Camera.h"
-#include"../Utilitys/Random.h"
+#include "Bug/Bug.h"
+#include "Player.h"
+#include "../Utilitys/Camera.h"
+#include "../Utilitys/Random.h"
+#include "../Scene/SceneType.h"
+#include "../Scene/ResultScene.h"
 
+Player* Cage::targetPlayer;
 int Cage::oldCicada = 0;
 int Cage::oldDragonfly = 0;
 int Cage::oldGrasshopper = 0;
-Vector2D Cage::location = { 100.0f * D_CAGE_RATIO, 75.0f * D_CAGE_RATIO };
+Vector2D Cage::location = {};
 
+int Cage::bugId = 0;
+bool Cage::isRemovedAll = false;
+
+float Cage::time = 0.0f;
 float Cage::animTime = 0.0f;
 int Cage::animCount = 6;
 
 int Cage::cicadaImage = -1;
 int Cage::dragonflyImage[2] = {};
 int Cage::grasshopperImage[4] = {};
-int Cage::cageImage[4] = {};
+int Cage::cageImage[2][4] = {};
 
 Cage bug[D_CAGE_MAX];	// かご内の虫
 
@@ -27,6 +35,7 @@ Cage::Cage()
 	m_location = {};
 	m_moveSpeed = {};
 	m_angle = 0.0f;
+	m_theta = 0.0f;
 
 	m_state = eJoin;
 
@@ -39,217 +48,453 @@ Cage::~Cage()
 {
 }
 
-void Cage::Init()
+void Cage::Init(eSceneType sceneType)
 {
-	oldCicada = 0;
-	oldDragonfly = 0;
-	oldGrasshopper = 0;
-
+	time = 0.0f;
 	animTime = 0.0f;
-	animCount = 6;
 
-	cicadaImage = LoadGraph("assets/images/Bugs/Cicada/Cicada.PNG");
-
-	dragonflyImage[0] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly1.PNG");
-	dragonflyImage[1] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly2.PNG");
-
-	grasshopperImage[0] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper1.PNG");
-	grasshopperImage[1] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper2.PNG");
-	grasshopperImage[2] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper3.PNG");
-	grasshopperImage[3] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper4.PNG");
-
-	cageImage[0] = LoadGraph("assets/images/OtherObjects/Cage/Cage1.PNG");
-	cageImage[1] = LoadGraph("assets/images/OtherObjects/Cage/Cage2.PNG");
-	cageImage[2] = LoadGraph("assets/images/OtherObjects/Cage/Cage3.PNG");
-	cageImage[3] = LoadGraph("assets/images/OtherObjects/Cage/Cage4.PNG");
-
-	for (int id = 0;id < D_CAGE_MAX;id++)
+	switch(sceneType)
 	{
-		bug[id].BugInit();
-	}
-}
+	case eInGame:
 
-void Cage::Update(float delta)
-{
-	animTime += delta;
-	
-	if (animTime >= 0.25f)
-	{
-		animCount++;
-		animTime = 0.0f;
-	}
+		oldCicada = 0;
+		oldDragonfly = 0;
+		oldGrasshopper = 0;
 
+		location = { 80.0f * D_CAGE_RATIO, 80.0f * D_CAGE_RATIO };
 
-	int cicadaCount = Bug::GetCicadaCount();
-	int dragonflyCount = Bug::GetDragonflyCount();
-	int grasshopperCount = Bug::GetGrasshopperCount();
+		animCount = 6;
 
-	if (cicadaCount > oldCicada)
-	{
-		for (int i = 0;i < cicadaCount - oldCicada;i++)
+		cicadaImage = LoadGraph("assets/images/Bugs/Cicada/Cicada.PNG");
+
+		dragonflyImage[0] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly1.PNG");
+		dragonflyImage[1] = LoadGraph("assets/images/Bugs/Dragonfly/Dragonfly2.PNG");
+
+		grasshopperImage[0] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper1.PNG");
+		grasshopperImage[1] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper2.PNG");
+		grasshopperImage[2] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper3.PNG");
+		grasshopperImage[3] = LoadGraph("assets/images/Bugs/Grasshopper/Grasshopper4.PNG");
+
+		cageImage[0][0] = LoadGraph("assets/images/OtherObjects/Cage/Cage1.PNG");
+		cageImage[0][1] = LoadGraph("assets/images/OtherObjects/Cage/Cage2.PNG");
+		cageImage[0][2] = LoadGraph("assets/images/OtherObjects/Cage/Cage3.PNG");
+		cageImage[0][3] = LoadGraph("assets/images/OtherObjects/Cage/Cage4.PNG");
+
+		cageImage[1][0] = LoadGraph("assets/images/OtherObjects/Cage/Cage5.PNG");
+		cageImage[1][1] = LoadGraph("assets/images/OtherObjects/Cage/Cage6.PNG");
+		cageImage[1][2] = LoadGraph("assets/images/OtherObjects/Cage/Cage7.PNG");
+		cageImage[1][3] = LoadGraph("assets/images/OtherObjects/Cage/Cage8.PNG");
+
+		break;
+	case eResult:
+
+		animCount = 0;
+
+		location = { D_WIN_WIDTH / 2.0f, 600.0f };
+
+		// 最後に入った虫のIDから始める
+		for (int id = D_CAGE_MAX - 1;id >= 0;id--)
 		{
-			for (int j = 0;j < D_CAGE_MAX;j++)
+			if (bug[id].GetDisplay())
 			{
-				if (!bug[j].GetDisplay())
-				{
-					bug[j].Add(eCicada);
-					break;
-				}
+				bugId = id;
+				break;
 			}
 		}
-	}
-	if (dragonflyCount > oldDragonfly)
-	{
-		for (int i = 0;i < dragonflyCount - oldDragonfly;i++)
-		{
-			for (int j = 0;j < D_CAGE_MAX;j++)
-			{
-				if (!bug[j].GetDisplay())
-				{
-					bug[j].Add(eDragonfly);
-					break;
-				}
-			}
-		}
-	}
-	if (grasshopperCount > oldGrasshopper)
-	{
-		for (int i = 0;i < grasshopperCount - oldGrasshopper;i++)
-		{
-			for (int j = 0;j < D_CAGE_MAX;j++)
-			{
-				if (!bug[j].GetDisplay())
-				{
-					bug[j].Add(eGrasshopper);
-					break;
-				}
-			}
-		}
+
+		isRemovedAll = false;
+
+		break;
 	}
 
 	for (int id = 0;id < D_CAGE_MAX;id++)
 	{
-		bug[id].BugUpdate(delta);
-	}
-
-	oldCicada = cicadaCount;
-	oldDragonfly = dragonflyCount;
-	oldGrasshopper = grasshopperCount;
-}
-
-void Cage::Draw()
-{
-	int num = 0;
-
-	switch (animCount)
-	{
-	case 0:
-	case 5:
-		num = 1;
-		break;
-	case 1:
-	case 4:
-		num = 2;
-		break;
-	case 2:
-	case 3:
-		num = 3;
-		break;
-	default:
-		num = 0;
-		break;
-	}
-
-	Camera::DrawGraph(location, 3.0f * D_CAGE_RATIO, 3.0f * D_CAGE_RATIO, 0.0f, cageImage[num]);
-
-	for (int id = 0;id < D_CAGE_MAX;id++)
-	{
-		bug[id].BugDraw();
+		bug[id].BugInit(sceneType);	// かご内の虫の初期化
 	}
 }
 
-void Cage::BugInit()
+void Cage::Update(eSceneType sceneType, float delta)
 {
-	m_display = false;
-	m_location = { 0.0f, -100.0f * D_CAGE_RATIO };
+	switch (sceneType)
+	{
+	case eInGame:
+
+		animTime += delta;
+		if (animCount == 2)
+		{
+			if (animTime >= 1.0f)
+			{
+				animCount++;
+				animTime = 0.0f;
+			}
+		}
+		else
+		{
+			if (animTime >= 0.25f)
+			{
+				animCount++;
+				animTime = 0.0f;
+			}
+		}
+		
+		{
+			int cicadaCount = Bug::GetCicadaCount();
+			int dragonflyCount = Bug::GetDragonflyCount();
+			int grasshopperCount = Bug::GetGrasshopperCount();
+
+			// セミの数が前のセミの数より大きいなら
+			if (cicadaCount > oldCicada)
+			{
+				// このフレームで捕ったセミの数繰り返す
+				for (int i = 0;i < cicadaCount - oldCicada;i++)
+				{
+					// 虫の最大数繰り返す
+					for (int j = 0;j < D_CAGE_MAX;j++)
+					{
+						// 非表示なら
+						if (!bug[j].GetDisplay())
+						{
+							// セミを追加
+							bug[j].Add(eCicada);
+							break;
+						}
+					}
+				}
+			}
+			// トンボの数が前のトンボの数より大きいなら
+			if (dragonflyCount > oldDragonfly)
+			{
+				// このフレームで捕ったトンボの数繰り返す
+				for (int i = 0;i < dragonflyCount - oldDragonfly;i++)
+				{
+					// 虫の最大数繰り返す
+					for (int j = 0;j < D_CAGE_MAX;j++)
+					{
+						// 非表示なら
+						if (!bug[j].GetDisplay())
+						{
+							// トンボを追加
+							bug[j].Add(eDragonfly);
+							break;
+						}
+					}
+				}
+			}
+			// バッタの数が前のバッタの数より大きいなら
+			if (grasshopperCount > oldGrasshopper)
+			{
+				// このフレームで捕ったバッタの数繰り返す
+				for (int i = 0;i < grasshopperCount - oldGrasshopper;i++)
+				{
+					// 虫の最大数繰り返す
+					for (int j = 0;j < D_CAGE_MAX;j++)
+					{
+						// 非表示なら
+						if (!bug[j].GetDisplay())
+						{
+							// バッタを追加
+							bug[j].Add(eGrasshopper);
+							break;
+						}
+					}
+				}
+			}
+
+			for (int id = 0;id < D_CAGE_MAX;id++)
+			{
+				bug[id].BugUpdate(sceneType, delta);	// かご内の虫の更新
+			}
+
+			// 前の数を今の数にする
+			oldCicada = cicadaCount;
+			oldDragonfly = dragonflyCount;
+			oldGrasshopper = grasshopperCount;
+		}
+
+		break;
+	case eResult:
+
+		// アニメーションカウントが4より少ないとき
+		if (animCount < 3)
+		{
+			animTime += delta;
+			if (animTime >= 0.25f)
+			{
+				animCount++;
+				animTime = 0.0f;
+			}
+		}
+		// アニメーションカウントが4以上のとき
+		else
+		{
+			time += delta;
+			// 虫のIDの始まりが0より大きいとき
+			if (bugId > 0)
+			{
+				if (time >= 0.1f)
+				{
+					bugId--;
+					time = 0.0f;
+				}
+			}
+			// 虫のIDの始まりが0のとき
+			else
+			{
+				location.y += 300.0f * delta;
+				if (location.y >= D_WIN_HEIGHT + 300.0f)
+				{
+					// 全て出した
+					isRemovedAll = true;
+				}
+			}
+
+			for (int id = bugId;id < D_CAGE_MAX;id++)
+			{
+				bug[id].BugUpdate(sceneType, delta);	// かご内の虫の更新
+			}
+		}
+
+		// Aボタンを押したら
+		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)
+		{
+			// 全て出した
+			isRemovedAll = true;
+		}
+
+		break;
+	}
+}
+
+void Cage::Draw(eSceneType sceneType, unsigned int color)
+{
+	switch (sceneType)
+	{
+	case eInGame:
+
+	{
+		int num = 0;	// 画像番号
+
+		// 空けて閉じるアニメーション
+		switch (animCount)
+		{
+		case 0:
+		case 4:
+			num = 1;
+			break;
+		case 1:
+		case 3:
+			num = 2;
+			break;
+		case 2:
+			num = 3;
+			break;
+		default:
+			num = 0;
+			break;
+		}
+
+		// かごを表示
+		Camera::DrawGraph(location, 3.0f * D_CAGE_RATIO, 3.0f * D_CAGE_RATIO, 0.0f, cageImage[0][num], false, false, color);
+
+		for (int id = 0;id < D_CAGE_MAX;id++)
+		{
+			bug[id].BugDraw(sceneType, color);	// かご内の虫の描画
+		}
+	}
+
+	break;
+	case eResult:
+
+		// かごを表示
+		Camera::DrawGraph(location, 4.5f, 4.5f, 0.0f, cageImage[0][animCount]);
+
+		for (int id = 0;id < D_CAGE_MAX;id++)
+		{
+			bug[id].BugDraw(sceneType);	// かご内の虫の描画
+		}
+
+		// かごの外装を表示
+		Camera::DrawGraph(location, 4.5f, 4.5f, 0.0f, cageImage[1][animCount]);
+
+		break;
+	}
+
+}
+
+void Cage::BugInit(eSceneType sceneType)
+{
 	m_moveSpeed = {};
-	m_angle = 1.0f * DX_PI_F;
-
-	m_state = eJoin;
 
 	m_time = 0.0f;
 	m_animTime = 0.0f;
 	m_animCount = 0;
+
+	switch (sceneType)
+	{
+	case eInGame:
+
+		m_display = false;
+		m_location = { Random::GetRand(-15.0f, 15.0f), -100.0f * D_CAGE_RATIO };
+		m_angle = 1.0f * DX_PI_F;
+
+		m_state = eJoin;
+
+		break;
+	case eResult:
+
+		m_location = location;
+		m_angle = 0.0f;
+		m_theta = 0.0f;
+
+		break;
+	}
 }
 
-void Cage::BugUpdate(float delta)
+void Cage::BugUpdate(eSceneType sceneType, float delta)
 {
 	if (m_display)
 	{
-		m_time -= delta;
-		m_animTime += delta;
+		switch (sceneType)
+		{
+		case eInGame:
 
-		switch (m_state)
-		{
-		case eJoin:
-			Join(delta);
-			break;
-		case eStand:
-			Stand(delta);
-			break;
-		case eMove:
-			Move(delta);
-			break;
-		}
+			m_time -= delta;
+			m_animTime += delta;
 
-		// 移動
-		m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
+			// 状態によって処理を変える
+			switch (m_state)
+			{
+			case eJoin:
+				Join(delta);
+				break;
+			case eStand:
+				Stand(delta);
+				break;
+			case eMove:
+				Move(delta);
+				break;
+			}
 
-		// 移動制限
-		if (m_location.x < -D_CAGE_WIDTH)
-		{
-			m_location.x = -D_CAGE_WIDTH;
-			m_moveSpeed.x = 0.0f;
-		}
-		else if (m_location.x > D_CAGE_WIDTH)
-		{
-			m_location.x = D_CAGE_WIDTH;
-			m_moveSpeed.x = 0.0f;
-		}
-		if (m_location.y < -D_CAGE_HEIGHT && m_state != eJoin)
-		{
-			m_location.y = -D_CAGE_HEIGHT;
-			m_moveSpeed.y = 0.0f;
-		}
-		else if (m_location.y > D_CAGE_HEIGHT)
-		{
-			m_location.y = D_CAGE_HEIGHT;
-			m_moveSpeed.y = 0.0f;
+			// 移動
+			m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
+
+			// 移動制限
+			if (m_location.x < -D_CAGE_WIDTH)
+			{
+				m_location.x = -D_CAGE_WIDTH;
+				m_moveSpeed.x = 0.0f;
+			}
+			else if (m_location.x > D_CAGE_WIDTH)
+			{
+				m_location.x = D_CAGE_WIDTH;
+				m_moveSpeed.x = 0.0f;
+			}
+			if (m_location.y < -D_CAGE_HEIGHT && m_state != eJoin)
+			{
+				m_location.y = -D_CAGE_HEIGHT;
+				m_moveSpeed.y = 0.0f;
+			}
+			else if (m_location.y > D_CAGE_HEIGHT)
+			{
+				m_location.y = D_CAGE_HEIGHT;
+				m_moveSpeed.y = 0.0f;
+			}
+
+			break;
+		case eResult:
+
+			m_theta += 1.0f * delta;
+			if (m_theta > 1.0f || isRemovedAll)
+			{
+				// ポイントを追加
+				Result::AddPoint(m_type);
+				// 非表示
+				m_display = false;
+
+				break;
+			}
+
+			Vector2D start = { D_WIN_WIDTH / 2.0f, 600.0f };
+			Vector2D goal;
+			float s = 0.0f;
+			switch (m_type)
+			{
+			case eCicada:
+				s = 0.0f;
+				break;
+			case eDragonfly:
+				s = 1.0f;
+				break;
+			case eGrasshopper:
+				s = 2.0f;
+				break;
+			}
+			goal = { 200.0f + (s * 320.0f) , 150.0f };
+
+			float top = 100.0f;
+			float height = sinf(m_theta * DX_PI_F) * top;
+			// 移動処理
+			m_location.x = start.x + (goal.x - start.x) * m_theta;
+			m_location.y = start.y + (goal.y - start.y) * m_theta - height;
+
+			break;
 		}
 	}
 }
 
-void Cage::BugDraw() const
+void Cage::BugDraw(eSceneType sceneType, unsigned int color) const
 {
 	if (m_display)
 	{
-		Vector2D loc = {};
-		loc.x = location.x + m_location.x;
-		loc.y = location.y + m_location.y;
-		float angle = m_angle;
-
-		switch (m_type)
+		switch (sceneType)
 		{
-		case eCicada:
-			Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, cicadaImage);
+		case eInGame:
+
+		{
+			// 座標をかごに合わせる
+			Vector2D loc = {};
+			loc.x = location.x + m_location.x;
+			loc.y = location.y + m_location.y;
+			float angle = m_angle;
+
+			switch (m_type)
+			{
+			case eCicada:
+				// セミを表示
+				Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, cicadaImage, false, false, color);
+				break;
+			case eDragonfly:
+				// トンボを表示
+				angle += 0.70f * DX_PI_F;
+				Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, dragonflyImage[m_animCount], false, false, color);
+				break;
+			case eGrasshopper:
+				// バッタを表示
+				angle += 0.6f * DX_PI_F;
+				Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, grasshopperImage[m_animCount], false, false, color);
+				break;
+			}
+		}
+
 			break;
-		case eDragonfly:
-			angle += 0.70f * DX_PI_F;
-			Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, dragonflyImage[m_animCount]);
-			break;
-		case eGrasshopper:
-			angle += 0.6f * DX_PI_F;
-			Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, grasshopperImage[m_animCount]);
+		case eResult:
+
+			switch (m_type)
+			{
+			case eCicada:
+				// セミを表示
+				Camera::DrawGraph(m_location, 3.0f, 3.0f, 0.0f, cicadaImage);
+				break;
+			case eDragonfly:
+				// トンボを表示
+				Camera::DrawGraph(m_location, 3.0f, 3.0f, 0.0f, dragonflyImage[0]);
+				break;
+			case eGrasshopper:
+				// バッタを表示
+				Camera::DrawGraph(m_location, 3.0f, 3.0f, 0.0f, grasshopperImage[0]);
+				break;
+			}
+
 			break;
 		}
 	}
@@ -260,16 +505,15 @@ void Cage::Add(Type type)
 	m_type = type;
 	m_display = true;
 
+	// かごを開ける
 	animTime = 0.0f;
-
 	switch (animCount)
 	{
 	case 1:
-	case 4:
+	case 3:
 		animCount = 1;
 		break;
 	case 2:
-	case 3:
 		animCount = 2;
 		break;
 	default:
@@ -290,6 +534,7 @@ void Cage::Join(float delta)
 		break;
 	}
 
+	// 落とす
 	m_moveSpeed.y += 100.0f * delta * D_CAGE_RATIO;
 
 	// 速度制限
@@ -302,9 +547,12 @@ void Cage::Join(float delta)
 		m_moveSpeed.y -= cosf(shiita) * len;
 	}
 
+	// 底についたら
 	if (m_location.y + m_moveSpeed.y * delta >= D_CAGE_HEIGHT)
 	{
+		// 状態を待機にする
 		m_state = eStand;
+		// 遷移時間を0にする
 		m_time = 0.0f;
 	}
 }
@@ -321,17 +569,22 @@ void Cage::Stand(float delta)
 		break;
 	}
 
+	// 遷移時間が0以下なら
 	if (m_time <= 0.0f)
 	{
+		// 向きをランダムにする
 		m_angle = Random::GetRand(0.0f, 2.0f, 0.125f) * DX_PI_F;
 
+		// 状態を動くにする
 		m_state = eMove;
+		// 遷移する時間を0～5秒のランダムにする
 		m_time = Random::GetRand(0.0f, 5.0f, 0.1f);
 	}
 }
 
 void Cage::Move(float delta)
 {
+	// アニメーション
 	switch (m_type)
 	{
 	case eDragonfly:
@@ -352,10 +605,13 @@ void Cage::Move(float delta)
 
 	if (m_time <= 0.0f)
 	{
+		// 状態を待機にする
 		m_state = eStand;
+		// 遷移する時間を1～10秒のランダムにする
 		m_time = Random::GetRand(1.0f, 10.0f, 0.1f);
 	}
 
+	// 向きに合わせて移動する
 	m_moveSpeed.x += sinf(m_angle) * 100.0f * D_CAGE_RATIO;
 	m_moveSpeed.y -= cosf(m_angle) * 100.0f * D_CAGE_RATIO;
 
@@ -373,4 +629,9 @@ void Cage::Move(float delta)
 bool Cage::GetDisplay() const
 {
 	return m_display;
+}
+
+bool Cage::GetRemovedAll()
+{
+	return isRemovedAll;
 }

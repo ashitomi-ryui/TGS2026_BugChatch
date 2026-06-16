@@ -263,20 +263,25 @@ void Camera::DrawCircle(Vector2D location, float radius, unsigned int Color, boo
 	endAngle *= 50.0f;
 
 	// カラーコードをRGBに分ける
-	int r, g, b;
-	Color %= 0x1000000;
+	int a, r, g, b;
+	a = Color >> 24;
+	Color -= a << 24;
 	r = Color >> 16;
 	Color -= r << 16;
 	g = Color >> 8;
 	Color -= g << 8;
 	b = Color;
+	if (a == 0)
+		a = 0xff;
 
 	// 色を変える
 	SetDrawBright(r, g, b);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, a);
 
 	DxLib::DrawCircleGaugeF(location.x, location.y, (double)endAngle, circle, (double)startAngle, (double)scale);
 
 	SetDrawBright(255, 255, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xff);
 }
 
 void Camera::DrawCircleW(Vector2D location, float radius, unsigned int Color, bool FillFlag, float yRatio, float startAngle, float endAngle)
@@ -312,16 +317,20 @@ void Camera::DrawGraph(Vector2D location, double ExRateX, double ExRateY, double
 	ExRateY *= m_screenRatioSize;
 
 	// カラーコードをRGBに分ける
-	int r, g, b;
-	Color %= 0x1000000;
+	int a, r, g, b;
+	a = Color >> 24;
+	Color -= a << 24;
 	r = Color >> 16;
 	Color -= r << 16;
 	g = Color >> 8;
 	Color -= g << 8;
 	b = Color;
+	if (a == 0)
+		a = 0xff;
 
 	// 色を変える
 	SetDrawBright(r, g, b);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, a);
 
 	if (ExRateX == ExRateY)
 	{
@@ -347,6 +356,7 @@ void Camera::DrawGraph(Vector2D location, double ExRateX, double ExRateY, double
 	}
 
 	SetDrawBright(255, 255, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xff);
 }
 
 void Camera::DrawGraphW(Vector2D location, double ExRateX, double ExRateY, double Angle, int GrHandle, bool ReverseXFlag, bool ReverseYFlag, unsigned int Color)
@@ -372,16 +382,20 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 	size *= m_screenRatioSize;
 
 	// カラーコードをRGBに分ける
-	int r, g, b;
-	Color %= 0x1000000;
+	int a, r, g, b;
+	a = Color >> 24;
+	Color -= a << 24;
 	r = Color >> 16;
 	Color -= r << 16;
 	g = Color >> 8;
 	Color -= g << 8;
 	b = Color;
+	if (a == 0)
+		a = 0xff;
 
 	// 色を変える
 	SetDrawBright(r, g, b);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, a);
 
 	float x = 0.0f;
 	int y = 0;
@@ -574,6 +588,7 @@ void Camera::DrawString(Vector2D location, int size, unsigned int Color, const T
 	}
 
 	SetDrawBright(255, 255, 255);
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xff);
 }
 
 void Camera::DrawStringW(Vector2D location, int size, unsigned int Color, const TCHAR * FormatString, ...)

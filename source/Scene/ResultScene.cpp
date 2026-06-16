@@ -1,6 +1,7 @@
 #include<DxLib.h>
 #include"ResultScene.h"
 #include"RankingScene.h"
+#include"../Object/Cage.h"
 #include"../Utilitys/Camera.h"
 
 int Result::netImage = -1;
@@ -10,6 +11,8 @@ int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
 
 Bug bug;
 Ranking result;
+
+Result::point Result::p = {};
 
 Result::Result()
 {
@@ -56,10 +59,10 @@ int Result::Init()
 
 	PlaySoundMem(ResultBGM, DX_PLAYTYPE_LOOP);
 
-	p.point[0] = bug.GetCicadaCount();
-	p.point[1] = bug.GetDragonflyCount();
-	p.point[2] = bug.GetGrasshopperCount();
-	p.point[3] = p.point[0] + p.point[1] + p.point[2]; 
+	p.point[0] = 0;
+	p.point[1] = 0;
+	p.point[2] = 0;
+	p.point[3] = 0; 
 
 	for (int i = 0; i < DISPLAY_LIMIT; i++)
 	{
@@ -110,6 +113,9 @@ int Result::Init()
 	{
 		isRankIn = false;
 	}
+
+	Cage::Init(eResult);
+
 	colorHue = 0.0f;
 
 	timer = 0.0f;
@@ -119,6 +125,8 @@ int Result::Init()
 
 	Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT });
 	Camera::SetScreenRatioSize(0.0f);
+
+	select_x = -1;
 
 	return TRUE;
 }
@@ -148,7 +156,23 @@ eSceneType Result::Update(float delta_second)
 		Camera::SetScreenRatioSize(shiita * shiita);
 
 		break;
-	case 1:
+	case 1:	// ============================================================================集計
+
+		Cage::Update(eResult, delta_second);
+
+		if (Cage::GetRemovedAll())
+		{
+			p.point[0] = bug.GetCicadaCount();
+			p.point[1] = bug.GetDragonflyCount();
+			p.point[2] = bug.GetGrasshopperCount();
+			p.point[3] = p.point[0] + p.point[1] + p.point[2];
+
+			changeProduction++;
+		}
+
+		break;
+	case 2:	// ============================================================================ランクイン
+
 		if (isRankIn)
 		{
 			timer += delta_second;
@@ -160,10 +184,12 @@ eSceneType Result::Update(float delta_second)
 		}
 		else
 		{
+			select_x = 0;
 			changeProduction++;
 		}
+
 		break;
-	case 2:	// ============================================================================選択
+	case 3:	// ============================================================================選択
 
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
 		{
@@ -202,7 +228,7 @@ eSceneType Result::Update(float delta_second)
 		}
 
 		break;
-	case 3:	// =======================================================次への演出
+	case 4:	// =======================================================次への演出
 
 		shiita += 2.0f * delta_second;
 
@@ -221,7 +247,7 @@ eSceneType Result::Update(float delta_second)
 		Camera::SetScreenRatioSize(1.0f - shiita);
 
 		break;
-	case 4:
+	case 5:
 
 		shiita += 2.0f * delta_second;
 
@@ -281,81 +307,93 @@ void Result::Draw()const
 	Vector2D startLoc = { 300.0f, 600.0f };
 	Vector2D titleLoc = { 1000.0f, 600.0f };
 
-	if (select_x == 0)	//タイトルが選択されている場合
-	{
-		if (pressed == TRUE)	//ボタンが押されている場合
-		{
-			//ボタンを押された状態にする
-			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
-		}
-		else
-		{
-			//ボタンを押されていない状態にする
-			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
-		}
-		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "タイトル");
-	}
-	else
-	{
-		//通常サイズに戻す
-		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
-	}
-
-	if (select_x == 1)	//ランキングが選択されている場合
-	{
-		if (pressed == TRUE)
-		{
-			//ボタンを大きくする
-			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.pressed);
-		}
-		else
-		{
-			//ボタンを大きくする
-			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.select);
-		}
-	}
-	else
-	{
-		//通常サイズに戻す
-		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, rank_b.newtral);
-	}
-
 	for (int i = 0;i < 3;i++)
 	{
 		Camera::DrawGraph({ 200.0f + (i * 320.0f), 150.0f }, 3.0f, 3.0f, 0.0f, bugIcon[i]);
 		Camera::DrawString({ 220.0f + (i * 320.0f), 150.0f }, 75, GetColor(255, 255, 255), "　%d匹", p.point[i]);
 	}
-	Camera::DrawString({ 400, 250 }, 100, GetColor(255, 255, 255), "合計　%d匹", p.point[3]);
 
-
-	int r = 0, g = 0, b = 0;
-	if (colorHue < 1.0f)
+	if(changeProduction > 1)
 	{
-		r = (int)(((1.0f - fabsf(colorHue))) * 255.0f);
-	}
-	else if (colorHue > 2.0f)
-	{
-		r = (int)((1.0f - fabsf(colorHue - 3.0f)) * 255.0f);
-	}
-	if (colorHue > 0.0f && colorHue < 2.0f)
-	{
-		g = (int)((1.0f - fabsf(colorHue - 1.0f)) * 255.0f);
-	}
-	if (colorHue > 1.0f && colorHue < 3.0f)
-	{
-		b = (int)((1.0f - fabsf(colorHue - 2.0f)) * 255.0f);
+		Camera::DrawString({ 400, 250 }, 100, GetColor(255, 255, 255), "合計　%d匹", p.point[3]);
 	}
 
-	if(changeProduction > 1 && isRankIn)
 	{
-		Camera::DrawString({ 375, 375 }, 100, GetColor(r, g, b), "ランクイン！");
+		int r = 0, g = 0, b = 0;
+		if (colorHue < 1.0f)
+		{
+			r = (int)(((1.0f - fabsf(colorHue))) * 255.0f);
+		}
+		else if (colorHue > 2.0f)
+		{
+			r = (int)((1.0f - fabsf(colorHue - 3.0f)) * 255.0f);
+		}
+		if (colorHue > 0.0f && colorHue < 2.0f)
+		{
+			g = (int)((1.0f - fabsf(colorHue - 1.0f)) * 255.0f);
+		}
+		if (colorHue > 1.0f && colorHue < 3.0f)
+		{
+			b = (int)((1.0f - fabsf(colorHue - 2.0f)) * 255.0f);
+		}
+
+		if (changeProduction > 2 && isRankIn)
+		{
+			Camera::DrawString({ 375, 375 }, 100, GetColor(r, g, b), "ランクイン！");
+		}
 	}
-	
+
+	if(changeProduction > 1)
+	{
+		if (select_x == 0)	//タイトルが選択されている場合
+		{
+			if (pressed == TRUE)	//ボタンが押されている場合
+			{
+				//ボタンを押された状態にする
+				Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
+			}
+			else
+			{
+				//ボタンを押されていない状態にする
+				Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
+			}
+			Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "タイトル");
+		}
+		else
+		{
+			//通常サイズに戻す
+			Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
+			Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
+		}
+
+		if (select_x == 1)	//ランキングが選択されている場合
+		{
+			if (pressed == TRUE)
+			{
+				//ボタンを大きくする
+				Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.pressed);
+			}
+			else
+			{
+				//ボタンを大きくする
+				Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.select);
+			}
+		}
+		else
+		{
+			//通常サイズに戻す
+			Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, rank_b.newtral);
+		}
+	}
+
+	if(changeProduction < 2)
+	{
+		Cage::Draw(eResult);
+	}
 
 	Camera::Draw();
 
-	if (changeProduction == 4)
+	if (changeProduction == 5)
 	{
 		Vector2D location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 750.0f };
 		float angle = 0.5f - (shiita - 0.6f) * 1.5f;
@@ -363,5 +401,21 @@ void Result::Draw()const
 		location.x += sinf(angle) * 500.0f;
 		location.y -= cosf(angle) * 500.0f;
 		DrawRotaGraphF(location.x, location.y, 15.0f, angle, netImage, true);
+	}
+}
+
+void Result::AddPoint(Cage::Type type)
+{
+	switch (type)
+	{
+	case Cage::eCicada:
+		p.point[0]++;
+		break;
+	case Cage::eDragonfly:
+		p.point[1]++;
+		break;
+	case Cage::eGrasshopper:
+		p.point[2]++;
+		break;
 	}
 }

@@ -56,7 +56,7 @@ int InGameInit(void)//各プログラムの初期化
 	Cicada::Init();
 	Grasshopper::Init();
 	Dragonfly::Init();
-	Cage::Init();
+	Cage::Init(eInGame);
 
 	player.Init();
 	
@@ -317,6 +317,9 @@ eSceneType InGameUpdate(float delta_second)
 			}
 		}
 
+		// かごの更新
+		Cage::Update(eInGame, delta_second);
+
 		// 音再生・停止
 		Cicada::PlayAudio();
 
@@ -381,8 +384,6 @@ eSceneType InGameUpdate(float delta_second)
 	{
 		shadow.dragonfly[id].Set(dragonfly[id].GetLocation(), dragonfly[id].GetHeight(), dragonfly[id].GetIsAppearance(), dragonfly[id].GetIsBack());
 	}
-
-	Cage::Update(delta_second);
 
 	Camera::Update(player.GetPlayerLocation());	// カメラの更新
 
@@ -479,6 +480,16 @@ void InGameDraw(void)
 		effect[id].Draw();
 	}
 
+	unsigned int color = 0xffffff;
+	// UIがプレイヤーと重なったとき
+	Vector2D playerLocation = player.GetPlayerLocation();
+	if (playerLocation.x < 180.0f * D_CAGE_RATIO &&
+		playerLocation.y < 160.0f * D_CAGE_RATIO + 50.0f)
+	{
+		// 色を薄くする
+		color += 0x60000000;
+	}
+
 	switch(changeProduction)
 	{
 	case 3:
@@ -490,22 +501,26 @@ void InGameDraw(void)
 			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 120.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "スタート！");
 		}
 
-		// スコアの表示
-		Camera::DrawString({ 25,25 }, 40, GetColor(255, 255, 255), "のこり%d秒", 60 - (int)timer);
-		Camera::DrawString({ 75,75 }, 40, GetColor(255, 255, 255), "%d匹", get[0]);
-		Camera::DrawString({ 75,135 }, 40, GetColor(255, 255, 255), "%d匹", get[1]);
-		Camera::DrawString({ 75,195 }, 40, GetColor(255, 255, 255), "%d匹", get[2]);
+		Camera::DrawString({ 25.0f, 150.0f * D_CAGE_RATIO }, 50.0f, color, "のこり%d秒", 60 - (int)timer);
 
-		Camera::DrawGraph({ 25,75 }, 1.7, 1.7, 0.0, icon.cicada);
-		Camera::DrawGraph({ 25,135 }, 1.7, 1.7, 0.0, icon.dragonfly);
-		Camera::DrawGraph({ 25,195 }, 1.7, 1.7, 0.0, icon.grasshopper);
+		//// スコアの表示
+		//Camera::DrawString({ 75,75 }, 40, GetColor(255, 255, 255), "%d匹", get[0]);
+		//Camera::DrawString({ 75,135 }, 40, GetColor(255, 255, 255), "%d匹", get[1]);
+		//Camera::DrawString({ 75,195 }, 40, GetColor(255, 255, 255), "%d匹", get[2]);
+
+		//Camera::DrawGraph({ 25,75 }, 1.7, 1.7, 0.0, icon.cicada);
+		//Camera::DrawGraph({ 25,135 }, 1.7, 1.7, 0.0, icon.dragonfly);
+		//Camera::DrawGraph({ 25,195 }, 1.7, 1.7, 0.0, icon.grasshopper);
 		break;
 	case 5:
 		Camera::DrawString({ 465,260 }, 100, GetColor(255, 255, 255), "そこまで！");
 		break;
 	}
 
-	Cage::Draw();
+	if(changeProduction > 3)
+	{
+		Cage::Draw(eInGame, color);
+	}
 
 	Camera::Draw();
 }
