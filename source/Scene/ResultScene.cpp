@@ -13,6 +13,11 @@ Ranking result;
 
 Result::Result()
 {
+	isRankIn = false;
+	colorHue = 0.0f;
+
+	timer = 0.0f;
+
 	shiita = 0.0f;
 	changeProduction = 0;
 }
@@ -93,10 +98,21 @@ int Result::Init()
 	}
 
 	int rank_check = result.CheckRankData(p.point[3]);
-	if (rank_check != TRUE)
+	if (rank_check == -1)
 	{
 		return FALSE;
 	}
+	if (rank_check == 1)
+	{
+		isRankIn = true;
+	}
+	else
+	{
+		isRankIn = false;
+	}
+	colorHue = 0.0f;
+
+	timer = 0.0f;
 
 	shiita = 0.0f;
 	changeProduction = 0;
@@ -119,6 +135,7 @@ eSceneType Result::Update(float delta_second)
 		{
 			shiita = 1.0f; // 行き過ぎ防止
 
+			timer = 0.0f;
 			changeProduction++;
 		}
 
@@ -131,7 +148,22 @@ eSceneType Result::Update(float delta_second)
 		Camera::SetScreenRatioSize(shiita * shiita);
 
 		break;
-	case 1:	// ============================================================================選択
+	case 1:
+		if (isRankIn)
+		{
+			timer += delta_second;
+
+			if (timer >= 1.0f)
+			{
+				changeProduction++;
+			}
+		}
+		else
+		{
+			changeProduction++;
+		}
+		break;
+	case 2:	// ============================================================================選択
 
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
 		{
@@ -170,7 +202,7 @@ eSceneType Result::Update(float delta_second)
 		}
 
 		break;
-	case 2:	// =======================================================次への演出
+	case 3:	// =======================================================次への演出
 
 		shiita += 2.0f * delta_second;
 
@@ -189,7 +221,7 @@ eSceneType Result::Update(float delta_second)
 		Camera::SetScreenRatioSize(1.0f - shiita);
 
 		break;
-	case 3:
+	case 4:
 
 		shiita += 2.0f * delta_second;
 
@@ -223,6 +255,15 @@ eSceneType Result::Update(float delta_second)
 		}
 
 		break;
+	}
+
+	if (changeProduction > 1 && isRankIn)
+	{
+		colorHue += 1.0f * delta_second;
+		if (colorHue >= 3.0f)
+		{
+			colorHue -= 3.0f;
+		}
 	}
 
 	return eResult;
@@ -285,11 +326,36 @@ void Result::Draw()const
 		Camera::DrawGraph({ 200.0f + (i * 320.0f), 150.0f }, 3.0f, 3.0f, 0.0f, bugIcon[i]);
 		Camera::DrawString({ 220.0f + (i * 320.0f), 150.0f }, 75, GetColor(255, 255, 255), "　%d匹", p.point[i]);
 	}
-	Camera::DrawString({ 400, 250 }, 100, GetColor(255,255,255), "合計　%d匹", p.point[3]);
+	Camera::DrawString({ 400, 250 }, 100, GetColor(255, 255, 255), "合計　%d匹", p.point[3]);
+
+
+	int r = 0, g = 0, b = 0;
+	if (colorHue < 1.0f)
+	{
+		r = (int)(((1.0f - fabsf(colorHue))) * 255.0f);
+	}
+	else if (colorHue > 2.0f)
+	{
+		r = (int)((1.0f - fabsf(colorHue - 3.0f)) * 255.0f);
+	}
+	if (colorHue > 0.0f && colorHue < 2.0f)
+	{
+		g = (int)((1.0f - fabsf(colorHue - 1.0f)) * 255.0f);
+	}
+	if (colorHue > 1.0f && colorHue < 3.0f)
+	{
+		b = (int)((1.0f - fabsf(colorHue - 2.0f)) * 255.0f);
+	}
+
+	if(changeProduction > 1 && isRankIn)
+	{
+		Camera::DrawString({ 375, 375 }, 100, GetColor(r, g, b), "ランクイン！");
+	}
+	
 
 	Camera::Draw();
 
-	if (changeProduction == 3)
+	if (changeProduction == 4)
 	{
 		Vector2D location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 750.0f };
 		float angle = 0.5f - (shiita - 0.6f) * 1.5f;
