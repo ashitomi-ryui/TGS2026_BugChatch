@@ -42,7 +42,7 @@ private:
 	bool m_oldHoldingFlag;	// 前フレームの虫網を持つフラグ
 	bool m_reverseFlag;	// 反転フラグ
 	bool m_pullTheNetFlag;	// 虫網を引くフラグ
-	bool m_rotatingPullFlag;	// 回転させながら引くフラグ
+	bool m_rotatingThrustFlag;	// 回転させながら出すフラグ
 
 	// アニメーション
 	float m_blinkTime;		// 瞬き時間

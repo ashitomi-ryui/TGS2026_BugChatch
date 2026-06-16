@@ -51,7 +51,7 @@ Player::Player()
 	m_oldHoldingFlag = false;	// 前フレームの虫網を持つフラグ
 	m_reverseFlag = false;	// 反転フラグ
 	m_pullTheNetFlag = false;	// 虫網を引くフラグ
-	m_rotatingPullFlag = false;	// 回転させながら引くフラグ
+	m_rotatingThrustFlag = false;	// 回転させながら出すフラグ
 
 	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
@@ -101,7 +101,7 @@ void Player::Init()
 	m_oldHoldingFlag = false;	// 前フレームの虫網を持つフラグ
 	m_reverseFlag = false;	// 反転フラグ
 	m_pullTheNetFlag = false;	// 虫網を引くフラグ
-	m_rotatingPullFlag = false;	// 回転させながら引くフラグ
+	m_rotatingThrustFlag = false;	// 回転させながら出すフラグ
 
 	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
@@ -546,6 +546,9 @@ void Player::Net(float delta)
 				// 掛ける値を反転
 				m_valueRotateStick *= -1.0f;
 			}
+
+			// 回転させながら出す
+			m_rotatingThrustFlag = true;
 		}
 
 		// 虫網を引くとき
@@ -555,26 +558,21 @@ void Player::Net(float delta)
 			if (m_tiltStick > 0.9f)
 			{
 				// 回しながら引く
-				m_rotatingPullFlag = true;
-			}
-
-			// 回しながら引く
-			if(m_rotatingPullFlag)
-			{
-				// プレイヤーに近いほど90°ずらす
-				m_rotateStick -= m_valueRotateStick * (1.0f - m_tiltStick);
-			}
-			else
-			{
-				// プレイヤーに近いほど90°ずらす
-				m_rotateStick += m_valueRotateStick * (1.0f - m_tiltStick);
+				m_rotatingThrustFlag = false;
 			}
 		}
-		else
+
+		// 回しながら出す
+		if (m_rotatingThrustFlag)
 		{
-			m_rotatingPullFlag = false;
 			// プレイヤーに近いほど90°ずらす
 			m_rotateStick += m_valueRotateStick * (1.0f - m_tiltStick);
+		}
+		// 回しながら引く
+		else
+		{
+			// プレイヤーに近いほど90°ずらす
+			m_rotateStick -= m_valueRotateStick * (1.0f - m_tiltStick);
 		}
 
 		// 虫網を構える
