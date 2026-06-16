@@ -416,21 +416,13 @@ void Player::Move(float delta)
 	}
 
 	// 最大速度調整
-	if (m_moveSpeed.x > m_maxSpeed)
+	float len = Length(m_moveSpeed);
+	if (len > m_maxSpeed)
 	{
-		m_moveSpeed.x = m_maxSpeed;
-	}
-	if (m_moveSpeed.x < -m_maxSpeed)
-	{
-		m_moveSpeed.x = -m_maxSpeed;
-	}
-	if (m_moveSpeed.y > m_maxSpeed)
-	{
-		m_moveSpeed.y = m_maxSpeed;
-	}
-	if (m_moveSpeed.y < -m_maxSpeed)
-	{
-		m_moveSpeed.y = -m_maxSpeed;
+		float shiita = VecATan2(m_moveSpeed, { 0.0f,0.0f });
+		len -= m_maxSpeed;
+		m_moveSpeed.x += sinf(shiita) * len;
+		m_moveSpeed.y -= cosf(shiita) * len;
 	}
 
 	// 歩くアニメーション
