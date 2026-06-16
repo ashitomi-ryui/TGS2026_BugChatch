@@ -153,7 +153,7 @@ void Cicada::Spawn()
 	location.x += Random::GetRand((D_TREE_WIDTH / 2.0f), -(D_TREE_WIDTH / 4.0f));
 	location.y += Random::GetRand((D_TREE_HEIGHT / 2.0f), -(D_TREE_HEIGHT / 4.0f));
 
-	m_height = D_OBJECT_SIZE_RATIO;
+	m_height = D_OBJECT_SIZE_RATIO * 25;
 
 	// ÉXÉ|Å[Éì
 	Set(location);
