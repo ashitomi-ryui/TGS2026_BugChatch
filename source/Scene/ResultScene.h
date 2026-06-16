@@ -48,6 +48,11 @@ private:
 	static int display[DISPLAY_LIMIT][DISPLAY_LIMIT];
 	point p;
 
+	bool isRankIn;
+	float colorHue;	// Ô0`—Î1`Â2`Ô3
+
+	float timer;
+
 	float shiita;
 	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o
 

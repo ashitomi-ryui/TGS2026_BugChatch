@@ -302,11 +302,13 @@ int Ranking::CheckRankData(int p_point)
 
 		if (SortRankData() != TRUE)
 		{
-			return FALSE;
+			return -1;
 		}
+
+		return 1;
 	}
 
-	return TRUE;
+	return 0;
 }
 
 int Ranking::SortRankData()
