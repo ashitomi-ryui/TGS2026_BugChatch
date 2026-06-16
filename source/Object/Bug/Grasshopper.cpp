@@ -129,7 +129,7 @@ void Grasshopper::Update(float delta)
 			m_isAppearance = false;
 			// 遷移時間を1.0f秒にする
 			m_transitionTime = 1.0f;
-			SetEffect(m_location, 0x000fff);
+			SetEffect(m_location, 0x00ffff);
 		}
 	}
 	else
@@ -186,6 +186,8 @@ void Grasshopper::Spawn()
 	escape = FALSE;
 	m_moveSpeed = { 0.0f, 0.0f };
 	m_transitionTime = 0.0f;
+
+	m_height = 10 * D_OBJECT_SIZE_RATIO;
 
 	// スポーン
 	Set(location);
@@ -380,26 +382,31 @@ void Grasshopper::Animation(float delta)
 		{
 			if (shiita < 0.25f)
 			{
+				m_height = 30 * D_OBJECT_SIZE_RATIO;
 				m_animCount = 4; // 飛び始め
 			}
 			else if (shiita < 0.75f)
 			{
+				m_height = 50 * D_OBJECT_SIZE_RATIO;
 				m_animCount = 5; // 頂点通過
 			}
 			else
 			{
+				m_height = 30 * D_OBJECT_SIZE_RATIO;
 				m_animCount = 6; // 着地前
 			}
 		}
 
 		else if (m_state == eStand)
 		{
+			m_height = 10 * D_OBJECT_SIZE_RATIO;
 			m_animCount = 0; // 通常時（地面にいる画像）に戻す！
 		}
 		else if (m_isJump == false)
 		{
 			if (m_animTime > 0.2f)
 			{
+				m_height = 10 * D_OBJECT_SIZE_RATIO;
 				m_animTime = 0.0f;
 				m_animCount = (m_animCount + 1) % 4;
 			}
