@@ -3,8 +3,9 @@
 #include"../Utilitys/Math.h"
 
 #define D_CAGE_MAX		(999)	// かごの最大容量
-#define D_CAGE_WIDTH	(50.0f)	// かごの横幅
-#define D_CAGE_HEIGHT	(50.0f)	// かごの高さ
+#define D_CAGE_RATIO	(1.5f)	// かごの比率	
+#define D_CAGE_WIDTH	(35.0f * D_CAGE_RATIO)	// かごの横幅
+#define D_CAGE_HEIGHT	(15.0f * D_CAGE_RATIO)	// かごの高さ
 
 class Cage
 {
@@ -18,33 +19,41 @@ private:
 		eDragonfly,		// トンボ
 		eGrasshopper,	// バッタ
 	};
+	/// <summary>
+	/// 状態
+	/// </summary>
+	enum State
+	{
+		eJoin,	// 入る
+		eStand,	// 待機
+		eMove,	// 動く
+	};
+
+	// かごの変数
 	static int oldCicada;		// 前のセミの数
 	static int oldDragonfly;	// 前のトンボの数
 	static int oldGrasshopper;	// 前のバッタの数
 	static Vector2D location;	// かごの座標
-	
+
+	static float animTime;	// アニメーション時間
+	static int animCount;	// アニメーションカウント
+
+	static int cicadaImage;		// セミ画像
+	static int dragonflyImage[2];	// トンボ画像
+	static int grasshopperImage[4];	// バッタ画像
+	static int cageImage[4];		// かご画像
+
+	// 虫の変数
 	Type m_type;			// 種類
+	State m_state;			// 状態
 	bool m_display;			// 表示
 	Vector2D m_location;	// 座標
 	Vector2D m_moveSpeed;	// 移動量
 	float m_angle;			// 向き
 
-	enum State
-	{
-		eJoin,
-		eStand,
-		eMove,
-	};
-	State m_state;
-
 	float m_time;		// 時間
 	float m_animTime;	// アニメーション時間
 	int m_animCount;	// アニメーションカウント
-
-	static int cicadaImage[2];		// セミ画像
-	static int dragonflyImage[2];	// トンボ画像
-	static int grasshopperImage[4];	// バッタ画像
-	static int cageImage;			// かご画像
 
 public:
 	Cage();
@@ -66,6 +75,7 @@ public:
 	/// <param name="id">ID</param>
 	void Add(Type type);
 
+private:
 	/// <summary>
 	/// 入る
 	/// </summary>

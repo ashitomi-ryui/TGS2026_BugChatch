@@ -111,7 +111,3 @@ public:
 	static int GetDragonflyCount();
 	static int GetGrasshopperCount();
 };
-
-
-
-
