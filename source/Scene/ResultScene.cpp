@@ -272,7 +272,7 @@ eSceneType Result::Update(float delta_second)
 void Result::Draw()const
 {
 
-	Camera::DrawGraph({ 640, 360 }, 1.0, 1.0, 0.0, back_ground, TRUE);
+	Camera::DrawGraph({ 640, 360 }, 1.0, 1.0, 0.0, back_ground, true);
 
 	float selectSize = 0.84f;
 	float notSelectSize = 0.7f;
