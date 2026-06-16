@@ -4,6 +4,7 @@
 #include "../../Utilitys/Math.h"
 #include "../../Utilitys/Random.h"
 #include "../../Utilitys/Camera.h"
+#include "../Effect.h"
 
 #include "../../Scene/InGameScene.h"
 
@@ -128,6 +129,7 @@ void Grasshopper::Update(float delta)
 			m_isAppearance = false;
 			// ‘JˆÚŽžŠÔ‚ð1.0f•b‚É‚·‚é
 			m_transitionTime = 1.0f;
+			SetEffect(m_location, 0x000fff);
 		}
 	}
 	else
