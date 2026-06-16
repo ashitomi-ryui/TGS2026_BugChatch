@@ -13,6 +13,7 @@
 #include"../Object/Bug/Bug.h"
 #include"../Object/Effect.h"
 #include"../Object/Shadow.h"
+#include"../Object/Cage.h"
 
 #include"../Object/Tree.h"
 #include"../Object/Leaf.h"
@@ -35,7 +36,6 @@ struct ObjectShadow
 ObjectShadow shadow;
 
 Icon icon;
-Bug score;
 int get[3] = {};
 float timer;
 int BGM;
@@ -56,6 +56,8 @@ int InGameInit(void)//各プログラムの初期化
 	Cicada::Init();
 	Grasshopper::Init();
 	Dragonfly::Init();
+	Cage::Init();
+
 	player.Init();
 	
 	BGM = LoadSoundMem("assets/Audio/AS_1468345_Main.wav");
@@ -304,13 +306,13 @@ eSceneType InGameUpdate(float delta_second)
 			switch (i)
 			{
 			case 0:
-				get[i] = score.GetCicadaCount();
+				get[i] = Bug::GetCicadaCount();
 				break;
 			case 1:
-				get[i] = score.GetDragonflyCount();
+				get[i] = Bug::GetDragonflyCount();
 				break;
 			case 2:
-				get[i] = score.GetGrasshopperCount();
+				get[i] = Bug::GetGrasshopperCount();
 				break;
 			}
 		}
@@ -379,6 +381,8 @@ eSceneType InGameUpdate(float delta_second)
 	{
 		shadow.dragonfly[id].Set(dragonfly[id].GetLocation(), dragonfly[id].GetHeight(), dragonfly[id].GetIsAppearance(), dragonfly[id].GetIsBack());
 	}
+
+	Cage::Update(delta_second);
 
 	Camera::Update(player.GetPlayerLocation());	// カメラの更新
 
@@ -500,6 +504,8 @@ void InGameDraw(void)
 		Camera::DrawString({ 465,260 }, 100, GetColor(255, 255, 255), "そこまで！");
 		break;
 	}
+
+	Cage::Draw();
 
 	Camera::Draw();
 }

@@ -143,6 +143,7 @@
     <ClCompile Include="source\Object\Bug\Bug.cpp" />
     <ClCompile Include="source\Object\Bug\Dragonfly.cpp" />
     <ClCompile Include="source\Object\Bug\Grasshopper.cpp" />
+    <ClCompile Include="source\Object\Cage.cpp" />
     <ClCompile Include="source\Object\Effect.cpp" />
     <ClCompile Include="source\Object\Leaf.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="source\Object\Bug\Bug.h" />
     <ClInclude Include="source\Object\Bug\Dragonfly.h" />
     <ClInclude Include="source\Object\Bug\Grasshopper.h" />
+    <ClInclude Include="source\Object\Cage.h" />
     <ClInclude Include="source\Object\Effect.h" />
     <ClInclude Include="source\Object\Leaf.h" />
     <ClInclude Include="source\Object\Player.h" />

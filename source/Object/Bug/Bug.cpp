@@ -213,17 +213,17 @@ bool Bug::GetIsBack() const
 	return m_isBack;
 }
 
-int Bug::GetCicadaCount() const
+int Bug::GetCicadaCount()
 {
 	return cicadaGetCount;
 }
 
-int Bug::GetDragonflyCount() const
+int Bug::GetDragonflyCount()
 {
 	return dragonflyGetCount;
 }
 
-int Bug::GetGrasshopperCount() const
+int Bug::GetGrasshopperCount()
 {
 	return grasshopperGetCount;
 }

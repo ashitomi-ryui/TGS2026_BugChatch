@@ -107,9 +107,9 @@ public:
 	bool GetIsAppearance() const;
 	bool GetIsBack() const;
 
-	int GetCicadaCount() const;
-	int GetDragonflyCount() const;
-	int GetGrasshopperCount() const;
+	static int GetCicadaCount();
+	static int GetDragonflyCount();
+	static int GetGrasshopperCount();
 };
 
 
