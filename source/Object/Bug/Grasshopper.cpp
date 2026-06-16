@@ -226,7 +226,7 @@ void Grasshopper::SetDestination(Vector2D location)
 
 		if (jougai == TRUE)
 		{
-			
+
 			// 近くの草を目的地にする
 			nearleaf = FindNearestLeaf(location);
 
@@ -274,7 +274,7 @@ void Grasshopper::SetDestination(Vector2D location)
 				m_isJump = false;
 			}
 
-			
+
 		}
 
 		for (float t = 0.1f; t <= 1.0f; t += 0.1f)
@@ -283,11 +283,11 @@ void Grasshopper::SetDestination(Vector2D location)
 			test_loc.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * t;
 			test_loc.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * t;
 
-			
+
 			if (CheckTreeCollision(test_loc))
 			{
-				isRouteBlocked = true; 
-				break;                 
+				isRouteBlocked = true;
+				break;
 			}
 		}
 
@@ -301,48 +301,23 @@ void Grasshopper::SetDestination(Vector2D location)
 void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
 {
 	shiita = 0;
-	bool isRouteBlocked = false; // ルート上に木があるかどうかのフラグ
-	int retryCount = 0;          // 無限ループ防止用のカウンター
-	const int MAX_RETRY = 10;    // 最大10回まで再抽選する
 
-	do
-	{
-		isRouteBlocked = false;
+	m_direction = atan2f((location.y - Plocation.y), (location.x - Plocation.x));
 
-		m_direction = atan2f((location.y - Plocation.y), (location.x - Plocation.x));
+	//移動距離
+	float distance = Random::GetRand(150.0f, 400.0f, 0.1f);
 
-		//移動距離
-		float distance = Random::GetRand(150.0f, 400.0f, 0.1f);
+	// 目的地
+	m_destination.x = location.x + cosf(m_direction) * distance;
 
-		// 目的地
-		m_destination.x = location.x + cosf(m_direction) * distance;
+	m_destination.y = location.y + sinf(m_direction) * distance;
 
-		m_destination.y = location.y + sinf(m_direction) * distance;
+	m_startLocation = location;
 
-		m_startLocation = location;
+	// 速さ
+	m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
 
-		// 速さ
-		m_moveSpeed.x = Random::GetRand(1.0f, 1.5f, 0.1f);
-
-		top = Random::GetRand(20.0, 50.0, 0.1f);
-
-		for (float t = 0.1f; t <= 1.0f; t += 0.1f)
-		{
-			Vector2D test_loc;
-			test_loc.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * t;
-			test_loc.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * t;
-
-			
-			if (CheckTreeCollision(test_loc))
-			{
-				isRouteBlocked = true; 
-				break;                
-			}
-		}
-
-		retryCount++;
-
-	} while (isRouteBlocked && retryCount < MAX_RETRY);
+	top = Random::GetRand(20.0, 50.0, 0.1f);
 }
 
 
@@ -425,10 +400,7 @@ void Grasshopper::Escape(float delta)
 		escape = TRUE;
 	}
 
-	if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
-	{
-		PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
-	}
+	
 
 
 	shiita += m_moveSpeed.x * delta;
@@ -443,7 +415,20 @@ void Grasshopper::Escape(float delta)
 	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
 	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
 
+	if (CheckTreeCollision(m_location))
+	{
+		m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * (shiita - m_moveSpeed.x * delta);
+		m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * (shiita - m_moveSpeed.x * delta);
 
+		// その場を着地地点にして、強制終了処理
+		m_destination = m_location;
+		m_moveSpeed = { 0.0f, 0.0f };
+		shiita = 1.0f; 
+	}
+	else if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+		PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
+	}
 
 	//AIニキ
 	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
@@ -548,28 +533,15 @@ void Grasshopper::Move(float delta)
 
 bool Grasshopper::CheckTreeCollision(Vector2D current_loc)
 {
-	Vector2D treeLocation = FindNearestTree(current_loc);
+	Vector2D neartree = FindNearestTree(current_loc);
 
-	// 木の全体のサイズから「幹」のサイズを割り出す
-	float trunkWidth = D_TREE_WIDTH*0.3f;   // 横幅は全体の30%
-	float trunkHeight = D_TREE_HEIGHT*0.4; // 縦幅は全体の40%
-
-	float trunkLeft = treeLocation.x + (D_TREE_WIDTH / 2.0f) - (trunkWidth / 2.0f);
-	float trunkRight = treeLocation.x + (D_TREE_WIDTH / 2.0f) + (trunkWidth / 2.0f);
-
-	float trunkTop = treeLocation.y + D_TREE_HEIGHT - trunkHeight;
-	float trunkBottom = treeLocation.y + D_TREE_HEIGHT;
-
-	// 足元の座標（current_loc）が、幹の範囲に入っているか？
-	if (current_loc.x > trunkLeft &&
-		current_loc.x < trunkRight &&
-		current_loc.y > trunkTop &&
-		current_loc.y < trunkBottom)
+	if (neartree.x - 30 < current_loc.x && current_loc.x < neartree.x + 30 &&
+		neartree.y - 40 < current_loc.y && current_loc.y < neartree.y + 40)
 	{
-		return true; 
+		return true;
 	}
 
-	return false; 
+	return false;
 }
 
 void Grasshopper::PerceptionJudgment()
@@ -633,6 +605,6 @@ void Grasshopper::CheckOverlap()
 void Grasshopper::StopAudio()
 {
 	if (Audio[0] != -1) StopSoundMem(Audio[0]);
-	
+
 	if (Audio[1] != -1) StopSoundMem(Audio[1]);
 }
