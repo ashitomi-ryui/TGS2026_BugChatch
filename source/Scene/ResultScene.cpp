@@ -94,6 +94,11 @@ int Result::Init()
 		
 	}
 
+	p.point[0] = bug.GetCicadaCount();
+	p.point[1] = bug.GetDragonflyCount();
+	p.point[2] = bug.GetGrasshopperCount();
+	p.point[3] = p.point[0] + p.point[1] + p.point[2];
+
 	int loadrankdata = result.LoadRankData();
 	if (loadrankdata != TRUE)
 	{
@@ -156,17 +161,12 @@ eSceneType Result::Update(float delta_second)
 		Camera::SetScreenRatioSize(shiita * shiita);
 
 		break;
-	case 1:	// ============================================================================èWåv
+	case 1:	// ============================================================================íéÇéÀèo
 
 		Cage::Update(eResult, delta_second);
 
 		if (Cage::GetRemovedAll())
 		{
-			p.point[0] = bug.GetCicadaCount();
-			p.point[1] = bug.GetDragonflyCount();
-			p.point[2] = bug.GetGrasshopperCount();
-			p.point[3] = p.point[0] + p.point[1] + p.point[2];
-
 			changeProduction++;
 		}
 
