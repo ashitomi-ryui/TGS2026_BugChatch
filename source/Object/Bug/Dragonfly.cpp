@@ -6,8 +6,7 @@
 #include "../../Utilitys/Random.h"
 #include "../../Utilitys/Camera.h"
 
-#include "../../Scene/InGameScene.h"
-
+#include "../ObjectManager.h"
 #include "Dragonfly.h"
 
 #include"../Tree.h"
@@ -46,7 +45,7 @@ void Dragonfly::Init()
 	dragonflyGetCount = 0;
 }
 
-void Dragonfly::Update(float delta)
+void Dragonfly::Update(int id, float delta)
 {
 	Animation(delta);
 
@@ -97,10 +96,10 @@ void Dragonfly::Update(float delta)
 			PerceptionJudgment();
 		}
 
-		Bug::Update(delta);
+		Bug::Update(id, delta);
 
 		// 当たり判定
-		if (HitCheck())
+		if (ObjectManager::NetHitCheak(m_location))
 		{
 			PlaySoundMem(HitSE, DX_PLAYTYPE_BACK);
 			dragonflyGetCount += 1;
@@ -108,7 +107,7 @@ void Dragonfly::Update(float delta)
 			// 遷移時間を1.0f秒にする
 			m_transitionTime = 1.0f;
 
-			SetEffect(m_location,0xffff00);
+			ObjectManager::SetEffect(m_location,0xffff00);
 		}
 	}
 	else
@@ -190,13 +189,13 @@ void Dragonfly::Spawn()
 	m_isFlip = false;	// 反転
 
 	// 位置をランダムな草に設定
-	Vector2D location = FindNearestLeaf(RandomLocationOnTheScreen());
+	Vector2D location = ObjectManager::FindNearestLeaf(ObjectManager::RandomLocation(500.0f * D_OBJECT_SIZE_RATIO));
 
 	// スポーン位置
-	 location = FindNearestTree(location);
+	 location = ObjectManager::FindNearestTree(location);
 	// ランダムに座標をずらす
-	location.x += Random::GetRand((D_LEAF_WIDTH / 2.0f), -(D_LEAF_WIDTH / 4.0f));
-	location.y += Random::GetRand((D_LEAF_HEIGHT / 4.0f), -(D_LEAF_HEIGHT / 4.0f));
+	location.x += Random::GetRand((D_LEAF_WIDTH / 4.0f), -(D_LEAF_WIDTH / 8.0f));
+	location.y += Random::GetRand((D_LEAF_HEIGHT / 8.0f), -(D_LEAF_HEIGHT / 8.0f));
 	
 	// 高さ
 	m_height = 25.0f * D_OBJECT_SIZE_RATIO;
@@ -231,7 +230,7 @@ void Dragonfly::SetDestination()
 	// 仮の目的地に5つのランダムな点を設定する
 	for (int i = 0;i < m_destinationNum;i++)
 	{
-		temp[i] = RandomLocationOnTheScreen();
+		temp[i] = ObjectManager::RandomLocation(0.0f);
 		m_isAlreadySet[i] = false;
 	}
 
@@ -504,11 +503,11 @@ void Dragonfly::Hovering(float delta)
 			m_isBreak = true;
 
 			// ランダムな草を目的地に設定
-			m_destination = FindNearestLeaf(RandomLocationOnTheScreen());
+			m_destination = ObjectManager::FindNearestLeaf(ObjectManager::RandomLocation(0.0f));
 
 			// 目的地をランダムに座標をずらす
-			m_destination.x += Random::GetRand((D_LEAF_WIDTH / 2.0f), - (D_LEAF_WIDTH / 4.0f));
-			m_destination.y += Random::GetRand((D_LEAF_HEIGHT / 4.0f), - (D_LEAF_HEIGHT / 4.0f));
+			m_destination.x += Random::GetRand((D_LEAF_WIDTH / 4.0f), - (D_LEAF_WIDTH / 8.0f));
+			m_destination.y += Random::GetRand((D_LEAF_HEIGHT / 8.0f), - (D_LEAF_HEIGHT / 8.0f));
 		}
 		else
 		{
@@ -641,7 +640,7 @@ void Dragonfly::HeadingForABreak(float delta)
 	// 減速
 	Deceleration(deceleration, delta);
 
-	Vector2D leafLocation = FindNearestLeaf(m_location);
+	Vector2D leafLocation = ObjectManager::FindNearestLeaf(m_location);
 	// 目的地についたかつ、草の範囲なら
 	if (Length(Vec2Sub(m_location, m_destination)) < 1.0f * D_OBJECT_SIZE_RATIO)
 	{
@@ -697,7 +696,7 @@ void Dragonfly::TransitionToEscape()
 
 void Dragonfly::PutInFront()
 {
-	Vector2D treeLocation = FindNearestTree(m_location);
+	Vector2D treeLocation = ObjectManager::FindNearestTree(m_location);
 
 	// その木から離れたら、前面に置く
 	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||

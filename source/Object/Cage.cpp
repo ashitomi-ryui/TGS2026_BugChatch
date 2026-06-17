@@ -505,21 +505,21 @@ void Cage::Add(Type type)
 	m_type = type;
 	m_display = true;
 
-	// かごを開ける
-	animTime = 0.0f;
-	switch (animCount)
-	{
-	case 1:
-	case 3:
-		animCount = 1;
-		break;
-	case 2:
-		animCount = 2;
-		break;
-	default:
-		animCount = 0;
-		break;
-	}
+	//// かごを開ける
+	//animTime = 0.0f;
+	//switch (animCount)
+	//{
+	//case 1:
+	//case 3:
+	//	animCount = 1;
+	//	break;
+	//case 2:
+	//	animCount = 2;
+	//	break;
+	//default:
+	//	animCount = 0;
+	//	break;
+	//}
 }
 
 void Cage::Join(float delta)
@@ -538,7 +538,7 @@ void Cage::Join(float delta)
 	m_moveSpeed.y += 100.0f * delta * D_CAGE_RATIO;
 
 	// 速度制限
-	int len = Length(m_moveSpeed);
+	float len = Length(m_moveSpeed);
 	if (len > 100.0f * D_CAGE_RATIO)
 	{
 		len -= 100.0f * D_CAGE_RATIO;
@@ -616,7 +616,7 @@ void Cage::Move(float delta)
 	m_moveSpeed.y -= cosf(m_angle) * 100.0f * D_CAGE_RATIO;
 
 	// 速度制限
-	int len = Length(m_moveSpeed);
+	float len = Length(m_moveSpeed);
 	if (len > 10.0f * D_CAGE_RATIO)
 	{
 		len -= 10.0f * D_CAGE_RATIO;

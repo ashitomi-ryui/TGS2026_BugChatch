@@ -1,6 +1,7 @@
 #include "DxLib.h"
 
 #include "Player.h"
+#include "ObjectManager.h"
 #include "../Scene/InGameScene.h"
 #include "../Utilitys/Camera.h"
 #include "../Utilitys/Random.h"
@@ -73,6 +74,10 @@ void Player::Init()
 	// 座標
 	// プレイヤーキャラ
 	m_location = { 640.0f, 360.0f };	// プレイヤーの座標
+
+	m_location = Vec2Add(m_location, ObjectManager::TreeHitCheak(m_location, m_radius, false));
+
+
 	m_moveSpeed = { 0.0f, 0.0f };	// 動く速度
 
 	// 虫網
@@ -448,6 +453,8 @@ void Player::Move(float delta)
 	}
 
 	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
+
+	m_location = Vec2Add(m_location, ObjectManager::TreeHitCheak(m_location, m_radius, false));
 
 	// 移動の限界
 	if (m_location.x < m_radius)

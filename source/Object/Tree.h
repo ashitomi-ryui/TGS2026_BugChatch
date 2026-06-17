@@ -4,9 +4,9 @@
 
 #include "Player.h"
 
-#define D_TREE_WIDTH	(90.0f * D_OBJECT_SIZE_RATIO)
-#define D_TREE_HEIGHT	(140.0f * D_OBJECT_SIZE_RATIO)
-#define D_TREE_MAX		(25)
+#define D_TREE_WIDTH	(180.0f * D_OBJECT_SIZE_RATIO)
+#define D_TREE_HEIGHT	(280.0f * D_OBJECT_SIZE_RATIO)
+#define D_TREE_MAX		(40)
 
 class Tree
 {
@@ -32,6 +32,12 @@ public:
 	/// </summary>
 	/// <param name="p">ポインタ</param>
 	static void SetPlayer(Player* p);
+
+	/// <summary>
+	/// 重なりをなくす
+	/// </summary>
+	/// <param name="id">ID</param>
+	void EliminateOverlap(int id);
 
 	Vector2D GetLocation() const;
 };

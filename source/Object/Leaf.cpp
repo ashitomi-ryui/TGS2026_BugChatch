@@ -1,5 +1,6 @@
 #include<DxLib.h>
 #include"Leaf.h"
+#include "ObjectManager.h"
 #include"../Utilitys/Camera.h"
 
 static Player* targetPlayer;     //プレイヤー情報
@@ -42,7 +43,6 @@ void Leaf::Update(float delta)
 		m_animCount++;
 		m_animCount %= 4;
 	}
-
 }
 
 void Leaf::Draw()const
@@ -53,6 +53,15 @@ void Leaf::Draw()const
 void Leaf::SetPlayer(Player* p)
 {
 	targetPlayer = p;
+}
+
+void Leaf::EliminateOverlap(int id)
+{
+	// 重なりをなくす
+	float radius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_LEAF_WIDTH / 2.0f, D_LEAF_HEIGHT / 2.0f }));
+	float playerRadius = targetPlayer->GetPlayerRadius();
+	m_location = Vec2Add(m_location, Vec2Mult(ObjectManager::TreeHitCheak(m_location, radius, true), 0.5f));
+	m_location = Vec2Add(m_location, Vec2Mult(ObjectManager::LeafHitCheak(m_location, radius, true, id), 0.5f));
 }
 
 Vector2D Leaf::GetLocation() const

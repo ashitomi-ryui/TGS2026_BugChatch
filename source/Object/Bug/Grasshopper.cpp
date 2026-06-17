@@ -6,8 +6,7 @@
 #include "../../Utilitys/Camera.h"
 #include "../Effect.h"
 
-#include "../../Scene/InGameScene.h"
-
+#include "../ObjectManager.h"
 #include "Grasshopper.h"
 
 #include "../Leaf.h"
@@ -67,7 +66,7 @@ void Grasshopper::Init()
 	grasshopperGetCount = 0;
 }
 
-void Grasshopper::Update(float delta)
+void Grasshopper::Update(int id, float delta)
 {
 	Animation(delta);
 
@@ -119,17 +118,17 @@ void Grasshopper::Update(float delta)
 			PerceptionJudgment();
 		}
 
-		Bug::Update(delta);
+		Bug::Update(id, delta);
 
 		// 当たり判定
-		if (HitCheck())
+		if (ObjectManager::NetHitCheak(m_location))
 		{
 			PlaySoundMem(HitSE, DX_PLAYTYPE_BACK);
 			grasshopperGetCount += 1;
 			m_isAppearance = false;
 			// 遷移時間を1.0f秒にする
 			m_transitionTime = 1.0f;
-			SetEffect(m_location, 0x00ffff);
+			ObjectManager::SetEffect(m_location, 0x00ffff);
 		}
 	}
 	else
@@ -173,10 +172,10 @@ void Grasshopper::DrawOnTheFront() const
 void Grasshopper::Spawn()
 {
 	// スポーン位置
-	Vector2D location = Bug::RandomLocationOnTheScreen();
+	Vector2D location = ObjectManager::RandomLocation(500.0f * D_OBJECT_SIZE_RATIO);
 
 	// 位置を近くの草に設定する
-	location = FindNearestLeaf(location);
+	location = ObjectManager::FindNearestLeaf(location);
 	// 位置を少しずらす
 	location.x += Random::GetRand((D_LEAF_WIDTH / 2), -(D_LEAF_WIDTH / 2));
 	location.y += Random::GetRand((D_LEAF_HEIGHT / 2), -(D_LEAF_HEIGHT / 2));
@@ -228,7 +227,7 @@ void Grasshopper::SetDestination(Vector2D location)
 		{
 
 			// 近くの草を目的地にする
-			nearleaf = FindNearestLeaf(location);
+			nearleaf = ObjectManager::FindNearestLeaf(location);
 
 			m_direction = atan2f((nearleaf.y - m_location.y), (nearleaf.x - m_location.x));
 
@@ -533,7 +532,7 @@ void Grasshopper::Move(float delta)
 
 bool Grasshopper::CheckTreeCollision(Vector2D current_loc)
 {
-	Vector2D neartree = FindNearestTree(current_loc);
+	Vector2D neartree = ObjectManager::FindNearestTree(current_loc);
 
 	if (neartree.x - 30 < current_loc.x && current_loc.x < neartree.x + 30 &&
 		neartree.y - 40 < current_loc.y && current_loc.y < neartree.y + 40)
@@ -587,7 +586,7 @@ void Grasshopper::TransitionToEscape()
 
 void Grasshopper::CheckOverlap()
 {
-	Vector2D treeLocation = FindNearestTree(m_location);
+	Vector2D treeLocation = ObjectManager::FindNearestTree(m_location);
 
 	if (m_location.x > treeLocation.x - D_TREE_WIDTH / 2.0f &&
 		m_location.x < treeLocation.x + D_TREE_WIDTH / 2.0f &&

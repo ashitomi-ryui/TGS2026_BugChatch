@@ -29,7 +29,7 @@ public:
 
 public:
 	static void Init();
-	virtual void Update(float delta) override;
+	virtual void Update(int id, float delta) override;
 	virtual void Draw() const override;
 	virtual void DrawOnTheBack() const override;
 	virtual void DrawOnTheFront() const override;

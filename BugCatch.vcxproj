@@ -146,6 +146,7 @@
     <ClCompile Include="source\Object\Cage.cpp" />
     <ClCompile Include="source\Object\Effect.cpp" />
     <ClCompile Include="source\Object\Leaf.cpp" />
+    <ClCompile Include="source\Object\ObjectManager.cpp" />
     <ClCompile Include="source\Object\Player.cpp" />
     <ClCompile Include="source\Object\Bug\Cicada.cpp" />
     <ClCompile Include="source\Object\Shadow.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="source\Object\Cage.h" />
     <ClInclude Include="source\Object\Effect.h" />
     <ClInclude Include="source\Object\Leaf.h" />
+    <ClInclude Include="source\Object\ObjectManager.h" />
     <ClInclude Include="source\Object\Player.h" />
     <ClInclude Include="source\Object\Bug\Cicada.h" />
     <ClInclude Include="source\Object\Shadow.h" />

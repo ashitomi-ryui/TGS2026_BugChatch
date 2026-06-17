@@ -5,10 +5,9 @@
 #include "../../Utilitys/Random.h"
 #include "../../Utilitys/Camera.h"
 
-#include "../../Scene/InGameScene.h"
-
 #include "Cicada.h"
 
+#include "../ObjectManager.h"
 #include "../Tree.h"
 
 int Cicada::images[5] = { -1,-1,-1,-1,-1 };
@@ -38,7 +37,7 @@ void Cicada::Init()
 	
 }
 
-void Cicada::Update(float delta)
+void Cicada::Update(int id, float delta)
 {
 	if (Camera::CheckItsOnTheScreen(m_location, m_radius) == true)
 	{
@@ -83,10 +82,10 @@ void Cicada::Update(float delta)
 			PerceptionJudgment();
 		}
 
-		Bug::Update(delta);
+		Bug::Update(id, delta);
 
 		// 当たり判定
-		if (HitCheck())
+		if (ObjectManager::NetHitCheak(m_location))
 		{
 			PlaySoundMem(HitSE, DX_PLAYTYPE_BACK);
 			cicadaGetCount += 1;
@@ -94,7 +93,7 @@ void Cicada::Update(float delta)
 			// 遷移時間を1.0f秒にする
 			m_transitionTime = 1.0f;
 
-			SetEffect(m_location, GetColor(200,150,40));
+			ObjectManager::SetEffect(m_location, GetColor(200,150,40));
 		}
 	}
 	else
@@ -145,13 +144,13 @@ void Cicada::PlayAudio()
 void Cicada::Spawn()
 {
 	// スポーン位置
-	Vector2D location = Bug::RandomLocationOnTheScreen();
+	Vector2D location = ObjectManager::RandomLocation(500.0f * D_OBJECT_SIZE_RATIO);
 
 	// 位置を近くの木に設定する
-	location = FindNearestTree(location);
+	location = ObjectManager::FindNearestTree(location);
 	// 位置を少しずらす
-	location.x += Random::GetRand((D_TREE_WIDTH / 2.0f), -(D_TREE_WIDTH / 4.0f));
-	location.y += Random::GetRand((D_TREE_HEIGHT / 2.0f), -(D_TREE_HEIGHT / 4.0f));
+	location.x += Random::GetRand((D_TREE_WIDTH / 4.0f), -(D_TREE_WIDTH / 8.0f));
+	location.y += Random::GetRand((D_TREE_HEIGHT / 4.0f), -(D_TREE_HEIGHT / 8.0f));
 
 	m_height = D_OBJECT_SIZE_RATIO * 25;
 
@@ -173,11 +172,11 @@ void Cicada::ReSpawn(float delta)
 void Cicada::SetDestination(Vector2D location)
 {
 	// 近くの木を目的地にする
-	m_destination = FindNearestTree(location);
+	m_destination = ObjectManager::FindNearestTree(location);
 
 	// 目的地をランダムに座標をずらす
-	m_destination.x += Random::GetRand((D_TREE_WIDTH / 2), -(D_TREE_WIDTH / 2));
-	m_destination.y += Random::GetRand((D_TREE_HEIGHT / 2), -(D_TREE_HEIGHT / 2));
+	m_destination.x += Random::GetRand((D_TREE_WIDTH / 4.0f), + (D_TREE_WIDTH / 8.0f));
+	m_destination.y += Random::GetRand((D_TREE_HEIGHT / 4.0f), + (D_TREE_HEIGHT / 8.0f));
 }
 
 void Cicada::Animation(float delta)
@@ -315,7 +314,7 @@ void Cicada::Stand(float delta)
 		// 向きを0.25πごとに区切ったランダムな向きに
 		m_direction = Random::GetRand(0.0f, 2.0f, 0.25) * DX_PI_F;
 		// ランダムな木を目的地に設定
-		SetDestination(RandomLocationOnTheScreen());
+		SetDestination(ObjectManager::RandomLocation(0.0f));
 
 	}
 }
@@ -338,13 +337,13 @@ void Cicada::Move(float delta)
 	// 減速
 	Deceleration(deceleration, delta);
 
-	Vector2D treeLocation = FindNearestTree(m_location);
+	Vector2D treeLocation = ObjectManager::FindNearestTree(m_location);
 	// 目的地についたかつ、木の範囲なら
 	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f * D_OBJECT_SIZE_RATIO &&
-		m_location.x > treeLocation.x - D_TREE_WIDTH &&
-		m_location.x < treeLocation.x + D_TREE_WIDTH &&
-		m_location.y > treeLocation.y - D_TREE_HEIGHT &&
-		m_location.y < treeLocation.y + D_TREE_HEIGHT)
+		m_location.x > treeLocation.x - D_TREE_WIDTH / 2.0f &&
+		m_location.x < treeLocation.x + D_TREE_WIDTH / 2.0f &&
+		m_location.y > treeLocation.y - D_TREE_HEIGHT / 2.0f &&
+		m_location.y < treeLocation.y + D_TREE_HEIGHT / 2.0f)
 	{
 		// 目的地についたら待機状態へ
 		m_moveSpeed = { 0.0f, 0.0f };
@@ -426,13 +425,13 @@ void Cicada::TransitionToEscape()
 
 void Cicada::PutInFront()
 {
-	Vector2D treeLocation = FindNearestTree(m_location);
+	Vector2D treeLocation = ObjectManager::FindNearestTree(m_location);
 
 	// その木から離れたら、前面に置く
-	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH ||
-		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH ||
-		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT ||
-		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT)
+	if (m_location.x + m_radius < treeLocation.x - D_TREE_WIDTH / 2.0f ||
+		m_location.x - m_radius > treeLocation.x + D_TREE_WIDTH / 2.0f ||
+		m_location.y + m_radius < treeLocation.y - D_TREE_HEIGHT / 2.0f ||
+		m_location.y - m_radius > treeLocation.y + D_TREE_HEIGHT / 2.0f)
 	{
 		m_isBack = false;
 	}

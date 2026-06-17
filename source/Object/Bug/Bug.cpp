@@ -2,7 +2,6 @@
 
 #include "Bug.h"
 
-#include "../../Scene/InGameScene.h"
 #include "../../Utilitys/Camera.h"
 #include "../../Utilitys/Random.h"
 
@@ -80,7 +79,7 @@ void Bug::Set(Vector2D location)
 	m_animCount = 0;
 }
 
-void Bug::Update(float delta)
+void Bug::Update(int id, float delta)
 {
 	// 移動
 	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
@@ -111,15 +110,6 @@ void Bug::DrawOnTheFront() const
 void Bug::SetPlayer(Player* p)
 {
 	targetPlayer = p;
-}
-
-Vector2D Bug::RandomLocationOnTheScreen()
-{
-	Vector2D location;	// 位置
-	// 位置を画面内のランダムな位置に設定する
-	location.x = Random::GetRand(D_STAGE_WIDTH);
-	location.y = Random::GetRand(D_STAGE_HEIGHT);
-	return location;
 }
 
 void Bug::Acceleration(float acceleration, float maxSpeed, float direction, float delta)
@@ -178,24 +168,14 @@ void Bug::Animation(float delta)
 	m_animTime += delta;
 }
 
-bool Bug::HitCheck()
-{
-	//ネットの位置を取得
-	Vector2D netLocation = targetPlayer->GetRingLocation();
-	float netRadius = targetPlayer->GetRingRadius();
-
-	float len = Length(Vec2Sub(m_location, netLocation));
-	if (len < netRadius)
-	{
-		return true;
-	}
-
-	return false;
-}
-
 Vector2D Bug::GetLocation() const
 {
 	return m_location;
+}
+
+float Bug::GetRadius() const
+{
+	return m_radius;
 }
 
 float Bug::GetHeight() const

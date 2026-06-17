@@ -1,7 +1,7 @@
 #include<DxLib.h>
 #include"Tree.h"
+#include "ObjectManager.h"
 #include"../Utilitys/Camera.h"
-#include"../Scene/InGameScene.h"
 
 Player* targetPlayer;     //プレイヤー情報
 
@@ -42,54 +42,6 @@ void Tree::Update(float delta)
 		m_animCount++;
 		m_animCount %= 4;
 	}
-
-	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
-
-	// プレイヤーに最も近い点
-	Vector2D closest;
-
-	// X座標の最も近い点を求める
-	if (playerLocation.x > m_location.x + D_TREE_WIDTH)
-	{
-		closest.x = m_location.x + D_TREE_WIDTH;
-	}
-	else if (playerLocation.x < m_location.x - D_TREE_WIDTH)
-	{
-		closest.x = m_location.x - D_TREE_WIDTH;
-	}
-	else
-	{
-		closest.x = playerLocation.x;
-	}
-
-	// Y座標の最も近い点を求める
-	if (playerLocation.y > m_location.y + D_TREE_HEIGHT)
-	{
-		closest.y = m_location.y + D_TREE_HEIGHT;
-	}
-	else if (playerLocation.y < m_location.y - D_TREE_HEIGHT)
-	{
-		closest.y = m_location.y - D_TREE_HEIGHT;
-	}
-	else
-	{
-		closest.y = playerLocation.y;
-	}
-
-	float len = Length(Vec2Sub(closest, playerLocation));
-	float playerRadius = targetPlayer->GetRingRadius();
-	if (len < playerRadius)
-	{
-		Vector2D playerMove;
-
-		float angle = VecATan2(closest, playerLocation);
-
-		playerMove.x = sinf(angle) * (playerRadius - len);
-		playerMove.y = -cosf(angle) * (playerRadius - len);
-
-		targetPlayer->PlayerLocationMove(playerMove);
-	}
-
 }
 
 void Tree::Draw(int id)const
@@ -100,6 +52,15 @@ void Tree::Draw(int id)const
 void Tree::SetPlayer(Player* p)
 {
 	targetPlayer = p;
+}
+
+void Tree::EliminateOverlap(int id)
+{
+	// 重なりをなくす
+	float radius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_TREE_WIDTH / 2.0f, D_TREE_HEIGHT / 2.0f }));
+	float playerRadius = targetPlayer->GetPlayerRadius();
+	m_location = Vec2Add(m_location, Vec2Mult(ObjectManager::TreeHitCheak(m_location, radius + playerRadius * 3.0f, true, id), 0.5f));
+	m_location = Vec2Add(m_location, Vec2Mult(ObjectManager::LeafHitCheak(m_location, radius, true), 0.5f));
 }
 
 Vector2D Tree::GetLocation() const

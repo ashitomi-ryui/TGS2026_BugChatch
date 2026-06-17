@@ -151,21 +151,21 @@ void Camera::Init()
 void Camera::Update(Vector2D playerLocation)
 {
 	m_location = playerLocation;
-	if (playerLocation.x < D_WIN_WIDTH / 2)
+	if (playerLocation.x < D_WIN_WIDTH / 2.0f)
 	{
-		m_location.x = D_WIN_WIDTH / 2;
+		m_location.x = D_WIN_WIDTH / 2.0f;
 	}
-	if (playerLocation.x > D_STAGE_WIDTH - D_WIN_WIDTH / 2)
+	if (playerLocation.x > D_STAGE_WIDTH - D_WIN_WIDTH / 2.0f)
 	{
-		m_location.x = D_STAGE_WIDTH - D_WIN_WIDTH / 2;
+		m_location.x = D_STAGE_WIDTH - D_WIN_WIDTH / 2.0f;
 	}
-	if (playerLocation.y < D_WIN_HEIGHT / 2)
+	if (playerLocation.y < D_WIN_HEIGHT / 2.0f)
 	{
-		m_location.y = D_WIN_HEIGHT / 2;
+		m_location.y = D_WIN_HEIGHT / 2.0f;
 	}
-	if (playerLocation.y > D_STAGE_HEIGHT - D_WIN_HEIGHT / 2)
+	if (playerLocation.y > D_STAGE_HEIGHT - D_WIN_HEIGHT / 2.0f)
 	{
-		m_location.y = D_STAGE_HEIGHT - D_WIN_HEIGHT / 2;
+		m_location.y = D_STAGE_HEIGHT - D_WIN_HEIGHT / 2.0f;
 	}
 
 }

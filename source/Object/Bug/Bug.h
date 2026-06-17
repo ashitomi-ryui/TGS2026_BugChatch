@@ -53,7 +53,7 @@ public:
 public:
 	static void Init();
 	virtual void Set(Vector2D location);	// 初期化
-	virtual void Update(float delta);		// 更新
+	virtual void Update(int id, float delta);		// 更新
 	virtual void Draw() const;				// 描画
 	virtual void DrawOnTheBack() const;		// 背面に描画
 	virtual void DrawOnTheFront() const;	// 前面に描画
@@ -66,12 +66,6 @@ public:
 	static void SetPlayer(class Player* p);
 
 protected:
-	/// <summary>
-	/// 画面内のランダムな位置
-	/// </summary>
-	/// <returns>座標</returns>
-	static Vector2D RandomLocationOnTheScreen();
-
 	/// <summary>
 	/// 加速
 	/// </summary>
@@ -95,14 +89,9 @@ protected:
 	/// <param name="delta"></param>
 	virtual void Animation(float delta);
 
-	/// <summary>
-	/// 当たり判定
-	/// </summary>
-	/// <returns>当たったならtrue</returns>
-	virtual bool HitCheck();
-
 public:
 	Vector2D GetLocation() const;
+	float GetRadius() const;
 	float GetHeight() const;
 	bool GetIsAppearance() const;
 	bool GetIsBack() const;

@@ -15,7 +15,7 @@ public:
 	/// <summary>
 	/// 種類
 	/// </summary>
-	static enum Type
+	enum Type
 	{
 		eCicada,		// セミ
 		eDragonfly,		// トンボ
@@ -25,7 +25,7 @@ private:
 	/// <summary>
 	/// 状態
 	/// </summary>
-	static enum State
+	enum State
 	{
 		eJoin,	// 入る
 		eStand,	// 待機
