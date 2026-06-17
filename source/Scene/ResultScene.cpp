@@ -94,31 +94,6 @@ int Result::Init()
 		
 	}
 
-	p.point[0] = bug.GetCicadaCount();
-	p.point[1] = bug.GetDragonflyCount();
-	p.point[2] = bug.GetGrasshopperCount();
-	p.point[3] = p.point[0] + p.point[1] + p.point[2];
-
-	int loadrankdata = result.LoadRankData();
-	if (loadrankdata != TRUE)
-	{
-		return FALSE;
-	}
-
-	int rank_check = result.CheckRankData(p.point[3]);
-	if (rank_check == -1)
-	{
-		return FALSE;
-	}
-	if (rank_check == 1)
-	{
-		isRankIn = true;
-	}
-	else
-	{
-		isRankIn = false;
-	}
-
 	Cage::Init(eResult);
 
 	colorHue = 0.0f;
@@ -167,6 +142,23 @@ eSceneType Result::Update(float delta_second)
 
 		if (Cage::GetRemovedAll())
 		{
+			p.point[0] = bug.GetCicadaCount();
+			p.point[1] = bug.GetDragonflyCount();
+			p.point[2] = bug.GetGrasshopperCount();
+			p.point[3] = p.point[0] + p.point[1] + p.point[2];
+
+			int loadrankdata = result.LoadRankData();
+
+			int rank_check = result.CheckRankData(p.point[3]);
+			if (rank_check == 1)
+			{
+				isRankIn = true;
+			}
+			else
+			{
+				isRankIn = false;
+			}
+
 			changeProduction++;
 		}
 
