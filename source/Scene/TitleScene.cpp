@@ -69,8 +69,6 @@ int Title::Init()
 	ChangeVolumeSoundMem(130, Titlebgm);
     PlaySoundMem(Titlebgm, DX_PLAYTYPE_LOOP);
 
-	select_x, select_y, pressed = 0;
-
 	shiita = 0.0f;
 	changeProduction = 0;
 
@@ -87,6 +85,9 @@ eSceneType Title::Update(float delta_second)
 	case 0:	// =========================================================================入る演出
 
 		shiita += 1.5f * delta_second;
+		select_x = 0;
+		select_y = 0;
+		pressed = 0;
 
 		if (shiita > 1.0f)
 		{
@@ -277,13 +278,13 @@ void Title::Draw()const
 			//ボタンを押されていない状態にする
 			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
 		}
-		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y - 5.0f }, selectCharSize, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
 		//通常サイズに戻す
 		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y - 5.0f }, notSelectCharSize, GetColor(255, 255, 255), "スタート");
 	}
 
 	if (select_y == 1 && select_x == 0)	//ヘルプが選択されている場合
@@ -299,13 +300,13 @@ void Title::Draw()const
 			Camera::DrawGraph(helpLoc, selectSize, selectSize, 0.0, b.select);
 		}
 
-		Camera::DrawString({ helpLoc.x - (float)selectCharSize * 1.0f, helpLoc.y }, selectCharSize, GetColor(255, 255, 255), "ヘルプ");
+		Camera::DrawString({ helpLoc.x - (float)selectCharSize * 1.0f, helpLoc.y - 5.0f }, selectCharSize, GetColor(255, 255, 255), "ヘルプ");
 	}
 	else
 	{
 		//通常サイズに戻す
 		Camera::DrawGraph(helpLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ helpLoc.x - (float)notSelectCharSize * 1.0f, helpLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "ヘルプ");
+		Camera::DrawString({ helpLoc.x - (float)notSelectCharSize * 1.0f, helpLoc.y - 5.0f }, notSelectCharSize, GetColor(255, 255, 255), "ヘルプ");
 	}
 
 	if (select_y == 1 && select_x == 1)	//ランキングが選択されている場合
@@ -340,13 +341,13 @@ void Title::Draw()const
 			Camera::DrawGraph(endLoc, selectSize, selectSize, 0.0, b.select);
 		}
 
-		Camera::DrawString({ endLoc.x - (float)selectCharSize * 1.0f, endLoc.y }, selectCharSize, GetColor(255, 255, 255), "おわり");
+		Camera::DrawString({ endLoc.x - (float)selectCharSize * 1.0f, endLoc.y - 10.0f }, selectCharSize, GetColor(255, 255, 255), "おわり");
 	}
 	else
 	{
 		//通常サイズに戻す
 		Camera::DrawGraph(endLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ endLoc.x - (float)notSelectCharSize * 1.0f, endLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "おわり");
+		Camera::DrawString({ endLoc.x - (float)notSelectCharSize * 1.0f, endLoc.y - 10.0f }, notSelectCharSize, GetColor(255, 255, 255), "おわり");
 	}
 
 	Camera::Draw();
