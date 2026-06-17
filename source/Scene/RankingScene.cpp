@@ -211,13 +211,13 @@ void Ranking::Draw()const
 			//ボタンを押されていない状態にする
 			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
 		}
-		Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ (startLoc.x - 10.0f) - (float)selectCharSize * 1.5f, startLoc.y - 10.0f }, selectCharSize * 1.2f, GetColor(255, 255, 255), "スタート");
 	}
 	else
 	{
 		//通常サイズに戻す
 		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "スタート");
+		Camera::DrawString({ (startLoc.x - 10.0f) - (float)notSelectCharSize * 1.5f, startLoc.y - 10.0f }, notSelectCharSize * 1.2f, GetColor(255, 255, 255), "スタート");
 	}
 
 	if (select_x == 1)	//タイトルが選択されている場合
@@ -233,13 +233,13 @@ void Ranking::Draw()const
 			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, b.select);
 		}
 
-		Camera::DrawString({ titleLoc.x - (float)selectCharSize * 1.5f, titleLoc.y }, selectCharSize, GetColor(255, 255, 255), "タイトル");
+		Camera::DrawString({ (titleLoc.x - 10.0f) - (float)selectCharSize * 1.5f, titleLoc.y - 10.0f }, selectCharSize * 1.2f, GetColor(255, 255, 255), "タイトル");
 	}
 	else
 	{
 		//通常サイズに戻す
 		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ titleLoc.x - (float)notSelectCharSize * 1.5f, titleLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
+		Camera::DrawString({ (titleLoc.x - 10.0f) - (float)notSelectCharSize * 1.5f, titleLoc.y - 10.0f }, notSelectCharSize * 1.2f, GetColor(255, 255, 255), "タイトル");
 	}
 
 	unsigned int color;
