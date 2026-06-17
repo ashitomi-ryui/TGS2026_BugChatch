@@ -55,6 +55,9 @@ int Ranking::Init()
 		return FALSE;
 	}
 
+	select_x = 0;
+	pressed = 0;
+
 	shiita = 0.0f;
 	changeProduction = 0;
 

@@ -69,6 +69,10 @@ int Title::Init()
 	ChangeVolumeSoundMem(130, Titlebgm);
     PlaySoundMem(Titlebgm, DX_PLAYTYPE_LOOP);
 
+	select_x = 0;
+	select_y = 0;
+	pressed = 0;
+
 	shiita = 0.0f;
 	changeProduction = 0;
 
@@ -85,9 +89,6 @@ eSceneType Title::Update(float delta_second)
 	case 0:	// =========================================================================“ü‚é‰‰o
 
 		shiita += 1.5f * delta_second;
-		select_x = 0;
-		select_y = 0;
-		pressed = 0;
 
 		if (shiita > 1.0f)
 		{

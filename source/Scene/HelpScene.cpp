@@ -43,7 +43,9 @@ int Help::Init()
 	}
 
 	PlaySoundMem(HelpBGM, DX_PLAYTYPE_LOOP);
-	select_x, pressed = 0;//selectはメニューの選択に利用する変数、pressedはボタンが押された場合に利用する変数
+
+	select_x = 0;
+	pressed = 0;
 	
 	shiita = 0.0f;
 	changeProduction = 0;
@@ -61,6 +63,7 @@ eSceneType Help::Update(float delta_second)
 	case 0:	// =========================================================================入る演出
 
 		shiita += 1.5f * delta_second;
+		
 
 		if (shiita > 1.0f)
 		{
@@ -80,19 +83,7 @@ eSceneType Help::Update(float delta_second)
 		break;
 	case 1:	// ============================================================================選択
 
-		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
-		{
-			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
-			if (select_x == 0)
-			{
-				select_x = 1;
-			}
-			else
-			{
-				select_x = 0;
-			}
-		}
-		if (GetLeftStickState_X(false) == ePressed)//左スティックが下に入力された場合
+		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
 			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
 			if (select_x == 1)
@@ -101,7 +92,19 @@ eSceneType Help::Update(float delta_second)
 			}
 			else
 			{
+				select_x++;
+			}
+		}
+		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
+		{
+			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
+			if (select_x == 0)
+			{
 				select_x = 1;
+			}
+			else
+			{
+				select_x--;
 			}
 		}
 
@@ -189,6 +192,8 @@ void Help::Draw()const
 	int notSelectCharSize = 50;
 	Vector2D startLoc = { 350.0f, 600.0f };
 	Vector2D titleLoc = { 1000.0f, 600.0f };
+
+	DrawFormatString(100, 100, GetColor(255, 0, 0), "%d", select_x);
 
 	if (select_x == 0)	//スタートが選択されている場合
 	{
