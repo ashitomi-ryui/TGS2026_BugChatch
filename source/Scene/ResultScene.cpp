@@ -5,6 +5,7 @@
 #include"../Utilitys/Camera.h"
 
 int Result::netImage = -1;
+int Result::buttonImage = -1;
 
 int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
 int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
@@ -32,12 +33,8 @@ Result::~Result()
 
 int Result::Init()
 {
-	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
-	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
-	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
-	rank_b.newtral = LoadGraph("assets/images/UI/RankingDefault.PNG");
-	rank_b.select = LoadGraph("assets/images/UI/RankingSelect.PNG");
-	rank_b.pressed = LoadGraph("assets/images/UI/RankingPress.PNG");
+	buttonImage = LoadGraph("assets/images/UI/Button.PNG");
+	
 	back_ground = LoadGraph("assets/images/UI/ResultBack.PNG");
 	bugIcon[0] = LoadGraph("assets/images/UI/CicadaIcon.PNG");
 	bugIcon[1] = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
@@ -55,7 +52,7 @@ int Result::Init()
 	{
 		return FALSE;
 	}
-	select_x, pressed = 0;
+	pressed = false;
 
 	PlaySoundMem(ResultBGM, DX_PLAYTYPE_LOOP);
 
@@ -106,7 +103,7 @@ int Result::Init()
 	Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT });
 	Camera::SetScreenRatioSize(0.0f);
 
-	select_x = -1;
+	buttonSelect = 1;
 
 	return TRUE;
 }
@@ -176,35 +173,27 @@ eSceneType Result::Update(float delta_second)
 		}
 		else
 		{
-			select_x = 0;
+			buttonSelect = 1;
 			changeProduction++;
 		}
 
 		break;
 	case 3:	// ============================================================================選択
 
-		if (GetLeftStickState_X(true) == ePressed)//左スティックが上に入力された場合
+		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
 			PlaySoundMem(ChoiceSE3, DX_PLAYTYPE_BACK);
-			if (select_x == 1)
+			if (buttonSelect < 2)
 			{
-				select_x = 0;
-			}
-			else
-			{
-				select_x = 1;
+				buttonSelect++;
 			}
 		}
-		if (GetLeftStickState_X(false) == ePressed)//左スティックが下に入力された場合
+		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
 		{
 			PlaySoundMem(ChoiceSE3, DX_PLAYTYPE_BACK);
-			if (select_x == 0)
+			if (buttonSelect > 0)
 			{
-				select_x = 1;
-			}
-			else
-			{
-				select_x = 0;
+				buttonSelect--;
 			}
 		}
 
@@ -216,7 +205,7 @@ eSceneType Result::Update(float delta_second)
 			changeProduction++;
 			shiita = 0.0f;
 
-			pressed = TRUE;
+			pressed = true;
 		}
 
 		break;
@@ -247,12 +236,15 @@ eSceneType Result::Update(float delta_second)
 		if (shiita > 1.6f)
 		{
 			// 選択したシーンへ遷移
-			switch (select_x)
+			switch (buttonSelect)
 			{
 			case 0:
 				return eTitle;
 				break;
 			case 1:
+				return eInGame;
+				break;
+			case 2:
 				return eRanking;
 				break;
 			}
@@ -292,13 +284,6 @@ void Result::Draw()const
 
 	Camera::DrawGraph({ 640, 360 }, 1.0, 1.0, 0.0, back_ground, true);
 
-	float selectSize = 0.84f;
-	float notSelectSize = 0.7f;
-	int selectCharSize = 60;
-	int notSelectCharSize = 50;
-	Vector2D startLoc = { 300.0f, 600.0f };
-	Vector2D titleLoc = { 1000.0f, 600.0f };
-
 	for (int i = 0;i < 3;i++)
 	{
 		Camera::DrawGraph({ 200.0f + (i * 320.0f), 150.0f }, 3.0f, 3.0f, 0.0f, bugIcon[i]);
@@ -337,44 +322,83 @@ void Result::Draw()const
 
 	if(changeProduction > 1)
 	{
-		if (select_x == 0)	//タイトルが選択されている場合
-		{
-			if (pressed == TRUE)	//ボタンが押されている場合
-			{
-				//ボタンを押された状態にする
-				Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
-			}
-			else
-			{
-				//ボタンを押されていない状態にする
-				Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
-			}
-			Camera::DrawString({ startLoc.x - (float)selectCharSize * 1.5f, startLoc.y }, selectCharSize, GetColor(255, 255, 255), "タイトル");
-		}
-		else
-		{
-			//通常サイズに戻す
-			Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-			Camera::DrawString({ startLoc.x - (float)notSelectCharSize * 1.5f, startLoc.y }, notSelectCharSize, GetColor(255, 255, 255), "タイトル");
-		}
+		float selectSize = 0.84f;
+		float notSelectSize = 0.7f;
+		int selectCharSize = 60;
+		int notSelectCharSize = 50;
+		Vector2D startLoc = { 300.0f, 600.0f };
+		Vector2D titleLoc = { 1000.0f, 600.0f };
 
-		if (select_x == 1)	//ランキングが選択されている場合
+		// ボタンのサイズ比率
+		float ratio = 1.0f;
+		// 文字サイズ
+		int charSize = 50;
+		// 押されている見た目か
+		bool isPress = false;
+		// ボタンの色
+		unsigned int buttonColor = 0xc0c0c0;
+		// 文字の色
+		unsigned int charColor = 0xffffff;
+		// ボタンの位置
+		Vector2D botLoc[4] = { { D_WIN_WIDTH / 2.0f - 400.0f, D_WIN_HEIGHT - 100.0f },		// タイトル
+							   { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT - 150.0f },		// リスタート
+							   { D_WIN_WIDTH / 2.0f + 400.0f, D_WIN_HEIGHT - 100.0f } };	// ランキング
+		// 文字の位置ずらす
+		Vector2D charVec[4] = { { -1.5f, -10.0f },		// タイトル
+								 { -2.0f, -10.0f },		// リスタート
+								 { -2.2f, -10.0f } };	// ランキング
+		// 文字
+		char character[4][20] = { "タイトル",		// タイトル
+								  "リスタート",		// リスタート
+								  "ランキング", };	// ランキング
+		for (int i = 0;i < 3;i++)
 		{
-			if (pressed == TRUE)
+			// 選択されている場合
+			if (buttonSelect == i)
 			{
-				//ボタンを大きくする
-				Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.pressed);
+				ratio = 1.2f;
+				// ボタンが押されている場合
+				if (pressed)
+				{
+					// 押されている見た目にする
+					isPress = true;
+					// 色を暗くする
+					buttonColor = 0x777777;
+					// 文字の枠を暗い黄色にする
+					charColor = 0x773c00;
+				}
+				else
+				{
+					// 色をそのままにする
+					buttonColor = 0xffffff;
+					// 文字の枠を黄色にする
+					charColor = 0xff7700;
+				}
 			}
 			else
 			{
-				//ボタンを大きくする
-				Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, rank_b.select);
+				ratio = 1.0f;
+				// 押されている見た目にする
+				isPress = false;
+				// 色を少し暗くする
+				buttonColor = 0xc0c0c0;
+				// 文字の枠を白にする
+				charColor = 0xffffff;
 			}
-		}
-		else
-		{
-			//通常サイズに戻す
-			Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, rank_b.newtral);
+
+			if (i > 0)
+			{
+				charSize = (int)(40.0f * ratio);
+			}
+			else
+			{
+				charSize = (int)(50.0f * ratio);
+			}
+
+			// ボタンを表示
+			Camera::DrawGraph(botLoc[i], ratio, ratio, 0.0, buttonImage, false, isPress, buttonColor);
+			// 文字を表示
+			Camera::DrawString(Vec2Add(botLoc[i], { charVec[i].x * (float)charSize, charVec[i].y }), charSize * 1.2f, charColor, character[i]);
 		}
 	}
 

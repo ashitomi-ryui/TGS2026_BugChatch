@@ -16,7 +16,7 @@ int Title::buttonImage = -1;
 int Title::netImage = -1;
 
 int Title::buttonSelect = 0;	// 0スタート、1ヘルプ、2おわり、3ランキング
-int Title::pressed = 0;
+bool Title::pressed = false;
 
 
 Title::Title()
@@ -68,7 +68,7 @@ int Title::Init()
     PlaySoundMem(Titlebgm, DX_PLAYTYPE_LOOP);
 
 	buttonSelect = 0;
-	pressed = 0;
+	pressed = false;
 
 	shiita = 0.0f;
 	changeProduction = 0;
@@ -136,7 +136,7 @@ eSceneType Title::Update(float delta_second)
 			changeProduction++;
 			shiita = 0.0f;
 
-			pressed = TRUE;
+			pressed = true;
 		}
 
 		break;
@@ -219,13 +219,15 @@ void Title::Draw()const
 	bool isPress = false;
 	// ボタンの色
 	unsigned int buttonColor = 0xc0c0c0;
+	// 文字の色
+	unsigned int charColor = 0xffffff;
 	// ボタンの位置
-	Vector2D botLoc[4] = { { 640.0f, 400.0f },		// スタート
-						   { 300.0f, 520.0f },		// ヘルプ
-						   { 640.0f, 640.0f },		// おわり
-						   { 980.0f, 520.0f } };	// ランキング
+	Vector2D botLoc[4] = { { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT - 320.0f },		// スタート
+						   { D_WIN_WIDTH / 2.0f - 350.0f, D_WIN_HEIGHT - 200.0f },		// ヘルプ
+						   { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT - 80.0f },		// おわり
+						   { D_WIN_WIDTH / 2.0f + 350.0f, D_WIN_HEIGHT - 200.0f } };	// ランキング
 	// 文字の位置ずらす
-	Vector2D charaVec[4] = { { -1.5f, -10.0f },		// スタート
+	Vector2D charVec[4] = { { -1.5f, -10.0f },		// スタート
 							 { -1.2f, -10.0f },		// ヘルプ
 							 { -1.0f, -10.0f },		// おわり
 							 { -2.2f, -10.0f } };	// ランキング
@@ -247,11 +249,15 @@ void Title::Draw()const
 				isPress = true;
 				// 色を暗くする
 				buttonColor = 0x777777;
+				// 文字の枠を暗い黄色にする
+				charColor = 0x773c00;
 			}
 			else
 			{
 				// 色をそのままにする
 				buttonColor = 0xffffff;
+				// 文字の枠を黄色にする
+				charColor = 0xff7700;
 			}
 		}
 		else
@@ -261,6 +267,8 @@ void Title::Draw()const
 			isPress = false;
 			// 色を少し暗くする
 			buttonColor = 0xc0c0c0;
+			// 文字の枠を白にする
+			charColor = 0xffffff;
 		}
 
 		if (i == 3)
@@ -275,7 +283,7 @@ void Title::Draw()const
 		// ボタンを表示
 		Camera::DrawGraph(botLoc[i], ratio, ratio, 0.0, buttonImage, false, isPress, buttonColor);
 		// 文字を表示
-		Camera::DrawString(Vec2Add(botLoc[i], { charaVec[i].x * (float)charSize, charaVec[i].y }), charSize * 1.2f, GetColor(255, 255, 255), character[i]);
+		Camera::DrawString(Vec2Add(botLoc[i], { charVec[i].x * (float)charSize, charVec[i].y }), charSize * 1.2f, charColor, character[i]);
 	}
 
 	Camera::Draw();

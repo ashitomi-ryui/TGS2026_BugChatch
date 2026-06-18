@@ -7,7 +7,7 @@ class Help
 {
 private:
 	int buttonSelect;
-	int pressed;
+	bool pressed;
 private:
 	int ChoiceSE2;
 	int DecisionSE2;

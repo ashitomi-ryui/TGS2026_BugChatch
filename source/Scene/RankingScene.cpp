@@ -186,11 +186,13 @@ void Ranking::Draw()const
 	bool isPress = false;
 	// ボタンの色
 	unsigned int buttonColor = 0xc0c0c0;
+	// 文字の色
+	unsigned int charColor = 0xffffff;
 	// ボタンの位置
-	Vector2D botLoc[4] = { { 350.0f, 600.0f },		// スタート
-						   { 1000.0f, 600.0f } };	// タイトル
+	Vector2D botLoc[4] = { { D_WIN_WIDTH / 2.0f - 300.0f, D_WIN_HEIGHT - 120.0f },		// スタート
+						   { D_WIN_WIDTH / 2.0f + 300.0f, D_WIN_HEIGHT - 120.0f } };	// タイトル
 	// 文字の位置ずらす
-	Vector2D charaVec[4] = { { -1.5f, -10.0f },		// スタート
+	Vector2D charVec[4] = { { -1.5f, -10.0f },		// スタート
 							 { -1.5f, -10.0f } };	// タイトル
 	// 文字
 	char character[4][20] = { "スタート",		// スタート
@@ -208,11 +210,15 @@ void Ranking::Draw()const
 				isPress = true;
 				// 色を暗くする
 				buttonColor = 0x777777;
+				// 文字の枠を暗い黄色にする
+				charColor = 0x773c00;
 			}
 			else
 			{
 				// 色をそのままにする
 				buttonColor = 0xffffff;
+				// 文字の枠を黄色にする
+				charColor = 0xff7700;
 			}
 		}
 		else
@@ -222,21 +228,16 @@ void Ranking::Draw()const
 			isPress = false;
 			// 色を少し暗くする
 			buttonColor = 0xc0c0c0;
+			// 文字の枠を白にする
+			charColor = 0xffffff;
 		}
 
-		if (i == 3)
-		{
-			charSize = (int)(40.0f * ratio);
-		}
-		else
-		{
-			charSize = (int)(50.0f * ratio);
-		}
+		charSize = (int)(50.0f * ratio);
 
 		// ボタンを表示
 		Camera::DrawGraph(botLoc[i], ratio, ratio, 0.0, buttonImage, false, isPress, buttonColor);
 		// 文字を表示
-		Camera::DrawString(Vec2Add(botLoc[i], { charaVec[i].x * (float)charSize, charaVec[i].y }), charSize * 1.2f, GetColor(255, 255, 255), character[i]);
+		Camera::DrawString(Vec2Add(botLoc[i], { charVec[i].x * (float)charSize, charVec[i].y }), charSize * 1.2f, charColor, character[i]);
 	}
 
 

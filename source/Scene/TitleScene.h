@@ -18,7 +18,7 @@ private:
 	static int netImage;
 
 	static int buttonSelect;	// 0スタート、1ヘルプ、2おわり、3ランキング
-	static int pressed;
+	static bool pressed;
 
 	float shiita;
 	int changeProduction;	// シーン切替演出
