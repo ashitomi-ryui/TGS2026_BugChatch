@@ -10,6 +10,7 @@ int Leaf::images[4] = {};
 Leaf::Leaf()
 {
 	m_location = { 0.0f,0.0f };
+	m_vector = {};
 	m_animTime = 0.0f;
 	m_animCount = 0;
 }
@@ -30,6 +31,7 @@ void Leaf::Init()
 void Leaf::Set(Vector2D location)
 {
 	m_location = location;
+	m_vector = { 0.0f,0.0f };
 	m_animTime = 0.0f;
 	m_animCount = 0;
 }
@@ -55,13 +57,26 @@ void Leaf::SetPlayer(Player* p)
 	targetPlayer = p;
 }
 
-void Leaf::EliminateOverlap(int id)
+bool Leaf::DetermineTheExtrusionVector(int id)
 {
 	// d‚È‚è‚ð‚È‚­‚·
 	float radius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_LEAF_WIDTH / 2.0f, D_LEAF_HEIGHT / 2.0f }));
 	float playerRadius = targetPlayer->GetPlayerRadius();
-	m_location = Vec2Add(m_location, Vec2Mult(ObjectManager::TreeHitCheak(m_location, radius, true), 0.5f));
-	m_location = Vec2Add(m_location, Vec2Mult(ObjectManager::LeafHitCheak(m_location, radius, true, id), 0.5f));
+	m_vector = ObjectManager::TreeHitCheak(m_location, radius, true);
+	m_vector = Vec2Add(m_vector, ObjectManager::LeafHitCheak(m_location, radius, true, id));
+	m_vector = Vec2Mult(m_vector, 0.5f);
+
+	if (m_vector.x != 0.0f ||
+		m_vector.y != 0.0f)
+		return true;
+
+	return false;
+}
+
+void Leaf::EliminateOverlap()
+{
+	m_location = Vec2Add(m_location, m_vector);
+	m_location = Vec2Add(m_location, m_vector);
 }
 
 Vector2D Leaf::GetLocation() const

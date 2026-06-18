@@ -12,6 +12,7 @@ class Tree
 {
 private:
 	Vector2D m_location;
+	Vector2D m_vector;
 	static int images[4];
 
 	float m_animTime;
@@ -34,10 +35,17 @@ public:
 	static void SetPlayer(Player* p);
 
 	/// <summary>
-	/// 重なりをなくす
+	/// 重なりをなくすための
+	/// 押し出しベクトルを決める
 	/// </summary>
 	/// <param name="id">ID</param>
-	void EliminateOverlap(int id);
+	/// <returns>重なっていたらtrue</returns>
+	bool DetermineTheExtrusionVector(int id);
+
+	/// <summary>
+	/// 重なりをなくす
+	/// </summary>
+	void EliminateOverlap();
 
 	Vector2D GetLocation() const;
 };

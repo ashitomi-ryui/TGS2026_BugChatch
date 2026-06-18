@@ -69,17 +69,31 @@ void ObjectManager::Init()
 		leaf[id].Set(RandomLocation(100.0f));
 	}
 
-	for (int i = 0;i < 1000;i++)
+	bool isOverlap = false;
+	for (int i = 0;i < 100;i++)
 	{
-		// 木が重ならないように
+		isOverlap = false;
+		// 木の押し出す大きさを決める
 		for (int id = 0;id < D_TREE_MAX;id++)
 		{
-			tree[id].EliminateOverlap(id);
+			if (tree[id].DetermineTheExtrusionVector(id))
+				isOverlap = true;
 		}
-		// 草が重ならないように
+		// 草の押し出す大きさを決める
 		for (int id = 0;id < D_TREE_MAX;id++)
 		{
-			leaf[id].EliminateOverlap(id);
+			if (leaf[id].DetermineTheExtrusionVector(id))
+				isOverlap = true;
+		}
+		// 木を重ならないように移動する
+		for (int id = 0;id < D_TREE_MAX;id++)
+		{
+			tree[id].EliminateOverlap();
+		}
+		// 草を重ならないように移動する
+		for (int id = 0;id < D_TREE_MAX;id++)
+		{
+			leaf[id].EliminateOverlap();
 		}
 	}
 
