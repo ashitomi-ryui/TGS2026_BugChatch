@@ -75,8 +75,12 @@ void Player::Init()
 	// プレイヤーキャラ
 	m_location = { 640.0f, 360.0f };	// プレイヤーの座標
 
-	m_location = Vec2Add(m_location, ObjectManager::TreeHitCheak(m_location, m_radius, false));
-
+	Vector2D treeHit = {};
+	do
+	{
+		treeHit = ObjectManager::TreeHitCheak(m_location, m_radius, false);
+		m_location = Vec2Add(m_location, treeHit);
+	} while (treeHit.x != 0.0f && treeHit.y != 0.0f);
 
 	m_moveSpeed = { 0.0f, 0.0f };	// 動く速度
 
