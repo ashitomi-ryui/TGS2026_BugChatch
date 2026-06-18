@@ -13,8 +13,8 @@
 class Result
 {
 private:
-	int select_x;
-	int pressed;
+	int buttonSelect;
+	bool pressed;
 private:
 	int ChoiceSE3;
 	int DecisionSE3;
@@ -23,22 +23,8 @@ private:
 	int bugIcon[3];
 
 	static int netImage;
+	static int buttonImage;
 
-
-	struct b
-	{
-		int newtral;
-		int select;
-		int pressed;
-	};
-	struct rank_b
-	{
-		int newtral;
-		int select;
-		int pressed;
-	};
-	b b;
-	rank_b rank_b;
 private:
 	static struct point
 	{
