@@ -54,7 +54,7 @@ void ObjectManager::Init()
 		Vector2D nearestTree = { 0.0f, 0.0f };	// 最も近い木
 		
 		// ランダムな位置に配置
-		tree[id].Set(RandomLocation(100.0f * D_OBJECT_SIZE_RATIO));
+		tree[id].Set(RandomLocation(100.0f));
 	}
 	// 草の配置
 	float leafRadius;	// 草の中心から一番離れた長さ
@@ -66,7 +66,7 @@ void ObjectManager::Init()
 		Vector2D nearestLeaf = { 0.0f, 0.0f };	// 最も近い草
 
 		// ランダムな位置に配置
-		leaf[id].Set(RandomLocation(100.0f * D_OBJECT_SIZE_RATIO));
+		leaf[id].Set(RandomLocation(100.0f));
 	}
 
 	for (int i = 0;i < 1000;i++)

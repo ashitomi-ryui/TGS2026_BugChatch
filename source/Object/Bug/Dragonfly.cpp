@@ -17,7 +17,7 @@ int Dragonfly::images[4] = { -1,-1,-1,-1 };
 Dragonfly::Dragonfly() : Bug()
 {
 	// 察知範囲
-	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
+	m_detectionRange = 200.0f;
 
 	m_destinationSub = 0;	// 目的地の添え字
 	m_destinationNum = 0;	// 目的地の数
@@ -121,7 +121,7 @@ void Dragonfly::Update(int id, float delta)
 
 void Dragonfly::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], m_isFlip, false);
+	Camera::DrawGraphW(m_location, 2.0f, 2.0f, m_Angle, images[m_animCount], m_isFlip, false);
 
 #ifdef _DEBUG
 	//if (m_isEscape)
@@ -189,7 +189,7 @@ void Dragonfly::Spawn()
 	m_isFlip = false;	// 反転
 
 	// 位置をランダムな草に設定
-	Vector2D location = ObjectManager::FindNearestLeaf(ObjectManager::RandomLocation(500.0f * D_OBJECT_SIZE_RATIO));
+	Vector2D location = ObjectManager::FindNearestLeaf(ObjectManager::RandomLocation(330.0f));
 
 	// スポーン位置
 	 location = ObjectManager::FindNearestTree(location);
@@ -198,7 +198,7 @@ void Dragonfly::Spawn()
 	location.y += Random::GetRand((D_LEAF_HEIGHT / 8.0f), -(D_LEAF_HEIGHT / 8.0f));
 	
 	// 高さ
-	m_height = 25.0f * D_OBJECT_SIZE_RATIO;
+	m_height = 17.0f;
 
 	// スポーン
 	Set(location);
@@ -281,7 +281,7 @@ void Dragonfly::Animation(float delta)
 			m_animTime = 0.0f;
 			m_animCount = (m_animCount + 1) % 2;
 
-			m_height = 75.0f * D_OBJECT_SIZE_RATIO;
+			m_height = 50.0f;
 		}
 	}
 	// 逃げていないなら
@@ -293,7 +293,7 @@ void Dragonfly::Animation(float delta)
 			// 画像の切り替え
 			m_animCount = 0;
 
-			m_height = 25.0f * D_OBJECT_SIZE_RATIO;
+			m_height = 17.0f;
 
 			break;
 		case eMove:
@@ -312,7 +312,7 @@ void Dragonfly::Animation(float delta)
 				}
 			}
 
-			m_height = 75.0f * D_OBJECT_SIZE_RATIO;
+			m_height = 50.0f;
 
 			break;
 		case ePanic:
@@ -323,7 +323,7 @@ void Dragonfly::Animation(float delta)
 				m_animCount = (m_animCount + 1) % 2;
 			}
 
-			m_height = 75.0f * D_OBJECT_SIZE_RATIO;
+			m_height = 50.0f;
 
 			break;
 		}
@@ -346,11 +346,11 @@ void Dragonfly::Escape(float delta)
 	}
 
 	// 加速度
-	float acceleration = 2000.0f;
+	float acceleration = 130000.0f;
 	// 最大速度
-	float maxSpeed = 600.0f;
+	float maxSpeed = 400.0f;
 	// 減速度
-	float deceleration = 400.0f;
+	float deceleration = 170.0f;
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);
@@ -403,11 +403,11 @@ void Dragonfly::Stand(float delta)
 void Dragonfly::Move(float delta)
 {
 	// 加速度
-	float acceleration = 1000.0f;
+	float acceleration = 670.0f;
 	// 最大速度
-	float maxSpeed = 400.0f;
+	float maxSpeed = 270.0f;
 	// 減速度
-	float deceleration = 200.0f;
+	float deceleration = 130.0f;
 
 	// 目的地に向ける
 	m_direction = VecATan2(m_location, m_destinations[m_destinationSub]);
@@ -427,7 +427,7 @@ void Dragonfly::Move(float delta)
 	}
 
 	// 目的地についたら
-	if (Length(Vec2Sub(m_location, m_destinations[m_destinationSub])) < 10.0f * D_OBJECT_SIZE_RATIO)
+	if (Length(Vec2Sub(m_location, m_destinations[m_destinationSub])) < 7.0f)
 	{
 		// 全ての目的地を通っていないなら
 		if (m_destinationSub < m_destinationNum - 1)
@@ -461,11 +461,11 @@ void Dragonfly::Panic(float delta)
 	m_direction += Random::GetRand(-2.0f, 2.0f, 0.125f) * DX_PI_F * delta;
 
 	// 加速度
-	float acceleration = 2000.0f;
+	float acceleration = 1300.0f;
 	// 最大速度
-	float maxSpeed = 600.0f;
+	float maxSpeed = 400.0f;
 	// 減速度
-	float deceleration = 400.0f;
+	float deceleration = 270.0f;
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);
@@ -569,11 +569,11 @@ void Dragonfly::Hovering(float delta)
 	else
 	{
 		// 加速度
-		acceleration = 50.0f;
+		acceleration = 30.0f;
 		// 最大速度
-		maxSpeed = 20.0f;
+		maxSpeed = 10.0f;
 		// 減速度
-		deceleration = 10.0f;
+		deceleration = 7.0f;
 
 		// 加速
 		Acceleration(acceleration, maxSpeed, m_direction, delta);
@@ -581,7 +581,7 @@ void Dragonfly::Hovering(float delta)
 		Deceleration(deceleration, delta);
 
 		// 到着判定
-		if (Length(Vec2Sub(m_location, m_destination)) < 0.1f * D_OBJECT_SIZE_RATIO)
+		if (Length(Vec2Sub(m_location, m_destination)) < 0.07f)
 		{
 			// 大きく羽ばたく
 			m_isFlapping = true;
@@ -626,11 +626,11 @@ void Dragonfly::HeadingForABreak(float delta)
 	}
 
 	// 加速度
-	float acceleration = 1000.0f;
+	float acceleration = 670.0f;
 	// 最大速度
-	float maxSpeed = 400.0f;
+	float maxSpeed = 270.0f;
 	// 減速度
-	float deceleration = 200.0f;
+	float deceleration = 130.0f;
 
 	// 目的地に向ける
 	m_direction = VecATan2(m_location, m_destination);
@@ -642,7 +642,7 @@ void Dragonfly::HeadingForABreak(float delta)
 
 	Vector2D leafLocation = ObjectManager::FindNearestLeaf(m_location);
 	// 目的地についたかつ、草の範囲なら
-	if (Length(Vec2Sub(m_location, m_destination)) < 1.0f * D_OBJECT_SIZE_RATIO)
+	if (Length(Vec2Sub(m_location, m_destination)) < 0.7f)
 	{
 		// 目的地についたら待機状態へ
 		m_moveSpeed = { 0.0f, 0.0f };

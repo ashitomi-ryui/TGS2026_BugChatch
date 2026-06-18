@@ -46,7 +46,7 @@ void Tree::Update(float delta)
 
 void Tree::Draw(int id)const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, images[m_animCount]);
+	Camera::DrawGraphW(m_location, 2.0f, 2.0f, 0.0f, images[m_animCount]);
 }
 
 void Tree::SetPlayer(Player* p)

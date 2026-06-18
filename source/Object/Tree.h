@@ -4,8 +4,8 @@
 
 #include "Player.h"
 
-#define D_TREE_WIDTH	(180.0f * D_OBJECT_SIZE_RATIO)
-#define D_TREE_HEIGHT	(280.0f * D_OBJECT_SIZE_RATIO)
+#define D_TREE_WIDTH	(120.0f)
+#define D_TREE_HEIGHT	(190.0f)
 #define D_TREE_MAX		(40)
 
 class Tree

@@ -22,7 +22,7 @@ int Grasshopper::Audio[2] = { -1,-1 };
 Grasshopper::Grasshopper() : Bug()
 {
 	// 察知範囲
-	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
+	m_detectionRange = 200.0f;
 	jougai = false;
 
 	m_isTurn = false;
@@ -148,7 +148,7 @@ void Grasshopper::Update(int id, float delta)
 
 void Grasshopper::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0, images[m_animCount], m_isTurn);
+	Camera::DrawGraphW(m_location, 2.0f, 2.0f, 0.0, images[m_animCount], m_isTurn);
 }
 
 void Grasshopper::DrawOnTheBack() const
@@ -172,7 +172,7 @@ void Grasshopper::DrawOnTheFront() const
 void Grasshopper::Spawn()
 {
 	// スポーン位置
-	Vector2D location = ObjectManager::RandomLocation(500.0f * D_OBJECT_SIZE_RATIO);
+	Vector2D location = ObjectManager::RandomLocation(330.0f);
 
 	// 位置を近くの草に設定する
 	location = ObjectManager::FindNearestLeaf(location);
@@ -186,7 +186,7 @@ void Grasshopper::Spawn()
 	m_moveSpeed = { 0.0f, 0.0f };
 	m_transitionTime = 0.0f;
 
-	m_height = 10 * D_OBJECT_SIZE_RATIO;
+	m_height = 7.0f;
 
 	// スポーン
 	Set(location);
@@ -356,31 +356,31 @@ void Grasshopper::Animation(float delta)
 		{
 			if (shiita < 0.25f)
 			{
-				m_height = 30 * D_OBJECT_SIZE_RATIO;
+				m_height = 20.0f;
 				m_animCount = 4; // 飛び始め
 			}
 			else if (shiita < 0.75f)
 			{
-				m_height = 50 * D_OBJECT_SIZE_RATIO;
+				m_height = 33.0f;
 				m_animCount = 5; // 頂点通過
 			}
 			else
 			{
-				m_height = 30 * D_OBJECT_SIZE_RATIO;
+				m_height = 20.0f;
 				m_animCount = 6; // 着地前
 			}
 		}
 
 		else if (m_state == eStand)
 		{
-			m_height = 10 * D_OBJECT_SIZE_RATIO;
+			m_height = 7.0f;
 			m_animCount = 0; // 通常時（地面にいる画像）に戻す！
 		}
 		else if (m_isJump == false)
 		{
 			if (m_animTime > 0.2f)
 			{
-				m_height = 10 * D_OBJECT_SIZE_RATIO;
+				m_height = 7.0f;
 				m_animTime = 0.0f;
 				m_animCount = (m_animCount + 1) % 4;
 			}

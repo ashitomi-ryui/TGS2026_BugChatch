@@ -18,7 +18,7 @@ bool Cicada::isWithinTheScreen = false;
 Cicada::Cicada() : Bug()
 {
 	// 察知範囲
-	m_detectionRange = 300.0f * D_OBJECT_SIZE_RATIO;
+	m_detectionRange = 200.0f;
 }
 Cicada::~Cicada()
 {
@@ -107,7 +107,7 @@ void Cicada::Update(int id, float delta)
 
 void Cicada::Draw() const
 {
-	Camera::DrawGraphW(m_location, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, m_Angle, images[m_animCount], false);
+	Camera::DrawGraphW(m_location, 2.0f, 2.0f, m_Angle, images[m_animCount], false);
 }
 
 void Cicada::DrawOnTheBack() const
@@ -144,7 +144,7 @@ void Cicada::PlayAudio()
 void Cicada::Spawn()
 {
 	// スポーン位置
-	Vector2D location = ObjectManager::RandomLocation(500.0f * D_OBJECT_SIZE_RATIO);
+	Vector2D location = ObjectManager::RandomLocation(330.0f);
 
 	// 位置を近くの木に設定する
 	location = ObjectManager::FindNearestTree(location);
@@ -152,7 +152,7 @@ void Cicada::Spawn()
 	location.x += Random::GetRand((D_TREE_WIDTH / 4.0f), -(D_TREE_WIDTH / 8.0f));
 	location.y += Random::GetRand((D_TREE_HEIGHT / 4.0f), -(D_TREE_HEIGHT / 8.0f));
 
-	m_height = D_OBJECT_SIZE_RATIO * 25;
+	m_height = 17.0f;
 
 	// スポーン
 	Set(location);
@@ -199,7 +199,7 @@ void Cicada::Animation(float delta)
 				m_animTime = 0.0f;
 				m_animCount = m_animCount % 4 + 1;
 			}
-			m_height = D_OBJECT_SIZE_RATIO * 75.0f;
+			m_height = 50.0f;
 
 			// 画像の向きを徐々に移動方向に向ける
 			GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
@@ -219,7 +219,7 @@ void Cicada::Animation(float delta)
 						m_animCount = (m_animCount + 1) % 5;
 					}
 				}
-				m_height = D_OBJECT_SIZE_RATIO * 25.0f;
+				m_height = 17.0f;
 
 				// 画像の向きを徐々に上に向ける
 				GraduallyTurn(m_Angle, 0.0f, 2.0f * DX_PI_F * delta);
@@ -232,7 +232,7 @@ void Cicada::Animation(float delta)
 					m_animTime = 0.0f;
 					m_animCount = m_animCount % 4 + 1;
 				}
-				m_height = D_OBJECT_SIZE_RATIO * 75.0f;
+				m_height = 50.0f;
 
 				// 画像の向きを徐々に移動方向に向ける
 				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
@@ -245,7 +245,7 @@ void Cicada::Animation(float delta)
 					m_animTime = 0.0f;
 					m_animCount = m_animCount % 4 + 1;
 				}
-				m_height = D_OBJECT_SIZE_RATIO * 75.0f;
+				m_height = 50.0f;
 
 				// 画像の向きを徐々に移動方向に向ける
 				GraduallyTurn(m_Angle, m_direction, 2.0f * DX_PI_F * delta);
@@ -266,11 +266,11 @@ void Cicada::Escape(float delta)
 	m_direction += Random::GetRand(-0.25f, 0.25f, 0.01f) * DX_PI_F;
 
 	// 加速度
-	float acceleration = 2000.0f;
+	float acceleration = 1300.0f;
 	// 最大速度
-	float maxSpeed = 600.0f;
+	float maxSpeed = 400.0f;
 	// 減速度
-	float deceleration = 400.0f;
+	float deceleration = 270.0f;
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);
@@ -322,11 +322,11 @@ void Cicada::Stand(float delta)
 void Cicada::Move(float delta)
 {
 	// 加速度
-	float acceleration = 1000.0f;
+	float acceleration = 670.0f;
 	// 最大速度
-	float maxSpeed = 400.0f;
+	float maxSpeed = 270.0f;
 	// 減速度
-	float deceleration = 200.0f;
+	float deceleration = 130.0f;
 
 	// 徐々に目的地に向ける
 	float destinationDirection = VecATan2(m_location, m_destination);
@@ -339,7 +339,7 @@ void Cicada::Move(float delta)
 
 	Vector2D treeLocation = ObjectManager::FindNearestTree(m_location);
 	// 目的地についたかつ、木の範囲なら
-	if (Length(Vec2Sub(m_location, m_destination)) < 10.0f * D_OBJECT_SIZE_RATIO &&
+	if (Length(Vec2Sub(m_location, m_destination)) < 7.0f &&
 		m_location.x > treeLocation.x - D_TREE_WIDTH / 2.0f &&
 		m_location.x < treeLocation.x + D_TREE_WIDTH / 2.0f &&
 		m_location.y > treeLocation.y - D_TREE_HEIGHT / 2.0f &&
@@ -361,11 +361,11 @@ void Cicada::Panic(float delta)
 	m_direction += Random::GetRand(-2.0f, 2.0f, 0.125f) * DX_PI_F * delta;
 
 	// 加速度
-	float acceleration = 2000.0f;
+	float acceleration = 1300.0f;
 	// 最大速度
-	float maxSpeed = 600.0f;
+	float maxSpeed = 400.0f;
 	// 減速度
-	float deceleration = 400.0f;
+	float deceleration = 270.0f;
 
 	// 加速
 	Acceleration(acceleration, maxSpeed, m_direction, delta);

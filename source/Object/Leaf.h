@@ -4,8 +4,8 @@
 
 #include "Player.h"
 
-#define D_LEAF_WIDTH	(90.0f * D_OBJECT_SIZE_RATIO)
-#define D_LEAF_HEIGHT	(280.0f * D_OBJECT_SIZE_RATIO)
+#define D_LEAF_WIDTH	(60.0f)
+#define D_LEAF_HEIGHT	(190.0f)
 #define D_LEAF_MAX		(40)
 
 class Leaf
