@@ -136,7 +136,7 @@ eSceneType InGameUpdate(float delta_second)
 	case 4:	// ==============================================ƒQ[ƒ€ƒvƒŒƒC
 		timer += delta_second;
 #ifndef _DEBUG
-		if (timer > 0)
+		if (timer > 60.0f)
 		{
 			timer = 0.0f;
 
@@ -232,11 +232,11 @@ eSceneType InGameUpdate(float delta_second)
 void InGameDraw(void)
 {
 	// ”wŒi‚Ì•\Ž¦
-	for (float i = 0;i < D_STAGE_WIDTH;i += 30.0f * 3.0f * D_OBJECT_SIZE_RATIO)
+	for (float i = 0;i < D_STAGE_WIDTH;i += 30.0f * 2.0f)
 	{
-		for (float j = 0;j < D_STAGE_HEIGHT;j += 30.0f * 3.0f * D_OBJECT_SIZE_RATIO)
+		for (float j = 0;j < D_STAGE_HEIGHT;j += 30.0f * 2.0f)
 		{
-			Camera::DrawGraphW({ i, j }, 3.0f * D_OBJECT_SIZE_RATIO, 3.0f * D_OBJECT_SIZE_RATIO, 0.0f, groundImage);
+			Camera::DrawGraphW({ i, j }, 2.0f, 2.0f, 0.0f, groundImage);
 		}
 	}
 

@@ -14,8 +14,6 @@
 #define D_STAGE_WIDTH	(D_WIN_WIDTH * 2.5f)	// ステージ横幅
 #define D_STAGE_HEIGHT	(D_WIN_HEIGHT * 2.5f)	// ステージ縦幅
 
-#define D_OBJECT_SIZE_RATIO	(2.0f / 3.0f)	// オブジェクトや移動などのサイズ比率
-
 #define D_WORD_KANA_SIZE	(50)
 #define D_WORD_HIRAGANA_SYMBOLS_SIZE	(10)
 #define D_WORD_KATAKANA_SYMBOLS_SIZE	(15)
