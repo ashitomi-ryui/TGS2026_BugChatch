@@ -20,7 +20,7 @@ private:
 
 	static int netImage;
 
-	int buttonImage;
+	static int buttonImage;
 
 	float shiita;
 	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o

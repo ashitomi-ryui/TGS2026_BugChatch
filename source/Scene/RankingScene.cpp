@@ -4,6 +4,7 @@
 #include<DxLib.h>
 
 int Ranking::netImage = -1;
+int Ranking::buttonImage = -1;
 
 Ranking::Ranking()
 {
