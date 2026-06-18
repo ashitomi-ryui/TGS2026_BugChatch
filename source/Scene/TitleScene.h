@@ -13,29 +13,23 @@ private:
 	static int back_ground;
 	static int title_logo;
 
+	static int buttonImage;
+
 	static int netImage;
 
-	static int select_x;
-	static int select_y;
+	static int buttonSelect;	// 0スタート、1ヘルプ、2おわり、3ランキング
 	static int pressed;
 
 	float shiita;
 	int changeProduction;	// シーン切替演出
 
 private:
-	struct b
-	{
-		int newtral;
-		int select;
-		int pressed;
-	};
 	struct rank_b
 	{
 		int newtral;
 		int select;
 		int pressed;
 	};
-	b b;
 	rank_b rank_b;
 public:
 	Title();

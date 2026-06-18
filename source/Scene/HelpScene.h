@@ -6,7 +6,7 @@
 class Help
 {
 private:
-	int select_x;
+	int buttonSelect;
 	int pressed;
 private:
 	int ChoiceSE2;
@@ -16,14 +16,7 @@ private:
 	int controller;
 
 	static int netImage;
-
-	struct b
-	{
-		int newtral;
-		int select;
-		int pressed;
-	};
-	b b;
+	static int buttonImage;
 
 	float shiita;
 	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o

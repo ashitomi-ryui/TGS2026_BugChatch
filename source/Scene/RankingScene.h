@@ -8,8 +8,8 @@
 class Ranking
 {
 private:
-	int select_x;
-	int pressed;
+	int buttonSelect;
+	bool pressed;
 private:
 	int ranking[MAX_RANK];
 private:
@@ -20,13 +20,7 @@ private:
 
 	static int netImage;
 
-	struct b
-	{
-		int newtral;
-		int select;
-		int pressed;
-	};
-	b b;
+	int buttonImage;
 
 	float shiita;
 	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o

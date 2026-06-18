@@ -5,6 +5,7 @@
 
 
 int Help::netImage = -1;
+int Help::buttonImage = -1;
 
 Help::Help()
 {
@@ -19,9 +20,7 @@ Help::~Help()
 
 int Help::Init()
 {
-	b.newtral = LoadGraph("assets/images/UI/ButtonDefault.PNG");
-	b.select = LoadGraph("assets/images/UI/ButtonSelect.PNG");
-	b.pressed = LoadGraph("assets/images/UI/ButtonPress.PNG");
+	buttonImage = LoadGraph("assets/images/UI/Button.PNG");
 	back_ground = LoadGraph("assets/images/UI/HelpBack.PNG");
 	controller = LoadGraph("assets/images/UI/Controller.PNG");
 	netImage = LoadGraph("assets/images/Player/BugNet.PNG");
@@ -44,7 +43,7 @@ int Help::Init()
 
 	PlaySoundMem(HelpBGM, DX_PLAYTYPE_LOOP);
 
-	select_x = 0;
+	buttonSelect = 0;
 	pressed = 0;
 	
 	shiita = 0.0f;
@@ -86,26 +85,12 @@ eSceneType Help::Update(float delta_second)
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
 			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
-			if (select_x == 1)
-			{
-				select_x = 0;
-			}
-			else
-			{
-				select_x++;
-			}
+			buttonSelect = 1;
 		}
 		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
 		{
 			PlaySoundMem(ChoiceSE2, DX_PLAYTYPE_BACK);
-			if (select_x == 0)
-			{
-				select_x = 1;
-			}
-			else
-			{
-				select_x--;
-			}
+			buttonSelect = 0;
 		}
 
 		if (GetButtonState(XINPUT_BUTTON_A) == ePressed)//スタートが選択されているかつAボタンが押された場合
@@ -147,7 +132,7 @@ eSceneType Help::Update(float delta_second)
 		if (shiita > 1.6f)
 		{
 			// 選択したシーンへ遷移
-			switch (select_x)
+			switch (buttonSelect)
 			{
 			case 0:
 				return eInGame;
@@ -186,55 +171,67 @@ void Help::Draw()const
 	Camera::DrawString({ 200,130 }, 55, GetColor(255, 255, 255), "キャラ操作");
 	Camera::DrawString({ 850,320 }, 55, GetColor(255, 255, 255), "網を操作");
 
-	float selectSize = 0.84f;
-	float notSelectSize = 0.7f;
-	int selectCharSize = 60;
-	int notSelectCharSize = 50;
-	Vector2D startLoc = { 350.0f, 600.0f };
-	Vector2D titleLoc = { 1000.0f, 600.0f };
-
-	if (select_x == 0)	//スタートが選択されている場合
+	// ボタンのサイズ比率
+	float ratio = 1.0f;
+	// 文字サイズ
+	int charSize = 50;
+	// 押されている見た目か
+	bool isPress = false;
+	// ボタンの色
+	unsigned int buttonColor = 0xc0c0c0;
+	// ボタンの位置
+	Vector2D botLoc[4] = { { 350.0f, 600.0f },		// スタート
+						   { 1000.0f, 600.0f } };	// タイトル
+	// 文字の位置ずらす
+	Vector2D charaVec[4] = { { -1.5f, -10.0f },		// スタート
+							 { -1.5f, -10.0f } };	// タイトル
+	// 文字
+	char character[4][20] = { "スタート",		// スタート
+							  "タイトル", };	// タイトル
+	for (int i = 0;i < 2;i++)
 	{
-		if (pressed == TRUE)	//ボタンが押されている場合
+		// 選択されている場合
+		if (buttonSelect == i)
 		{
-			//ボタンを押された状態にする
-			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.pressed);
+			ratio = 1.2f;
+			// ボタンが押されている場合
+			if (pressed)
+			{
+				// 押されている見た目にする
+				isPress = true;
+				// 色を暗くする
+				buttonColor = 0x777777;
+			}
+			else
+			{
+				// 色をそのままにする
+				buttonColor = 0xffffff;
+			}
 		}
 		else
 		{
-			//ボタンを押されていない状態にする
-			Camera::DrawGraph(startLoc, selectSize, selectSize, 0.0, b.select);
+			ratio = 1.0f;
+			// 押されている見た目にする
+			isPress = false;
+			// 色を少し暗くする
+			buttonColor = 0xc0c0c0;
 		}
-		Camera::DrawString({ (startLoc.x - 10.0f) - (float)selectCharSize * 1.5f, startLoc.y - 10.0f }, selectCharSize * 1.2f, GetColor(255, 255, 255), "スタート");
-	}
-	else
-	{
-		//通常サイズに戻す
-		Camera::DrawGraph(startLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ (startLoc.x - 10.0f) - (float)notSelectCharSize * 1.5f, startLoc.y - 10.0f }, notSelectCharSize * 1.2f, GetColor(255, 255, 255), "スタート");
-	}
 
-	if (select_x == 1)	//タイトルが選択されている場合
-	{
-		if (pressed == TRUE)
+		if (i == 3)
 		{
-			//ボタンを大きくする
-			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, b.pressed);
+			charSize = (int)(40.0f * ratio);
 		}
 		else
 		{
-			//ボタンを大きくする
-			Camera::DrawGraph(titleLoc, selectSize, selectSize, 0.0, b.select);
+			charSize = (int)(50.0f * ratio);
 		}
 
-		Camera::DrawString({ (titleLoc.x - 10.0f) - (float)selectCharSize * 1.5f, titleLoc.y - 10.0f }, selectCharSize * 1.2f, GetColor(255, 255, 255), "タイトル");
+		// ボタンを表示
+		Camera::DrawGraph(botLoc[i], ratio, ratio, 0.0, buttonImage, false, isPress, buttonColor);
+		// 文字を表示
+		Camera::DrawString(Vec2Add(botLoc[i], { charaVec[i].x * (float)charSize, charaVec[i].y }), charSize * 1.2f, GetColor(255, 255, 255), character[i]);
 	}
-	else
-	{
-		//通常サイズに戻す
-		Camera::DrawGraph(titleLoc, notSelectSize, notSelectSize, 0.0, b.newtral);
-		Camera::DrawString({ (titleLoc.x - 10.0f) - (float)notSelectCharSize * 1.5f, titleLoc.y - 10.0f }, notSelectCharSize * 1.2f, GetColor(255, 255, 255), "タイトル");
-	}
+	
 
 	Camera::Draw();
 
