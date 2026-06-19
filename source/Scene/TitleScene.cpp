@@ -14,6 +14,7 @@ int Title::back_ground = -1;
 int Title::title_logo = -1;
 int Title::buttonImage = -1;
 int Title::netImage = -1;
+int Title::productionImage[2] = {};
 
 int Title::buttonSelect = 0;	// 0スタート、1ヘルプ、2おわり、3ランキング
 bool Title::pressed = false;
@@ -36,6 +37,8 @@ int Title::Init()
 	back_ground = LoadGraph("assets/images/OtherObjects/Ground.PNG");
 	title_logo = LoadGraph("assets/images/UI/TitleLogo.PNG");
 	netImage = LoadGraph("assets/images/Player/BugNet.PNG");
+	productionImage[0] = LoadGraph("assets/images/UI/SceneProduction/Grasshopper1.PNG");
+	productionImage[1] = LoadGraph("assets/images/UI/SceneProduction/Grasshopper2.PNG");
 	buttonImage = LoadGraph("assets/images/UI/Button.PNG");
 	rank_b.newtral = LoadGraph("assets/images/UI/RankingDefault.PNG");
 	rank_b.select = LoadGraph("assets/images/UI/RankingSelect.PNG");
@@ -62,6 +65,7 @@ int Title::Init()
 	{
 		return FALSE;
 	}
+
 	ChangeVolumeSoundMem(150, ChoiceSE);
 	ChangeVolumeSoundMem(150, DecisionSE);
 	ChangeVolumeSoundMem(130, Titlebgm);
@@ -100,7 +104,7 @@ eSceneType Title::Update(float delta_second)
 			Camera::SetScreenLocation({ D_WIN_WIDTH / -6.0f + (D_WIN_WIDTH * 2.0f / 3.0f) * shiita,
 				D_WIN_HEIGHT + (D_WIN_HEIGHT / -2.0f) * shiita - height });
 		}
-		Camera::SetScreenRatioSize(shiita);
+		Camera::SetScreenRatioSize(shiita * shiita);
 
 		break;
 	case 1:	// ============================================================================選択
@@ -109,22 +113,26 @@ eSceneType Title::Update(float delta_second)
 
 		if (GetLeftStickState_Y(true) == ePressed)//左スティックが上に入力された場合
 		{
-			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
+			if (buttonSelect != 0)
+				PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
 			buttonSelect = 0;
 		}
 		if (GetLeftStickState_Y(false) == ePressed)//左スティックが下に入力された場合
 		{
-			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
+			if (buttonSelect != 2)
+				PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
 			buttonSelect = 2;
 		}
 		if (GetLeftStickState_X(true) == ePressed)//左スティックが右に入力された場合
 		{
-			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
+			if (buttonSelect != 3)
+				PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
 			buttonSelect = 3;
 		}
 		if (GetLeftStickState_X(false) == ePressed)//左スティックが左に入力された場合
 		{
-			PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
+			if (buttonSelect != 1)
+				PlaySoundMem(ChoiceSE, DX_PLAYTYPE_BACK, TRUE);
 			buttonSelect = 1;
 		}
 
@@ -142,32 +150,13 @@ eSceneType Title::Update(float delta_second)
 		break;
 	case 2:	// =======================================================次への演出
 
-		shiita += 2.0f * delta_second;
-
-		// 次へ
-		if (shiita > 0.6f)
-		{
-			changeProduction++;
-		}
-
-		{
-			//ジャンプの移動処理
-			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
-			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
-				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
-		}
-		Camera::SetScreenRatioSize(1.0f - shiita);
-
-		break;
-	case 3:
-
-		shiita += 2.0f * delta_second;
+		shiita += 1.7f * delta_second;
 
 		// 終了
-		if (shiita > 1.6f)
+		if (shiita > 1.15f)
 		{
 			// 選択したシーンへ遷移
-			
+
 			switch (buttonSelect)
 			{
 			case 0:
@@ -185,12 +174,12 @@ eSceneType Title::Update(float delta_second)
 			}
 		}
 
-		if (shiita <= 1.0f)
+		if (shiita <= 0.95f)
 		{
 			//ジャンプの移動処理
 			float height = sinf(shiita * DX_PI_F) * (D_WIN_HEIGHT / 2.0f);
 			Camera::SetScreenLocation({ D_WIN_WIDTH / 2.0f,
-				D_WIN_HEIGHT / 2.0f + (D_WIN_HEIGHT / 4.0f) * shiita - height });
+				D_WIN_HEIGHT / 2.0f - height });
 			Camera::SetScreenRatioSize(1.0f - shiita);
 		}
 		else
@@ -207,9 +196,9 @@ eSceneType Title::Update(float delta_second)
 
 void Title::Draw()const
 {
-	Camera::DrawGraph({ 640, 360 }, 25.0, 12.0, 0.0, back_ground);
+	Camera::DrawGraph({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f }, 25.0f, 12.0f, 0.0f, back_ground);
 
-	Camera::DrawGraph({ 640,170 }, 1.5, 1.0, 0.0, title_logo);
+	Camera::DrawGraph({ 440.0f, D_WIN_HEIGHT / 2.0f }, 2.0f, 2.0f, 0.0f, title_logo);
 
 	// ボタンのサイズ比率
 	float ratio = 1.0f;
@@ -288,13 +277,27 @@ void Title::Draw()const
 
 	Camera::Draw();
 
-	if (changeProduction == 3)
+	switch (changeProduction)
 	{
-		Vector2D location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 750.0f };
-		float angle = 0.5f - (shiita - 0.6f) * 1.5f;
-		angle *= DX_PI_F;
-		location.x += sinf(angle) * 500.0f;
-		location.y -= cosf(angle) * 500.0f;
-		DrawRotaGraphF(location.x, location.y, 15.0f, angle, netImage, true);
+	case 0:
+
+		Camera::DrawGraph({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 40.0f }, 80.0f, 80.0f, 0.0f, productionImage[0]);
+
+		break;
+	case 2:
+
+		Camera::DrawGraph({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 40.0f }, 80.0f, 80.0f, 0.0f, productionImage[1]);
+		
+		if (shiita > 0.6f)
+		{
+			Vector2D location = { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 1350.0f };
+			float angle = 0.5f - (shiita - 0.6f) * 1.5f;
+			angle *= DX_PI_F;
+			location.x += sinf(angle) * 1000.0f;
+			location.y -= cosf(angle) * 1000.0f;
+			DrawRotaGraphF(location.x, location.y, 30.0f, angle, netImage, true);
+		}
+
+		break;
 	}
 }

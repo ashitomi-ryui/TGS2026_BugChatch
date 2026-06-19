@@ -9,13 +9,14 @@ private:
 	int buttonSelect;
 	bool pressed;
 private:
-	int ChoiceSE2;
-	int DecisionSE2;
+	int ChoiceSE;
+	int DecisionSE;
 	int HelpBGM;
 	int back_ground;
 	int controller;
 
 	static int netImage;
+	static int productionImage[2];
 	static int buttonImage;
 
 	float shiita;

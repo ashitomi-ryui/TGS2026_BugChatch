@@ -16,6 +16,7 @@ private:
 	static int buttonImage;
 
 	static int netImage;
+	static int productionImage[2];
 
 	static int buttonSelect;	// 0スタート、1ヘルプ、2おわり、3ランキング
 	static bool pressed;
