@@ -17,6 +17,7 @@ private:
 	bool escape;   //逃げフラグ
 	bool jougai;   //画面外にでたか
 	Vector2D nearleaf;  //一番近くの草
+	bool isRouteBlock;// ルート上に木があるかどうかのフラグ
 
 
 public:
