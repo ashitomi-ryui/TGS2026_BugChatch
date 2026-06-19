@@ -11,7 +11,6 @@ int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
 int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
 
 Bug bug;
-Ranking result;
 
 Result::point Result::p = {};
 
@@ -142,11 +141,11 @@ eSceneType Result::Update(float delta_second)
 			p.point[0] = bug.GetCicadaCount();
 			p.point[1] = bug.GetDragonflyCount();
 			p.point[2] = bug.GetGrasshopperCount();
-			p.point[3] = p.point[0] + p.point[1] + p.point[2];
+			p.point[3] = p.point[0] + p.point[1] + p.point[2]+11;
 
-			int loadrankdata = result.LoadRankData();
+			int loadrankdata = Ranking::LoadRankData();
 
-			int rank_check = result.CheckRankData(p.point[3]);
+			int rank_check = Ranking::CheckRankData(p.point[3]);
 			if (rank_check == 1)
 			{
 				isRankIn = true;

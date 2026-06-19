@@ -3,6 +3,10 @@
 #include"../Utilitys/Camera.h"
 #include<DxLib.h>
 
+int Ranking::ranking[MAX_RANK] = {};
+int Ranking::new_data = -1;
+int Ranking::new_rank = 5;
+
 int Ranking::netImage = -1;
 int Ranking::buttonImage = -1;
 
@@ -244,24 +248,48 @@ void Ranking::Draw()const
 	unsigned int color;
 	for (int i = 0;i < MAX_RANK;i++)
 	{
-		switch (i)
 		{
-		case 0:
-			color = GetColor(255, 255, 120);
-			break;
-		case 1:
-			color = GetColor(200, 200, 200);
-			break;
-		case 2:
-			color = GetColor(180, 120, 20);
-			break;
-		default:
-			color = GetColor(100, 100, 100);
-			break;
+			switch (i)
+			{
+
+			case 0:
+				color = GetColor(255, 255, 120);
+				break;
+			case 1:
+				color = GetColor(200, 200, 200);
+				break;
+			case 2:
+				color = GetColor(180, 120, 20);
+				break;
+			default:
+				color = GetColor(100, 100, 100);
+				break;
+			}
 		}
+		
 
 		Camera::DrawString({ (float)(150 + (i / 3) * 600), (float)(115 + (i % 3) * 120) },
 			100, color, "%dˆÊ %3d•C", i + 1, ranking[i]);
+
+
+		/*Camera::DrawBox({ 42,47 }, { 650,186 }, GetColor(255, 255, 255));*/
+
+		if (new_rank != -1)
+		{
+			float horizontal_line = 0;
+			if (new_rank > 2)
+			{
+				 horizontal_line = 590;
+			}
+			float Vertical_line = (float)121 * (new_rank % 3);
+			Camera::DrawBox({ 42+horizontal_line,47 + Vertical_line }, { 60 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//cü‚P
+			Camera::DrawBox({ 632 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//cü2
+			Camera::DrawBox({ 42 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,65 + Vertical_line }, GetColor(255, 255, 255));//‰¡ü‚P
+			Camera::DrawBox({ 42 + horizontal_line,163 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//‰¡ü2
+		}
+		
+		DrawFormatString(100, 100, GetColor(255, 0, 0), "%d", new_data);
+		DrawFormatString(100, 150, GetColor(255, 0, 0), "%d", new_rank);
 	}
 
 	Camera::Draw();
@@ -298,8 +326,9 @@ int Ranking::LoadRankData()
 
 int Ranking::CheckRankData(int p_point)
 {
-	if (p_point > ranking[MAX_RANK - 1])
+	if (p_point >= ranking[MAX_RANK - 1])
 	{
+		new_data = p_point;
 		ranking[MAX_RANK - 1] = p_point;
 
 		if (SortRankData() != TRUE)
@@ -310,6 +339,8 @@ int Ranking::CheckRankData(int p_point)
 		return 1;
 	}
 
+	new_data = -1;
+	new_rank = -1;
 	return 0;
 }
 
@@ -327,6 +358,14 @@ int Ranking::SortRankData()
 				ranking[i] = ranking[j];
 				ranking[j] = swap;
 			}
+		}
+	}
+
+	for (int i = 0; i < MAX_RANK; i++)
+	{
+		if (ranking[i] == new_data)
+		{
+			new_rank = i;
 		}
 	}
 

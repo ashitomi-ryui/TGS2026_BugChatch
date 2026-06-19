@@ -11,7 +11,9 @@ private:
 	int buttonSelect;
 	bool pressed;
 private:
-	int ranking[MAX_RANK];
+	static int ranking[MAX_RANK];
+	static int new_data;
+	static int new_rank;
 private:
 	int RankingBGM2;
 	int Choicebgm2;
@@ -29,10 +31,10 @@ public:
 	Ranking();
 	~Ranking();
 public:
-	int LoadRankData();
-	int CheckRankData(int p_point);
-	int SortRankData();
-	int AddRankData();
+	static int LoadRankData();
+	static int CheckRankData(int p_point);
+	static int SortRankData();
+	static int AddRankData();
 public:
 	int Init();
 	eSceneType Update(float delta_second);
