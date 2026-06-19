@@ -14,10 +14,12 @@ float timer;
 int BGM;
 int groundImage = -1;
 int countSE;
+int FinishSE;
 int changeProduction;	// シーン切替演出
 float shiita;
 
 bool isCountSEPlayed = false;
+bool isFinishSE = false;
 int InGameInit(void)//各プログラムの初期化
 {
 	ObjectManager::Init();
@@ -34,6 +36,11 @@ int InGameInit(void)//各プログラムの初期化
 	{
 		return FALSE;
 	}
+	FinishSE = LoadSoundMem("assets/Audio/Finish.wav");
+	if (FinishSE == -1)
+	{
+		return FALSE;
+	}
 	timer = 0.0f;
 	
 	icon.cicada = LoadGraph("assets/images/UI/CicadaIcon.PNG");
@@ -46,7 +53,7 @@ int InGameInit(void)//各プログラムの初期化
 	}
 	groundImage = LoadGraph("assets/images/OtherObjects/Ground.PNG");
 
-	ChangeVolumeSoundMem(230, BGM);
+	ChangeVolumeSoundMem(130, BGM);
 	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
 
 	changeProduction = 0;
@@ -149,8 +156,14 @@ eSceneType InGameUpdate(float delta_second)
 	case 4:	// ==============================================ゲームプレイ
 		timer += delta_second;
 #ifndef _DEBUG
-		if (timer > 6.0f)
+		if (timer > 60.0f)
 		{
+		if (!isFinishSE)
+		{
+			PlaySoundMem(FinishSE, DX_PLAYTYPE_BACK);
+			isFinishSE = true;
+		}
+
 			timer = 0.0f;
 
 			// 音を止める
@@ -161,7 +174,7 @@ eSceneType InGameUpdate(float delta_second)
 			
 			// 次の演出
 			changeProduction = 5;
-
+			isFinishSE = false;
 			break;
 		}
 #endif
