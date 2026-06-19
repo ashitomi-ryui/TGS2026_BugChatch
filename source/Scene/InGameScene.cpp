@@ -13,10 +13,11 @@ int get[3] = {};
 float timer;
 int BGM;
 int groundImage = -1;
-
+int countSE;
 int changeProduction;	// シーン切替演出
 float shiita;
 
+bool isCountSEPlayed = false;
 int InGameInit(void)//各プログラムの初期化
 {
 	ObjectManager::Init();
@@ -28,7 +29,11 @@ int InGameInit(void)//各プログラムの初期化
 	{
 		return FALSE;
 	}
-
+	countSE = LoadSoundMem("assets/Audio/AS_1274842_３２１GO！・キャラクター達の競争.wav");
+	if (countSE == -1)
+	{
+		return FALSE;
+	}
 	timer = 0.0f;
 	
 	icon.cicada = LoadGraph("assets/images/UI/CicadaIcon.PNG");
@@ -55,6 +60,7 @@ int InGameInit(void)//各プログラムの初期化
 
 eSceneType InGameUpdate(float delta_second)
 {
+	
 	switch (changeProduction)
 	{
 	case 0:	// ==============================================ゲームスタート
@@ -123,20 +129,27 @@ eSceneType InGameUpdate(float delta_second)
 		break;
 	case 3:
 		timer += delta_second;
+		
+		if (!isCountSEPlayed)
+		{
+			PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
+			isCountSEPlayed = true;
+		}
 
 		if (timer >= 3.0f)
 		{
 			// 次の演出
 			changeProduction = 4;
 			timer = 0.0f;
+			isCountSEPlayed = false;
 		}
-
+		
 		break;
 
 	case 4:	// ==============================================ゲームプレイ
 		timer += delta_second;
 #ifndef _DEBUG
-		if (timer > 60.0f)
+		if (timer > 6.0f)
 		{
 			timer = 0.0f;
 

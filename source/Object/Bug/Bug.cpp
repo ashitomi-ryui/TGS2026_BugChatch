@@ -45,6 +45,7 @@ Bug::~Bug()
 
 void Bug::Init()
 {
+	ChangeVolumeSoundMem(1500, HitSE);
 	HitSE = LoadSoundMem("assets/Audio/HitSE.wav");
 }
 
