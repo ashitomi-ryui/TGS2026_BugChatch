@@ -5,7 +5,7 @@
 
 int Ranking::ranking[MAX_RANK] = {};
 int Ranking::new_data = -1;
-int Ranking::new_rank = 5;
+int Ranking::new_rank = -1;
 
 int Ranking::netImage = -1;
 int Ranking::productionImage[2] = {};

@@ -148,7 +148,7 @@ eSceneType Result::Update(float delta_second)
 			p.point[0] = bug.GetCicadaCount();
 			p.point[1] = bug.GetDragonflyCount();
 			p.point[2] = bug.GetGrasshopperCount();
-			p.point[3] = p.point[0] + p.point[1] + p.point[2]+11;
+			p.point[3] = p.point[0] + p.point[1] + p.point[2];
 
 			int loadrankdata = Ranking::LoadRankData();
 
