@@ -279,8 +279,8 @@ void Ranking::Draw()const
 			Camera::DrawBox({ 42 + horizontal_line,163 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//â°ê¸2
 		}
 		
-		DrawFormatString(100, 100, GetColor(255, 0, 0), "%d", new_data);
-		DrawFormatString(100, 150, GetColor(255, 0, 0), "%d", new_rank);
+		//DrawFormatString(100, 100, GetColor(255, 0, 0), "%d", new_data);
+		//DrawFormatString(100, 150, GetColor(255, 0, 0), "%d", new_rank);
 	}
 
 	Camera::Draw();
