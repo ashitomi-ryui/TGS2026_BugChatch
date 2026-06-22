@@ -36,6 +36,7 @@ Grasshopper::Grasshopper() : Bug()
 	nearleaf = { 0.0f,0.0f };
 	m_startLocation = { 0.0f,0.0f };
 	isRouteBlock = false;
+	m_isWallHit = false;
 }
 
 Grasshopper::~Grasshopper()
@@ -218,7 +219,7 @@ void Grasshopper::SetDestination(Vector2D location)
 {
 	shiita = 0;
 
-	
+
 	int retryCount = 0;          // 無限ループ防止用のカウンター
 	const int MAX_RETRY = 10;    // 最大10回まで再抽選する
 
@@ -307,7 +308,7 @@ void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
 	shiita = 0;
 
 	m_direction = atan2f((location.y - Plocation.y), (location.x - Plocation.x));
-	/*m_direction += Random::GetRand(-DX_PI_F / 3, DX_PI_F / 3, 1.0f);*/
+	m_direction += Random::GetRand(-DX_PI_F / 3, DX_PI_F / 3, 1.0f);
 
 	//移動距離
 	float distance = Random::GetRand(150.0f, 400.0f, 0.1f);
@@ -324,7 +325,7 @@ void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
 
 	top = Random::GetRand(20.0, 50.0, 0.1f);
 
-	for (float t = 0.1f; t <= 1.0f; t += 0.1f)
+	/*for (float t = 0.1f; t <= 1.0f; t += 0.1f)
 	{
 		Vector2D test_loc;
 		test_loc.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * t;
@@ -336,8 +337,8 @@ void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
 			isRouteBlock = true;
 			break;
 		}
-	}
-	
+	}*/
+
 }
 
 
@@ -355,11 +356,11 @@ void Grasshopper::Animation(float delta)
 	{
 		if (m_isEscape || m_state == eMove)
 		{
-			if (m_destination.x > m_startLocation.x)
+			if (m_destination.x >= m_startLocation.x)
 			{
 				m_Angle = DX_PI_F; // 右を向く
 			}
-			else
+			else if (m_destination.x < m_startLocation.x)
 			{
 				m_Angle = 0.0f;    // 左を向く
 			}
@@ -379,7 +380,7 @@ void Grasshopper::Animation(float delta)
 			{
 				m_height = 20.0f;
 				m_animCount = 4; // 飛び始め
-				
+
 			}
 
 			else if (shiita < 0.75f)
@@ -415,12 +416,12 @@ void Grasshopper::Animation(float delta)
 
 void Grasshopper::Escape(float delta)
 {
-
 	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
 	if (escape == FALSE)
 	{
 		EscapeSetDestination(m_location, playerLocation);
 		escape = TRUE;
+		m_isWallHit = false;
 	}
 
 	shiita += m_moveSpeed.x * delta;
@@ -430,25 +431,36 @@ void Grasshopper::Escape(float delta)
 		shiita = 1.0f; // 行き過ぎ防止
 	}
 
-
-	//ジャンプの移動処理
-	m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
-	m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
-
-	if (CheckTreeCollision(m_location))
+	if (m_isWallHit == false)
 	{
-		// その場を着地地点にして、強制終了処理
-		m_destination = m_location;
+		//ジャンプの移動処理
+		m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * shiita;
+		m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * shiita;
+		if (CheckTreeCollision(m_location))
+		{
+			// その場を着地地点にして、強制終了処理
+			m_destination = m_location;
+			m_isWallHit = true;
+			/*m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * (shiita - m_moveSpeed.x * delta);*/
+			/*m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * (shiita - m_moveSpeed.x * delta);*/
+		}
 
-		m_location.x = m_startLocation.x + (m_destination.x - m_startLocation.x) * (shiita - m_moveSpeed.x * delta);
-		m_location.y = m_startLocation.y + (m_destination.y - m_startLocation.y) * (shiita - m_moveSpeed.x * delta);
-
-		
 	}
-	else if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
+
+
+	else
+	{
+		m_location = m_destination;
+	}
+
+	if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
 		PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
 	}
+
+
+
+
 
 	//AIニキ
 	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
@@ -461,6 +473,7 @@ void Grasshopper::Escape(float delta)
 	// 着地判定（進行度が1.0に達したら終了）
 	if (shiita >= 1.0f)
 	{
+		m_location.y += height;
 		m_location = m_destination; // 座標を完全に目的地に合わせる
 		m_moveSpeed = { 0.0f, 0.0f };
 		shiita = 0;
@@ -472,6 +485,7 @@ void Grasshopper::Escape(float delta)
 		return;
 	}
 
+	m_location.y += height;
 	// 察知時間を0.1fごとに区切った0.0f~1.0fにする
 	m_detectionTime = Random::GetRand(0.0f, 1.0f, 0.1f);
 }
@@ -555,8 +569,8 @@ bool Grasshopper::CheckTreeCollision(Vector2D current_loc)
 {
 	Vector2D neartree = ObjectManager::FindNearestTree(current_loc);
 
-	if (neartree.x - 70 < current_loc.x && current_loc.x < neartree.x + 70 &&
-		neartree.y - 60 < current_loc.y && current_loc.y < neartree.y + 50)
+	if (neartree.x - 100 < current_loc.x && current_loc.x < neartree.x + 100 &&
+		neartree.y - 80 < current_loc.y && current_loc.y < neartree.y + 60)
 	{
 		return true;
 	}
