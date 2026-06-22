@@ -99,7 +99,7 @@ void Dragonfly::Update(int id, float delta)
 		Bug::Update(id, delta);
 
 		// “–‚½‚è”»’è
-		if (ObjectManager::NetHitCheak(m_location))
+		if (ObjectManager::NetHitCheck(m_location))
 		{
 			PlaySoundMem(HitSE, DX_PLAYTYPE_BACK);
 			dragonflyGetCount += 1;

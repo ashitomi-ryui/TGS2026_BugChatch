@@ -215,4 +215,10 @@ public:
 	/// <param name="radius">’²‚×‚½‚¢•¨‚Ì”¼Œa</param>
 	/// <returns>‰æ–Ê“à‚È‚çtrue</returns>
 	static bool CheckItsOnTheScreen(Vector2D location, float radius = 0.0f);
+
+	/// <summary>
+	/// ƒJƒƒ‰‚ÌÀ•W‚ğæ“¾
+	/// </summary>
+	/// <returns></returns>
+	static Vector2D GetLocation();
 };

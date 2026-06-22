@@ -360,7 +360,7 @@ Vector2D ObjectManager::BoxPushBack(Vector2D locationC, Vector2D locationB, floa
 	return { 0.0f, 0.0f };
 }
 
-bool ObjectManager::NetHitCheak(Vector2D location, float radius)
+bool ObjectManager::NetHitCheck(Vector2D location, float radius)
 {
 	//ネットの位置を取得
 	Vector2D netLocation = player.GetRingLocation();
@@ -369,7 +369,7 @@ bool ObjectManager::NetHitCheak(Vector2D location, float radius)
 	return CircleHitCheck(netLocation, location, netRadius, radius);
 }
 
-Vector2D ObjectManager::TreeHitCheak(Vector2D location, float radius, bool isCircle, int id)
+Vector2D ObjectManager::TreeHitCheck(Vector2D location, float radius, bool isCircle, int id)
 {
 	// 移動量
 	Vector2D move = { 0.0f, 0.0f };
@@ -402,7 +402,7 @@ Vector2D ObjectManager::TreeHitCheak(Vector2D location, float radius, bool isCir
 	return move;
 }
 
-Vector2D ObjectManager::LeafHitCheak(Vector2D location, float radius, bool isCircle, int id)
+Vector2D ObjectManager::LeafHitCheck(Vector2D location, float radius, bool isCircle, int id)
 {
 	// 移動量
 	Vector2D move = { 0.0f, 0.0f };
@@ -410,7 +410,7 @@ Vector2D ObjectManager::LeafHitCheak(Vector2D location, float radius, bool isCir
 	// 草の半径
 	float leafRadius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_TREE_WIDTH / 2.0f, D_TREE_HEIGHT / 2.0f }));
 
-	// 木の数分繰り返す
+	// 草の数分繰り返す
 	for (int i = 0;i < D_LEAF_MAX;i++)
 	{
 		Vector2D leafLocation = leaf[i].GetLocation();
@@ -435,13 +435,13 @@ Vector2D ObjectManager::LeafHitCheak(Vector2D location, float radius, bool isCir
 	return move;
 }
 
-Vector2D ObjectManager::CicadaHitCheak(Vector2D location, float radius, int id)
+Vector2D ObjectManager::CicadaHitCheck(Vector2D location, float radius, int id)
 {
 	// 移動量
 	Vector2D move = { 0.0f, 0.0f };
 
-	// 木の数分繰り返す
-	for (int i = 0;i < D_LEAF_MAX;i++)
+	// セミの数分繰り返す
+	for (int i = 0;i < D_CICADA_MAX;i++)
 	{
 		Vector2D cicadaLocation = cicada[i].GetLocation();
 		float cicadaRadius = cicada[i].GetRadius();
@@ -458,13 +458,13 @@ Vector2D ObjectManager::CicadaHitCheak(Vector2D location, float radius, int id)
 	return move;
 }
 
-Vector2D ObjectManager::DragonflyHitCheak(Vector2D location, float radius, int id)
+Vector2D ObjectManager::DragonflyHitCheck(Vector2D location, float radius, int id)
 {
 	// 移動量
 	Vector2D move = { 0.0f, 0.0f };
 
-	// 木の数分繰り返す
-	for (int i = 0;i < D_LEAF_MAX;i++)
+	// トンボの数分繰り返す
+	for (int i = 0;i < D_DRAGONFLY_MAX;i++)
 	{
 		Vector2D dragonflyLocation = dragonfly[i].GetLocation();
 		float dragonflyRadius = dragonfly[i].GetRadius();
@@ -481,13 +481,13 @@ Vector2D ObjectManager::DragonflyHitCheak(Vector2D location, float radius, int i
 	return move;
 }
 
-Vector2D ObjectManager::GrasshopperHitCheak(Vector2D location, float radius, int id)
+Vector2D ObjectManager::GrasshopperHitCheck(Vector2D location, float radius, int id)
 {
 	// 移動量
 	Vector2D move = { 0.0f, 0.0f };
 
-	// 木の数分繰り返す
-	for (int i = 0;i < D_LEAF_MAX;i++)
+	// バッタの数分繰り返す
+	for (int i = 0;i < D_GRASSHOPPER_MAX;i++)
 	{
 		Vector2D grasshopperLocation = grasshopper[i].GetLocation();
 		float grasshopperRadius = grasshopper[i].GetRadius();
@@ -596,4 +596,61 @@ Vector2D ObjectManager::RandomLocation(float radius)
 Vector2D ObjectManager::GetPlayerLocation()
 {
 	return player.GetPlayerLocation();
+}
+
+bool ObjectManager::CheckUIOverlapping(float width, float height, Vector2D location)
+{
+	// UIをワールド座標に
+	location = Vec2Add(location, Camera::GetLocation());
+	location.x += width / 2.0f;
+	location.y += height / 2.0f;
+	location.x -= D_WIN_WIDTH / 2.0f;
+	location.y -= D_WIN_HEIGHT / 2.0f;
+
+	// プレイヤーの座標と重なっていたら、真を返す
+	Vector2D loc = player.GetPlayerLocation();
+	float radius = player.GetPlayerRadius();
+	if (BoxHitCheck(loc, location, radius, width, height))
+		return true;
+
+	// 虫網の座標と重なっていたら、真を返す
+	loc = player.GetRingLocation();
+	radius = player.GetRingRadius();
+	if (BoxHitCheck(loc, location, radius, width, height))
+		return true;
+
+	// バッタの数分繰り返す
+	for (int i = 0;i < D_CICADA_MAX;i++)
+	{
+		loc = cicada[i].GetLocation();
+		radius = cicada[i].GetRadius();
+
+		// バッタの座標と重なっていたら、真を返す
+		if (BoxHitCheck(loc, location, radius, width, height))
+			return true;
+	}
+
+	// バッタの数分繰り返す
+	for (int i = 0;i < D_DRAGONFLY_MAX;i++)
+	{
+		loc = dragonfly[i].GetLocation();
+		radius = dragonfly[i].GetRadius();
+
+		// バッタの座標と重なっていたら、真を返す
+		if (BoxHitCheck(loc, location, radius, width, height))
+			return true;
+	}
+
+	// バッタの数分繰り返す
+	for (int i = 0;i < D_GRASSHOPPER_MAX;i++)
+	{
+		loc = grasshopper[i].GetLocation();
+		radius = grasshopper[i].GetRadius();
+
+		// バッタの座標と重なっていたら、真を返す
+		if (BoxHitCheck(loc, location, radius, width, height))
+			return true;
+	}
+
+	return false;
 }

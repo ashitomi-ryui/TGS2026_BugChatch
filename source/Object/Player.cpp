@@ -78,7 +78,7 @@ void Player::Init()
 	Vector2D treeHit = {};
 	do
 	{
-		treeHit = ObjectManager::TreeHitCheak(m_location, m_radius, false);
+		treeHit = ObjectManager::TreeHitCheck(m_location, m_radius, false);
 		m_location = Vec2Add(m_location, treeHit);
 	} while (treeHit.x != 0.0f && treeHit.y != 0.0f);
 
@@ -459,7 +459,7 @@ void Player::Move(float delta)
 
 	m_location = Vec2Add(m_location, Vec2Mult(m_moveSpeed, delta));
 
-	m_location = Vec2Add(m_location, ObjectManager::TreeHitCheak(m_location, m_radius, false));
+	m_location = Vec2Add(m_location, ObjectManager::TreeHitCheck(m_location, m_radius, false));
 
 	// ˆÚ“®‚ÌŒÀŠE
 	if (m_location.x < m_radius)

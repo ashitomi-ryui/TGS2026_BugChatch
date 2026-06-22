@@ -634,3 +634,8 @@ bool Camera::CheckItsOnTheScreen(Vector2D location, float radius)
 	// ‰æ–Ê“à
 	return true;
 }
+
+Vector2D Camera::GetLocation()
+{
+	return m_location;
+}

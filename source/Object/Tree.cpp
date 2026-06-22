@@ -61,8 +61,8 @@ bool Tree::DetermineTheExtrusionVector(int id)
 	// d‚È‚è‚ð‚È‚­‚·
 	float radius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_TREE_WIDTH / 2.0f, D_TREE_HEIGHT / 2.0f }));
 	float playerRadius = targetPlayer->GetPlayerRadius();
-	m_vector = ObjectManager::TreeHitCheak(m_location, radius + playerRadius * 3.0f, true, id);
-	m_vector = Vec2Add(m_vector, ObjectManager::LeafHitCheak(m_location, radius, true));
+	m_vector = ObjectManager::TreeHitCheck(m_location, radius + playerRadius * 3.0f, true, id);
+	m_vector = Vec2Add(m_vector, ObjectManager::LeafHitCheck(m_location, radius, true));
 	m_vector = Vec2Mult(m_vector, 0.5f);
 
 	if (m_vector.x != 0.0f ||

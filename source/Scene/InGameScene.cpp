@@ -269,10 +269,10 @@ void InGameDraw(void)
 	ObjectManager::Draw();
 
 	unsigned int color = 0xffffff;
-	// UIがプレイヤーと重なったとき
 	Vector2D playerLocation = ObjectManager::GetPlayerLocation();
-	if (playerLocation.x < 180.0f * D_CAGE_RATIO &&
-		playerLocation.y < 160.0f * D_CAGE_RATIO + 50.0f)
+
+	// UIがプレイヤーや虫と重なったとき
+	if (ObjectManager::CheckUIOverlapping(180.0f * D_CAGE_RATIO, 160.0f * D_CAGE_RATIO + 50.0f))
 	{
 		// 色を薄くする
 		color += 0x60000000;

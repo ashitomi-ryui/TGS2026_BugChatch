@@ -95,7 +95,7 @@ public:
 	/// <param name="location">座標</param>
 	/// <param name="radius">半径</param>
 	/// <returns>当たっているならtrue</returns>
-	static bool NetHitCheak(Vector2D location, float radius = 0.0f);
+	static bool NetHitCheck(Vector2D location, float radius = 0.0f);
 
 	/// <summary>
 	/// 木との当たり判定
@@ -105,7 +105,7 @@ public:
 	/// <param name="isCircle">丸かどうか</param>
 	/// <param name="id">木だった時のID</param>
 	/// <returns>押し返すベクトル</returns>
-	static Vector2D TreeHitCheak(Vector2D location, float radius = 0.0f, bool isCircle = true, int id = -1);
+	static Vector2D TreeHitCheck(Vector2D location, float radius = 0.0f, bool isCircle = true, int id = -1);
 
 	/// <summary>
 	/// 草との当たり判定
@@ -115,7 +115,7 @@ public:
 	/// <param name="isCircle">丸かどうか</param>
 	/// <param name="id">草だった時のID</param>
 	/// <returns>押し返すベクトル</returns>
-	static Vector2D LeafHitCheak(Vector2D location, float radius = 0.0f, bool isCircle = true, int id = -1);
+	static Vector2D LeafHitCheck(Vector2D location, float radius = 0.0f, bool isCircle = true, int id = -1);
 
 	/// <summary>
 	/// セミとの当たり判定
@@ -124,7 +124,7 @@ public:
 	/// <param name="radius">半径</param>
 	/// <param name="id">セミだった時のID</param>
 	/// <returns>押し返すベクトル</returns>
-	static Vector2D CicadaHitCheak(Vector2D location, float radius = 0.0f, int id = -1);
+	static Vector2D CicadaHitCheck(Vector2D location, float radius = 0.0f, int id = -1);
 
 	/// <summary>
 	/// トンボとの当たり判定
@@ -133,7 +133,7 @@ public:
 	/// <param name="radius">半径</param>
 	/// <param name="id">トンボだった時のID</param>
 	/// <returns>押し返すベクトル</returns>
-	static Vector2D DragonflyHitCheak(Vector2D location, float radius = 0.0f, int id = -1);
+	static Vector2D DragonflyHitCheck(Vector2D location, float radius = 0.0f, int id = -1);
 
 	/// <summary>
 	/// バッタとの当たり判定
@@ -142,7 +142,7 @@ public:
 	/// <param name="radius">半径</param>
 	/// <param name="id">バッタだった時のID</param>
 	/// <returns>押し返すベクトル</returns>
-	static Vector2D GrasshopperHitCheak(Vector2D location, float radius = 0.0f, int id = -1);
+	static Vector2D GrasshopperHitCheck(Vector2D location, float radius = 0.0f, int id = -1);
 
 	/// <summary>
 	/// 最も近い木の座標を取得する
@@ -166,4 +166,13 @@ public:
 public:
 	static Vector2D RandomLocation(float radius);
 	static Vector2D GetPlayerLocation();
+
+	/// <summary>
+	/// UIのプレイヤーや虫との重なりチェック
+	/// </summary>
+	/// <param name="width">横幅</param>
+	/// <param name="height">高さ</param>
+	/// <param name="location">左上の座標</param>
+	/// <returns>重なっているならtrue</returns>
+	static bool CheckUIOverlapping(float width, float height, Vector2D location = { 0.0f, 0.0f });
 };
