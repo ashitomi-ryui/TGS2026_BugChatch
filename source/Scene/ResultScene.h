@@ -16,13 +16,14 @@ private:
 	int buttonSelect;
 	bool pressed;
 private:
-	int ChoiceSE3;
-	int DecisionSE3;
+	int ChoiceSE;
+	int DecisionSE;
 	int ResultBGM;
 	int back_ground;
 	int bugIcon[3];
 
 	static int netImage;
+	static int productionImage[2];
 	static int buttonImage;
 
 private:

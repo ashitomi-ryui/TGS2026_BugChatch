@@ -15,13 +15,13 @@ private:
 	static int new_data;
 	static int new_rank;
 private:
-	int RankingBGM2;
-	int Choicebgm2;
-	int DecisionSE2;
+	int RankingBGM;
+	int ChoiceSE;
+	int DecisionSE;
 	int back_ground;
 
 	static int netImage;
-
+	static int productionImage[2];
 	static int buttonImage;
 
 	float shiita;
