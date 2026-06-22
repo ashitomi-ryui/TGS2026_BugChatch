@@ -3,14 +3,44 @@
 #include"SceneType.h"
 #include"../Utilitys/Math.h"
 
-int InGameInit(void);
-eSceneType InGameUpdate(float delta_second);
-void InGameDraw(void);
+#define D_TIME_LIMIT	(0.0f)
 
-
-struct Icon
+class InGame
 {
-	int cicada;
-	int dragonfly;
-	int grasshopper;
+private:
+	struct Icon
+	{
+		int cicada;
+		int dragonfly;
+		int grasshopper;
+	};
+
+	int get[3];
+	float timer;
+
+	int BGM;
+
+	static int groundImage;
+	static int productionImage[6];
+
+	int countSE;
+	int FinishSE;
+
+	int changeProduction;	// ÉVÅ[Éìêÿë÷ââèo
+	float shiita;
+
+	float animTime;
+	int animCount;
+
+	bool isCountSEPlayed;
+	bool isFinishSE;
+
+public:
+	InGame();
+	~InGame();
+
+public:
+	int Init();
+	eSceneType Update(float delta_second);
+	void Draw() const;
 };

@@ -8,19 +8,32 @@
 
 #include"../Object/Cage.h"
 
-Icon icon;
-int get[3] = {};
-float timer;
-int BGM;
-int groundImage = -1;
-int countSE;
-int FinishSE;
-int changeProduction;	// シーン切替演出
-float shiita;
+int InGame::groundImage = -1;
+int InGame::productionImage[6] = {};
 
-bool isCountSEPlayed = false;
-bool isFinishSE = false;
-int InGameInit(void)//各プログラムの初期化
+InGame::InGame()
+{
+	get[3] = {};
+	timer = 0.0f;
+
+	BGM = -1;
+	countSE = -1;
+	FinishSE = -1;
+
+	changeProduction = 0;	// シーン切替演出
+	shiita = 0.0f;
+
+	isCountSEPlayed = false;
+	isFinishSE = false;
+}
+
+InGame::~InGame()
+{
+}
+
+
+
+int InGame::Init()//各プログラムの初期化
 {
 	ObjectManager::Init();
 
@@ -42,16 +55,18 @@ int InGameInit(void)//各プログラムの初期化
 		return FALSE;
 	}
 	timer = 0.0f;
-	
-	icon.cicada = LoadGraph("assets/images/UI/CicadaIcon.PNG");
-	icon.dragonfly = LoadGraph("assets/images/UI/DragonflyIcon.PNG");
-	icon.grasshopper = LoadGraph("assets/images/UI/GrasshopperIcon.PNG");
-	
+
 	for (int i = 0; i < 3; i++)
 	{
 		get[i] = 0;
 	}
 	groundImage = LoadGraph("assets/images/OtherObjects/Ground.PNG");
+	productionImage[0] = LoadGraph("assets/images/UI/SceneProduction/Dragonfly1.PNG");
+	productionImage[1] = LoadGraph("assets/images/UI/SceneProduction/Dragonfly2.PNG");
+	productionImage[2] = LoadGraph("assets/images/UI/SceneProduction/Dragonfly3.PNG");
+	productionImage[3] = LoadGraph("assets/images/UI/SceneProduction/Dragonfly4.PNG");
+	productionImage[4] = LoadGraph("assets/images/UI/SceneProduction/Dragonfly5.PNG");
+	productionImage[5] = LoadGraph("assets/images/UI/SceneProduction/Dragonfly6.PNG");
 
 	ChangeVolumeSoundMem(130, BGM);
 	PlaySoundMem(BGM, DX_PLAYTYPE_BACK);
@@ -59,15 +74,28 @@ int InGameInit(void)//各プログラムの初期化
 	changeProduction = 0;
 	shiita = 0.0f;
 
+	animTime = 0.0f;
+	animCount = 0;
+
 	Camera::SetScreenLocation({ -D_WIN_WIDTH / 4.0f, D_WIN_HEIGHT / 4.0f });
 	Camera::SetScreenRatioSize(0.2f);
 
 	return TRUE;
 }
 
-eSceneType InGameUpdate(float delta_second)
+eSceneType InGame::Update(float delta_second)
 {
-	
+	if (changeProduction != 4)
+	{
+		animTime += delta_second;
+
+		if (animTime >= 0.025f)
+		{
+			animCount = (animCount + 1) % 2;
+			animTime = 0.0f;
+		}
+	}
+
 	switch (changeProduction)
 	{
 	case 0:	// ==============================================ゲームスタート
@@ -82,7 +110,7 @@ eSceneType InGameUpdate(float delta_second)
 		{
 			loc.x = D_WIN_WIDTH / 2.0f;
 			// 次の演出
-			changeProduction = 1;
+			changeProduction++;
 		}
 
 		Camera::SetScreenLocation(loc);
@@ -96,7 +124,7 @@ eSceneType InGameUpdate(float delta_second)
 			shiita = -1.0f; // 行き過ぎ防止
 
 			// 次の演出
-			changeProduction = 2;
+			changeProduction++;
 			shiita = 0.0f;
 		}
 
@@ -120,7 +148,7 @@ eSceneType InGameUpdate(float delta_second)
 				shiita = -1.0f; // 行き過ぎ防止
 
 				// 次の演出
-				changeProduction = 3;
+				changeProduction++;
 				timer = 0.0f;
 				ratio = 1.0f;
 			}
@@ -146,7 +174,7 @@ eSceneType InGameUpdate(float delta_second)
 		if (timer >= 3.0f)
 		{
 			// 次の演出
-			changeProduction = 4;
+			changeProduction++;
 			timer = 0.0f;
 			isCountSEPlayed = false;
 		}
@@ -155,14 +183,13 @@ eSceneType InGameUpdate(float delta_second)
 
 	case 4:	// ==============================================ゲームプレイ
 		timer += delta_second;
-#ifndef _DEBUG
-		if (timer > 60.0f)
+		if (timer > D_TIME_LIMIT)
 		{
-		if (!isFinishSE)
-		{
-			PlaySoundMem(FinishSE, DX_PLAYTYPE_BACK);
-			isFinishSE = true;
-		}
+			if (!isFinishSE)
+			{
+				PlaySoundMem(FinishSE, DX_PLAYTYPE_BACK);
+				isFinishSE = true;
+			}
 
 			timer = 0.0f;
 
@@ -171,13 +198,17 @@ eSceneType InGameUpdate(float delta_second)
 
 			Grasshopper::StopAudio();
 			Cicada::StopAudio();
-			
+
 			// 次の演出
-			changeProduction = 5;
+			changeProduction++;
 			isFinishSE = false;
+
+			animTime = 0.0f;
+			animCount = 0;
+
 			break;
 		}
-#endif
+
 		// 画面内にいるかの初期化
 		Cicada::WithinTheScreenInit();
 
@@ -210,7 +241,7 @@ eSceneType InGameUpdate(float delta_second)
 		if (timer > 2.0f)
 		{
 			timer = 0.0;
-			changeProduction = 6;
+			changeProduction++;
 		}
 
 		break;
@@ -219,7 +250,7 @@ eSceneType InGameUpdate(float delta_second)
 
 		if (timer > 0.0f)
 		{
-			changeProduction = 7;
+			changeProduction++;
 			shiita = 0.0f;
 		}
 		break;
@@ -255,7 +286,7 @@ eSceneType InGameUpdate(float delta_second)
 	return eInGame;
 }
 
-void InGameDraw(void)
+void InGame::Draw() const
 {
 	// 背景の表示
 	for (float i = 0;i < D_STAGE_WIDTH;i += 30.0f * 2.0f)
@@ -311,4 +342,26 @@ void InGameDraw(void)
 	}
 
 	Camera::Draw();
+
+	switch (changeProduction)
+	{
+	case 0:
+	case 1:
+
+		Camera::DrawGraph({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 40.0f }, 80.0f, 80.0f, 0.0f, productionImage[animCount]);
+
+		break;
+	case 2:
+
+		Camera::DrawGraph({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 40.0f }, 80.0f, 80.0f, 0.0f, productionImage[2 + animCount]);
+
+		break;
+	case 5:
+	case 6:
+	case 7:
+
+		Camera::DrawGraph({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 40.0f }, 80.0f, 80.0f, 0.0f, productionImage[4 + animCount]);
+
+		break;
+	}
 }

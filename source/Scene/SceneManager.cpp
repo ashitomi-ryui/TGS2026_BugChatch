@@ -12,6 +12,7 @@
 eSceneType current_type;
 
 Title t;
+InGame i;
 Result r;
 Help h;
 Ranking rank;
@@ -37,7 +38,7 @@ int SceneUpdate(float delta_second)
 		next_type = t.Update(delta_second);
 		break;
 	case eInGame:
-		next_type = InGameUpdate(delta_second);
+		next_type = i.Update(delta_second);
 		break;
 	case eResult:
 		next_type = r.Update(delta_second);
@@ -73,7 +74,7 @@ void SceneDraw(void)
 		t.Draw();
 		break;
 	case eInGame:
-		InGameDraw();
+		i.Draw();
 		break;
 	case eResult:
 		r.Draw();
@@ -104,7 +105,7 @@ int ChangeScene(eSceneType new_scene_type)
 	case eRestart:
 		new_scene_type = eInGame;
 	case eInGame:
-		result = InGameInit();
+		result = i.Init();
 		break;
 	case eResult:
 		result = r.Init();
