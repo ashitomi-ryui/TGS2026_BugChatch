@@ -308,7 +308,7 @@ void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
 	shiita = 0;
 
 	m_direction = atan2f((location.y - Plocation.y), (location.x - Plocation.x));
-	/*m_direction += Random::GetRand(-DX_PI_F / 3, DX_PI_F / 3, 1.0f);*/
+	m_direction += Random::GetRand(-DX_PI_F / 3, DX_PI_F / 3, 1.0f);
 
 	//ˆÚ“®‹——£
 	float distance = Random::GetRand(150.0f, 400.0f, 0.1f);
