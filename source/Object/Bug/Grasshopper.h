@@ -9,6 +9,7 @@ private:
 	static int images[7];
 	static int Audio[2];
 
+	bool m_isWallHit;
 	bool m_isTurn;
 	bool m_isJump;	// ジャンプするか
 	float shiita;  //ジャンプがどれぐらい完了しているかのやつ
