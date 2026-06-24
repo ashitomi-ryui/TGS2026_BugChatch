@@ -14,6 +14,8 @@ private:
 	static int ranking[MAX_RANK];
 	static int new_data;
 	static int new_rank;
+	bool check_blend;
+	float blend;
 private:
 	int RankingBGM;
 	int ChoiceSE;

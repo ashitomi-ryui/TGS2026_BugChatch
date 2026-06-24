@@ -75,6 +75,9 @@ int Ranking::Init()
 	Camera::SetScreenLocation({ 0.0f, D_WIN_HEIGHT });
 	Camera::SetScreenRatioSize(0.0f);
 
+	check_blend = false;
+	blend = 150;
+
 	return TRUE;
 }
 
@@ -124,8 +127,27 @@ eSceneType Ranking::Update(float delta_second)
 
 			changeProduction++;
 			shiita = 0.0f;
-
 			pressed = true;
+		}
+
+		if (blend > 150)
+		{
+			blend = 150;
+			check_blend = false;
+		}
+		if (blend < 0)
+		{
+			blend = 0;
+			check_blend = true;
+		}
+
+		if (check_blend == true)
+		{
+			blend += 150.0f * delta_second;
+		}
+		else
+		{
+			blend -= 150.0f * delta_second;
 		}
 
 		break;
@@ -243,15 +265,11 @@ void Ranking::Draw()const
 			horizontal_line = 590;
 		}
 		float Vertical_line = (float)121 * (new_rank % 3);
-
-		Camera::DrawBox({ 60 + horizontal_line,65 + Vertical_line }, { 632 + horizontal_line,168 + Vertical_line }, GetColor(255, 255, 255));
-
-		//Camera::DrawBox({ 42+horizontal_line,47 + Vertical_line }, { 60 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//cü‚P
-		//Camera::DrawBox({ 632 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//cü2
-		//Camera::DrawBox({ 42 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,65 + Vertical_line }, GetColor(255, 255, 255));//‰¡ü‚P
-		//Camera::DrawBox({ 42 + horizontal_line,163 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//‰¡ü2
+		DrawFormatString(100, 100, GetColor(255, 0, 0), "%d", (int)blend);
+		//SetDrawBlendMode(DX_BLENDMODE_ALPHA, blend);
+		unsigned int color = GetColor(255, 255, 255) | (unsigned int)blend << 24;
+		Camera::DrawBox({ 60 + horizontal_line,65 + Vertical_line }, { 632 + horizontal_line,168 + Vertical_line }, color);
 	}
-
 	unsigned int color;
 	for (int i = 0;i < MAX_RANK;i++)
 	{
