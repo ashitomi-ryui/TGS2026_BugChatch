@@ -235,6 +235,22 @@ void Ranking::Draw()const
 		Camera::DrawString(Vec2Add(botLoc[i], { charVec[i].x * (float)charSize, charVec[i].y }), charSize * 1.2f, charColor, character[i]);
 	}
 
+	if (new_rank != -1)
+	{
+		float horizontal_line = 0;
+		if (new_rank > 2)
+		{
+			horizontal_line = 590;
+		}
+		float Vertical_line = (float)121 * (new_rank % 3);
+
+		Camera::DrawBox({ 60 + horizontal_line,65 + Vertical_line }, { 632 + horizontal_line,168 + Vertical_line }, GetColor(255, 255, 255));
+
+		//Camera::DrawBox({ 42+horizontal_line,47 + Vertical_line }, { 60 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//ècê¸ÇP
+		//Camera::DrawBox({ 632 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//ècê¸2
+		//Camera::DrawBox({ 42 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,65 + Vertical_line }, GetColor(255, 255, 255));//â°ê¸ÇP
+		//Camera::DrawBox({ 42 + horizontal_line,163 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//â°ê¸2
+	}
 
 	unsigned int color;
 	for (int i = 0;i < MAX_RANK;i++)
@@ -257,27 +273,10 @@ void Ranking::Draw()const
 				break;
 			}
 		}
-		
 
 		Camera::DrawString({ (float)(150 + (i / 3) * 600), (float)(115 + (i % 3) * 120) },
 			100, color, "%dà  %3dïC", i + 1, ranking[i]);
 
-
-		/*Camera::DrawBox({ 42,47 }, { 650,186 }, GetColor(255, 255, 255));*/
-
-		if (new_rank != -1)
-		{
-			float horizontal_line = 0;
-			if (new_rank > 2)
-			{
-				 horizontal_line = 590;
-			}
-			float Vertical_line = (float)121 * (new_rank % 3);
-			Camera::DrawBox({ 42+horizontal_line,47 + Vertical_line }, { 60 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//ècê¸ÇP
-			Camera::DrawBox({ 632 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//ècê¸2
-			Camera::DrawBox({ 42 + horizontal_line,47 + Vertical_line }, { 650 + horizontal_line,65 + Vertical_line }, GetColor(255, 255, 255));//â°ê¸ÇP
-			Camera::DrawBox({ 42 + horizontal_line,163 + Vertical_line }, { 650 + horizontal_line,186 + Vertical_line }, GetColor(255, 255, 255));//â°ê¸2
-		}
 		
 		//DrawFormatString(100, 100, GetColor(255, 0, 0), "%d", new_data);
 		//DrawFormatString(100, 150, GetColor(255, 0, 0), "%d", new_rank);
