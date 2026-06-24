@@ -130,24 +130,24 @@ eSceneType Ranking::Update(float delta_second)
 			pressed = true;
 		}
 
-		if (blend > 150)
+		if (blend > (float)0xf0)
 		{
-			blend = 150;
+			blend = (float)0xf0;
 			check_blend = false;
 		}
-		if (blend < 0)
+		if (blend < (float)0x10)
 		{
-			blend = 0;
+			blend = (float)0x10;
 			check_blend = true;
 		}
 
 		if (check_blend == true)
 		{
-			blend += 150.0f * delta_second;
+			blend += (float)0xe0 * delta_second;
 		}
 		else
 		{
-			blend -= 150.0f * delta_second;
+			blend -= (float)0xe0 * delta_second;
 		}
 
 		break;
@@ -265,9 +265,7 @@ void Ranking::Draw()const
 			horizontal_line = 590;
 		}
 		float Vertical_line = (float)121 * (new_rank % 3);
-		DrawFormatString(100, 100, GetColor(255, 0, 0), "%d", (int)blend);
-		//SetDrawBlendMode(DX_BLENDMODE_ALPHA, blend);
-		unsigned int color = GetColor(255, 255, 255) | (unsigned int)blend << 24;
+		unsigned int color = 0xffffff + ((unsigned int)blend << 24);
 		Camera::DrawBox({ 60 + horizontal_line,65 + Vertical_line }, { 632 + horizontal_line,168 + Vertical_line }, color);
 	}
 	unsigned int color;

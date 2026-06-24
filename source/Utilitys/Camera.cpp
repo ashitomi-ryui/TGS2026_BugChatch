@@ -208,7 +208,15 @@ void Camera::DrawLine(Vector2D location1, Vector2D location2, unsigned int Color
 	location2 = FitLocationToScreen(location2);
 	Thinckness *= m_screenRatioSize;
 
+	int a = Color >> 24;
+	if (a == 0)
+		a = 0xff;
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, a);
+
 	DxLib::DrawLine((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, Color, (int)Thinckness);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xff);
 }
 
 void Camera::DrawLineW(Vector2D location1, Vector2D location2, unsigned int Color, float Thinckness)
@@ -227,7 +235,15 @@ void Camera::DrawTriangle(Vector2D location1, Vector2D location2, Vector2D locat
 	location2 = FitLocationToScreen(location2);
 	location3 = FitLocationToScreen(location3);
 
+	int a = Color >> 24;
+	if (a == 0)
+		a = 0xff;
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, a);
+
 	DxLib::DrawTriangle((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, (int)location3.x, (int)location3.y, Color, true);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xff);
 }
 
 void Camera::DrawTriangleW(Vector2D location1, Vector2D location2, Vector2D location3, unsigned int Color)
@@ -250,7 +266,16 @@ void Camera::DrawCircle(Vector2D location, float radius, unsigned int Color, boo
 	// ˜gü‚¾‚¯‚È‚ç
 	if (!FillFlag)
 	{
+		int a = Color >> 24;
+		if (a == 0)
+			a = 0xff;
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, a);
+
 		DxLib::DrawCircle((int)location.x, (int)location.y, (int)radius, Color, false);
+
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xff);
+
 		// ˆ—‚ðI—¹‚·‚é
 		return;
 	}
@@ -297,7 +322,15 @@ void Camera::DrawBox(Vector2D location1, Vector2D location2, unsigned int Color)
 	location1 = FitLocationToScreen(location1);
 	location2 = FitLocationToScreen(location2);
 
+	int a = Color >> 24;
+	if (a == 0)
+		a = 0xff;
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, a);
+
 	DxLib::DrawBox((int)location1.x, (int)location1.y, (int)location2.x, (int)location2.y, Color, true);
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 0xff);
 }
 
 void Camera::DrawBoxW(Vector2D location1, Vector2D location2, unsigned int Color)

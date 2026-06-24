@@ -619,38 +619,5 @@ bool ObjectManager::CheckUIOverlapping(float width, float height, Vector2D locat
 	if (BoxHitCheck(loc, location, radius, width, height))
 		return true;
 
-	// バッタの数分繰り返す
-	for (int i = 0;i < D_CICADA_MAX;i++)
-	{
-		loc = cicada[i].GetLocation();
-		radius = cicada[i].GetRadius();
-
-		// バッタの座標と重なっていたら、真を返す
-		if (BoxHitCheck(loc, location, radius, width, height))
-			return true;
-	}
-
-	// バッタの数分繰り返す
-	for (int i = 0;i < D_DRAGONFLY_MAX;i++)
-	{
-		loc = dragonfly[i].GetLocation();
-		radius = dragonfly[i].GetRadius();
-
-		// バッタの座標と重なっていたら、真を返す
-		if (BoxHitCheck(loc, location, radius, width, height))
-			return true;
-	}
-
-	// バッタの数分繰り返す
-	for (int i = 0;i < D_GRASSHOPPER_MAX;i++)
-	{
-		loc = grasshopper[i].GetLocation();
-		radius = grasshopper[i].GetRadius();
-
-		// バッタの座標と重なっていたら、真を返す
-		if (BoxHitCheck(loc, location, radius, width, height))
-			return true;
-	}
-
 	return false;
 }
