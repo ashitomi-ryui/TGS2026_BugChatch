@@ -3,7 +3,7 @@
 #include"SceneType.h"
 #include"../Utilitys/Math.h"
 
-#define D_TIME_LIMIT	(0.0f)
+#define D_TIME_LIMIT	(60.0f)
 
 class InGame
 {
