@@ -315,7 +315,7 @@ void Grasshopper::EscapeSetDestination(Vector2D location, Vector2D Plocation)
 
 	// 目的地
 	m_destination.x = location.x + cosf(m_direction) * distance;
-
+	  
 	m_destination.y = location.y + sinf(m_direction) * distance;
 
 	m_startLocation = location;
@@ -455,6 +455,7 @@ void Grasshopper::Escape(float delta)
 
 	if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
+		ChangeVolumeSoundMem(80, Audio[1]);
 		PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
 	}
 
@@ -497,6 +498,7 @@ void Grasshopper::Stand(float delta)
 
 	if (CheckSoundMem(Audio[0]) != TRUE && Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
+	    ChangeVolumeSoundMem(100, Audio[0]);
 		PlaySoundMem(Audio[0], DX_PLAYTYPE_BACK);
 	}
 
@@ -530,6 +532,7 @@ void Grasshopper::Move(float delta)
 		//ジャンプでの移動
 		if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
 		{
+			ChangeVolumeSoundMem(80, Audio[1]);
 			PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
 		}
 		//AIニキ
