@@ -2,6 +2,8 @@
 #include"../Utilitys/Camera.h"
 #include"../Utilitys/Random.h"
 
+
+
 Player ObjectManager::player;
 
 Cicada ObjectManager::cicada[D_CICADA_MAX];
@@ -362,6 +364,9 @@ Vector2D ObjectManager::BoxPushBack(Vector2D locationC, Vector2D locationB, floa
 
 bool ObjectManager::NetHitCheck(Vector2D location, float radius)
 {
+	if (!player.GetNetHolding())
+		return false;
+
 	//ネットの位置を取得
 	Vector2D netLocation = player.GetRingLocation();
 	float netRadius = player.GetRingRadius();
@@ -616,4 +621,130 @@ bool ObjectManager::CheckUIOverlapping(float width, float height, Vector2D locat
 		return true;
 
 	return false;
+}
+
+//void ObjectManager::UpdateBugAudio(Bug* bugList, int soundHandle, float maxRange)
+//{
+//	// プレイヤーの現在地を取得
+//	Vector2D playerLocation = GetPlayerLocation();
+//
+//	float minDistance = 999999.0f;
+//	bool anyBugOnScreen = false;
+//
+//	
+//	// 出現中かつ、画面内にいるか
+//	if (bugList->GetIsAppearance())
+//	{
+//		if (Camera::CheckItsOnTheScreen(bugList->GetLocation(), bugList->GetRadius()))
+//		{
+//			anyBugOnScreen = true;
+//
+//			// 距離を計算して最短を更新
+//			float len = Length(Vec2Sub(bugList->GetLocation(), playerLocation));
+//			if (len < minDistance)
+//			{
+//				minDistance = len;
+//			}
+//		}
+//	}
+//	
+//	// 音量を決定（デフォルトは100）
+//	int volume = 100;
+//
+//	if (anyBugOnScreen && minDistance < maxRange)
+//	{
+//		// 距離に応じて 100 ～ 255 に滑らかに変化
+//		volume = (int)(255 - (minDistance / maxRange) * (255 - 100));
+//	}
+//
+//	// 指定されたSEハンドルに対して音量を反映・再生
+//	ChangeVolumeSoundMem(volume, soundHandle);
+//
+//	if (CheckSoundMem(soundHandle) != TRUE)
+//	{
+//		PlaySoundMem(soundHandle, DX_PLAYTYPE_BACK);
+//	}
+//}
+
+void ObjectManager::UpdateCicadaAudio()
+{
+	static int CicadaSE = LoadSoundMem("assets/Audio/AS_78229_ミンミンゼミ.wav");
+
+	Vector2D playerLocation = GetPlayerLocation(); // プレイヤーの座標
+	float minDistance = 999999.0f;
+	bool anyBugOnScreen = false;
+
+	for (int i = 0; i < D_CICADA_MAX; i++)
+	{
+		if (cicada[i].GetIsAppearance())
+		{
+			if (Camera::CheckItsOnTheScreen(cicada[i].GetLocation(), cicada[i].GetRadius()))
+			{
+				anyBugOnScreen = true;
+				float len = Length(Vec2Sub(cicada[i].GetLocation(), playerLocation));
+
+				if (len < minDistance) { minDistance = len; }
+			}
+		}
+	}
+
+	
+	int volume = 100;
+	if (anyBugOnScreen && minDistance < 600.0f) {
+		volume = (int)(255 - (minDistance / 600.0f) * (255 - 100));
+	}
+
+	
+	ChangeVolumeSoundMem(volume, CicadaSE);
+	if (CheckSoundMem(CicadaSE) != TRUE) {
+		PlaySoundMem(CicadaSE, DX_PLAYTYPE_BACK);
+	}
+}
+
+void ObjectManager::UpdateGrasshopperAudio()
+{
+	//SE
+	static int grasshopperSE = LoadSoundMem("assets/Audio/Batta.wav");
+	/*static int grasshopperjumpSE = LoadSoundMem("assets/Audio/BattaJump.wav");*/
+
+	Vector2D playerLocation = GetPlayerLocation();
+	float minDistance = 999999.0f;
+	bool anyBugOnScreen = false;
+
+	for (int i = 0; i < D_GRASSHOPPER_MAX; i++)
+	{
+		// 出現中かチェック
+		if (grasshopper[i].GetIsAppearance())
+		{
+			// 画面内にいるかチェック
+			if (Camera::CheckItsOnTheScreen(grasshopper[i].GetLocation(), grasshopper[i].GetRadius()))
+			{
+				anyBugOnScreen = true;
+
+				// プレイヤーと「そのバッタ」の距離を計算
+				float len = Length(Vec2Sub(grasshopper[i].GetLocation(), playerLocation));
+
+				// 一番近いバッタの距離を更新
+				if (len < minDistance) { minDistance = len; }
+			}
+		}
+	}
+
+	int volume = 100; // デフォルト（画面外や遠いとき）は音量100
+	float maxRange = 500.0f; // バッタの音が変化する最大範囲（500ピクセル）
+
+	if (anyBugOnScreen && minDistance < maxRange)
+	{
+		// 距離0で最大255、距離500で最低100に滑らかに変化
+		volume = (int)(255 - (minDistance / maxRange) * (255 - 100));
+	}
+
+	
+	ChangeVolumeSoundMem(volume, grasshopperSE);
+
+	// まだ鳴っていなければ再生を開始
+	if (CheckSoundMem(grasshopperSE) != TRUE)
+	{
+		PlaySoundMem(grasshopperSE, DX_PLAYTYPE_BACK);
+	}
 }

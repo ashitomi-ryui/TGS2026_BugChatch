@@ -37,6 +37,8 @@ private:
 	};
 	static ObjectShadow shadow;
 
+	static int CicadaSE;
+
 public:
 	ObjectManager();
 	~ObjectManager();
@@ -163,6 +165,21 @@ public:
 	/// <param name="location">座標</param>
 	/// <param name="color">色</param>
 	static void SetEffect(Vector2D location, unsigned int color);
+
+	/*/// <summary>
+	/// 虫のSEの音量調整
+	/// </summary>
+	/// <param name="bugList">虫の名前</param>
+	/// <param name="bugNum">リスポーンしてる虫の総数</param>
+	/// <param name="soundHandle">SE</param>
+	/// <param name="maxRange">音が流れる最大値</param>
+	static void UpdateBugAudio(Bug* bugList, int soundHandle, float maxRange = 600.0f);*/
+
+	static void UpdateCicadaAudio();
+
+	static void UpdateGrasshopperAudio();
+
+	
 public:
 	static Vector2D RandomLocation(float radius);
 	static Vector2D GetPlayerLocation();

@@ -258,6 +258,10 @@ eSceneType InGame::Update(float delta_second)
 			}
 		}
 
+		ObjectManager::UpdateCicadaAudio();
+		ObjectManager::UpdateGrasshopperAudio();
+
+
 		// Ç©Ç≤ÇÃçXêV
 		Cage::Update(eInGame, delta_second);
 

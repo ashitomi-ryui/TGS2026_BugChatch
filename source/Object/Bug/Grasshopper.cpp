@@ -61,8 +61,8 @@ void Grasshopper::Init()
 	images[6] = LoadGraph("assets/images/Bugs/Grasshopper/Jump3.PNG");
 
 
-	//SE
-	Audio[0] = LoadSoundMem("assets/Audio/Batta.wav");
+	////SE
+	//Audio[0] = LoadSoundMem("assets/Audio/Batta.wav");
 	Audio[1] = LoadSoundMem("assets/Audio/BattaJump.wav");
 
 
@@ -455,7 +455,7 @@ void Grasshopper::Escape(float delta)
 
 	if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
-		ChangeVolumeSoundMem(80, Audio[1]);
+		ChangeVolumeSoundMem(140, Audio[1]);
 		PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
 	}
 
@@ -496,11 +496,11 @@ void Grasshopper::Stand(float delta)
 	shiita = 0;
 	m_moveSpeed = { 0.0f, 0.0f };
 
-	if (CheckSoundMem(Audio[0]) != TRUE && Camera::CheckItsOnTheScreen(m_location, m_radius))
+	/*if (CheckSoundMem(Audio[0]) != TRUE && Camera::CheckItsOnTheScreen(m_location, m_radius))
 	{
 	    ChangeVolumeSoundMem(100, Audio[0]);
 		PlaySoundMem(Audio[0], DX_PLAYTYPE_BACK);
-	}
+	}*/
 
 	if (m_transitionTime <= 0.0f)
 	{
@@ -532,9 +532,10 @@ void Grasshopper::Move(float delta)
 		//ジャンプでの移動
 		if (shiita <= 0.1 && Camera::CheckItsOnTheScreen(m_location, m_radius))
 		{
-			ChangeVolumeSoundMem(80, Audio[1]);
+			ChangeVolumeSoundMem(140, Audio[1]);
 			PlaySoundMem(Audio[1], DX_PLAYTYPE_BACK);
 		}
+
 		//AIニキ
 	// 2. Y軸にサインカーブ（放物線）の高さを上乗せする
 	// sinf(shiita * DX_PI_F) は shiitaが 0.0(始点) -> 0.5(頂点) -> 1.0(終点) で 0 -> 1 -> 0 と変化します

@@ -26,7 +26,7 @@ public:
 	virtual void DrawOnTheFront() const override;
 
 	static void WithinTheScreenInit();
-	static void PlayAudio();
+	//static void PlayAudio();
 	static void StopAudio();
 	
 	/// <summary>
@@ -90,4 +90,7 @@ private:
 	/// ‘O–Ê‚É’u‚­
 	/// </summary>
 	void PutInFront();
+
+	/*void UpdateCicadaAudio();*/
+
 };

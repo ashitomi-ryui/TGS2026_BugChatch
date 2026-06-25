@@ -12,6 +12,7 @@
 
 int Cicada::images[5] = { -1,-1,-1,-1,-1 };
 int Cicada::CicadaSE = -1;
+Cicada* cicada;
 
 bool Cicada::isWithinTheScreen = false;
 
@@ -43,6 +44,7 @@ void Cicada::Update(int id, float delta)
 	{
 		isWithinTheScreen = true;
 	}
+
 
 	Animation(delta);
 
@@ -133,13 +135,13 @@ void Cicada::WithinTheScreenInit()
 	isWithinTheScreen = false;
 }
 
-void Cicada::PlayAudio()
-{
-	if (isWithinTheScreen && CheckSoundMem(CicadaSE) == FALSE)
-		PlaySoundMem(CicadaSE, DX_PLAYTYPE_LOOP);
-	if (!isWithinTheScreen && CheckSoundMem(CicadaSE) == TRUE)
-		StopSoundMem(CicadaSE);
-}
+//void Cicada::PlayAudio()
+//{
+//	if (isWithinTheScreen && CheckSoundMem(CicadaSE) == FALSE)
+//		PlaySoundMem(CicadaSE, DX_PLAYTYPE_LOOP);
+//	if (!isWithinTheScreen && CheckSoundMem(CicadaSE) == TRUE)
+//		StopSoundMem(CicadaSE);
+//}
 
 void Cicada::Spawn()
 {
@@ -258,7 +260,7 @@ void Cicada::Animation(float delta)
 
 void Cicada::Escape(float delta)
 {
-	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+	Vector2D playerLocation = targetPlayer->GetLocation();
 
 	// 向きをプレイヤーから虫への向きに
 	m_direction = VecATan2(playerLocation, m_location);
@@ -307,6 +309,37 @@ void Cicada::Escape(float delta)
 void Cicada::Stand(float delta)
 {
 	m_moveSpeed = { 0.0f, 0.0f };
+
+	
+
+
+	/*if (Camera::CheckItsOnTheScreen(m_location, m_radius))
+	{
+		float len = Length(Vec2Sub(m_location, targetPlayer->GetPlayerLocation()));
+
+		float maxRange = 500.0f;
+		int volume = 0;
+
+		if (len < maxRange)
+		{
+
+			volume = (int)(255 - (len / maxRange) * (255 - 50));
+		}
+		else
+		{
+			volume = 100;
+		}
+
+		ChangeVolumeSoundMem(volume, CicadaSE);
+		if (CheckSoundMem(CicadaSE) != TRUE )
+		{
+			PlaySoundMem(CicadaSE, DX_PLAYTYPE_BACK);
+		}
+
+		
+		
+	}*/
+
 	if (m_transitionTime <= 0.0f)
 	{
 		// 移動状態へ
@@ -384,17 +417,23 @@ void Cicada::Panic(float delta)
 
 void Cicada::PerceptionJudgment()
 {
-	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+	Vector2D playerLocation = targetPlayer->GetLocation();
 	Vector2D ringLocation = targetPlayer->GetRingLocation();
 	float playerLen = Length(Vec2Sub(m_location, playerLocation));
 	float ringLen = Length(Vec2Sub(m_location, ringLocation));
 
+	float detection = m_detectionRange;
+	if (targetPlayer->GetSneak())
+	{
+		detection /= 2.0f;
+	}
+
 	// プレイヤー察知
 	// 察知範囲に入った時
-	if (playerLen < m_detectionRange || ringLen < m_detectionRange)
+	if (playerLen < detection || ringLen < detection)
 	{
 		// 察知班にの1/2に入った時
-		if (playerLen < m_detectionRange / 2.0f || ringLen < m_detectionRange / 2.0f)
+		if (playerLen < detection / 2.0f || ringLen < detection / 2.0f)
 		{
 			// 逃げ状態へ
 			TransitionToEscape();
@@ -442,3 +481,28 @@ void Cicada::StopAudio()
 	//StopSoundMem(CicadaSE);
 	if (CheckSoundMem(CicadaSE) == TRUE) StopSoundMem(CicadaSE);
 }
+
+
+//void Cicada::UpdateCicadaAudio()
+//{
+//	Vector2D playerLocation = targetPlayer->GetLocation();
+//	float minDistance = 999999.0f;
+//	bool anyBugOnScreen = false;
+//
+//	if (GetIsAppearance())
+//	{
+//		if (Camera::CheckItsOnTheScreen(GetLocation(), GetRadius()))
+//		{
+//			anyBugOnScreen = true;
+//			float len = Length(Vec2Sub(GetLocation(), playerLocation));
+//			if (len < minDistance) { minDistance = len; }
+//		}
+//	}
+//
+//	int volume = 100;
+//	if (anyBugOnScreen && minDistance < 600.0f) {
+//		volume = (int)(255 - (minDistance / 600.0f) * (255 - 100));
+//	}
+//	ChangeVolumeSoundMem(volume, CicadaSE);
+//	if (CheckSoundMem(CicadaSE) != TRUE) { PlaySoundMem(CicadaSE, DX_PLAYTYPE_BACK); }
+//}
