@@ -327,7 +327,7 @@ void InGame::Draw() const
 	Vector2D playerLocation = ObjectManager::GetPlayerLocation();
 
 	// 虫かごがプレイヤーや虫と重なったとき
-	if (ObjectManager::CheckUIOverlapping(160.0f * D_CAGE_RATIO, 140.0f * D_CAGE_RATIO + 50.0f))
+	if (ObjectManager::CheckUIOverlapping(240.0f, 210.0f + 50.0f))
 	{
 		// 色を薄くする
 		cageColor += 0x60000000;
@@ -351,7 +351,7 @@ void InGame::Draw() const
 			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 150.0f, D_WIN_HEIGHT / 2.0f - 150.0f }, 100, 0xffffff, "スタート！");
 		}
 
-		Camera::DrawString({ 25.0f, 150.0f * D_CAGE_RATIO }, 50, cageColor, "のこり%d秒", (int)timer + 1);
+		Camera::DrawString({ 25.0f, 230.0f }, 50, cageColor, "のこり%d秒", (int)timer + 1);
 
 		// 54321を表示
 		if (timer < 5.0f)

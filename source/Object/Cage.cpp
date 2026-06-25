@@ -61,7 +61,7 @@ void Cage::Init(eSceneType sceneType)
 		oldDragonfly = 0;
 		oldGrasshopper = 0;
 
-		location = { 80.0f * D_CAGE_RATIO, 80.0f * D_CAGE_RATIO };
+		location = { 120.0f, 120.0f };
 
 		animCount = 6;
 
@@ -294,7 +294,7 @@ void Cage::Draw(eSceneType sceneType, unsigned int color)
 		}
 
 		// かごを表示
-		Camera::DrawGraph(location, 3.0f * D_CAGE_RATIO, 3.0f * D_CAGE_RATIO, 0.0f, cageImage[0][num], false, false, color);
+		Camera::DrawGraph(location, 3.0f, 3.0f, 0.0f, cageImage[0][num], false, false, color);
 
 		for (int id = 0;id < D_CAGE_MAX;id++)
 		{
@@ -306,7 +306,7 @@ void Cage::Draw(eSceneType sceneType, unsigned int color)
 	case eResult:
 
 		// かごを表示
-		Camera::DrawGraph(location, 4.5f, 4.5f, 0.0f, cageImage[0][animCount]);
+		Camera::DrawGraph(location, 3.0f, 3.0f, 0.0f, cageImage[0][animCount]);
 
 		for (int id = 0;id < D_CAGE_MAX;id++)
 		{
@@ -314,7 +314,7 @@ void Cage::Draw(eSceneType sceneType, unsigned int color)
 		}
 
 		// かごの外装を表示
-		Camera::DrawGraph(location, 4.5f, 4.5f, 0.0f, cageImage[1][animCount]);
+		Camera::DrawGraph(location, 3.0f, 3.0f, 0.0f, cageImage[1][animCount]);
 
 		break;
 	}
@@ -334,7 +334,7 @@ void Cage::BugInit(eSceneType sceneType)
 	case eInGame:
 
 		m_display = false;
-		m_location = { Random::GetRand(-15.0f, 15.0f), -100.0f * D_CAGE_RATIO };
+		m_location = { Random::GetRand(-15.0f, 15.0f), -150.0f };
 		m_angle = 1.0f * DX_PI_F;
 
 		m_state = eJoin;
@@ -461,17 +461,17 @@ void Cage::BugDraw(eSceneType sceneType, unsigned int color) const
 			{
 			case eCicada:
 				// セミを表示
-				Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, cicadaImage, false, false, color);
+				Camera::DrawGraph(loc, 3.0f, 3.0f, angle, cicadaImage, false, false, color);
 				break;
 			case eDragonfly:
 				// トンボを表示
 				angle += 0.70f * DX_PI_F;
-				Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, dragonflyImage[m_animCount], false, false, color);
+				Camera::DrawGraph(loc, 3.0f, 3.0f, angle, dragonflyImage[m_animCount], false, false, color);
 				break;
 			case eGrasshopper:
 				// バッタを表示
 				angle += 0.6f * DX_PI_F;
-				Camera::DrawGraph(loc, 2.0f * D_CAGE_RATIO, 2.0f * D_CAGE_RATIO, angle, grasshopperImage[m_animCount], false, false, color);
+				Camera::DrawGraph(loc, 3.0f, 3.0f, angle, grasshopperImage[m_animCount], false, false, color);
 				break;
 			}
 		}
@@ -535,13 +535,13 @@ void Cage::Join(float delta)
 	}
 
 	// 落とす
-	m_moveSpeed.y += 100.0f * delta * D_CAGE_RATIO;
+	m_moveSpeed.y += 150.0f * delta;
 
 	// 速度制限
 	float len = Length(m_moveSpeed);
-	if (len > 100.0f * D_CAGE_RATIO)
+	if (len > 150.0f)
 	{
-		len -= 100.0f * D_CAGE_RATIO;
+		len -= 150.0f;
 		float shiita = VecATan2(m_moveSpeed, { 0.0f, 0.0f });
 		m_moveSpeed.x += sinf(shiita) * len;
 		m_moveSpeed.y -= cosf(shiita) * len;
@@ -612,14 +612,14 @@ void Cage::Move(float delta)
 	}
 
 	// 向きに合わせて移動する
-	m_moveSpeed.x += sinf(m_angle) * 100.0f * D_CAGE_RATIO;
-	m_moveSpeed.y -= cosf(m_angle) * 100.0f * D_CAGE_RATIO;
+	m_moveSpeed.x += sinf(m_angle) * 150.0f;
+	m_moveSpeed.y -= cosf(m_angle) * 150.0f;
 
 	// 速度制限
 	float len = Length(m_moveSpeed);
-	if (len > 10.0f * D_CAGE_RATIO)
+	if (len > 15.0f)
 	{
-		len -= 10.0f * D_CAGE_RATIO;
+		len -= 15.0f;
 		float shiita = VecATan2(m_moveSpeed, { 0.0f, 0.0f });
 		m_moveSpeed.x += sinf(shiita) * len;
 		m_moveSpeed.y -= cosf(shiita) * len;

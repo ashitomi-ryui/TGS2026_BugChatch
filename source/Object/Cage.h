@@ -5,9 +5,8 @@
 #include "../Scene/SceneType.h"
 
 #define D_CAGE_MAX		(999)	// Ç©Ç≤ÇÃç≈ëÂóeó 
-#define D_CAGE_RATIO	(1.5f)	// Ç©Ç≤ÇÃî‰ó¶	
-#define D_CAGE_WIDTH	(35.0f * D_CAGE_RATIO)	// Ç©Ç≤ì‡ÇÃâ°ïù
-#define D_CAGE_HEIGHT	(15.0f * D_CAGE_RATIO)	// Ç©Ç≤ì‡ÇÃçÇÇ≥
+#define D_CAGE_WIDTH	(65.0f)	// Ç©Ç≤ì‡ÇÃâ°ïù
+#define D_CAGE_HEIGHT	(30.0f)	// Ç©Ç≤ì‡ÇÃçÇÇ≥
 
 class Cage
 {
