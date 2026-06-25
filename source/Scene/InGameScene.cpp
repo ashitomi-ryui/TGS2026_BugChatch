@@ -7,15 +7,18 @@
 #include<DxLib.h>
 
 #include"../Object/Cage.h"
+#include "../Object/FlowingTime.h"
 
 int InGame::groundImage = -1;
 int InGame::productionImage[6] = {};
 
+FlowingTime flowingTime;
 
 InGame::InGame()
 {
 	get[3] = {};
 	timer = 0.0f;
+	timeStep = 0;
 
 	BGM = -1;
 	countSE = -1;
@@ -60,7 +63,8 @@ int InGame::Init()//各プログラムの初期化
 	{
 		return FALSE;
 	}*/
-	timer = 0.0f;
+	timer = 3.0f;
+	timeStep = 0;
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -155,7 +159,7 @@ eSceneType InGame::Update(float delta_second)
 
 				// 次の演出
 				changeProduction++;
-				timer = 0.0f;
+				timer = 3.0f;
 				ratio = 1.0f;
 			}
 
@@ -169,7 +173,7 @@ eSceneType InGame::Update(float delta_second)
 
 		break;
 	case 3:
-		timer += delta_second;
+		timer -= delta_second;
 		
 		if (!isCountSEPlayed)
 		{
@@ -177,19 +181,19 @@ eSceneType InGame::Update(float delta_second)
 			isCountSEPlayed = true;
 		}
 
-		if (timer >= 3.0f)
+		if (timer <= 0.0f)
 		{
 			// 次の演出
 			changeProduction++;
-			timer = 0.0f;
+			timer = D_TIME_LIMIT;
 			isCountSEPlayed = false;
 		}
 		
 		break;
 
 	case 4:	// ==============================================ゲームプレイ
-		timer += delta_second;
-		if (timer > D_TIME_LIMIT)
+		timer -= delta_second;
+		if (timer <= 0.0f)
 		{
 			if (!isFinishSE)
 			{
@@ -197,7 +201,7 @@ eSceneType InGame::Update(float delta_second)
 				isFinishSE = true;
 			}
 
-			timer = 0.0f;
+			timer = 2.0f;
 
 			// 音を止める
 			StopSoundMem(BGM);
@@ -212,6 +216,26 @@ eSceneType InGame::Update(float delta_second)
 			animTime = 0.0f;
 			animCount = 0;
 
+			break;
+		}
+
+		switch (timeStep)
+		{
+		case 0:
+			if (timer <= (float)((int)(D_TIME_LIMIT / 2.0f) / 10 * 10))
+			{
+				flowingTime.Flow((int)(D_TIME_LIMIT / 2.0f) / 10 * 10, 0xffffff);
+				timeStep++;
+			}
+			break;
+		case 1:
+			if (timer <= (float)((int)(D_TIME_LIMIT / 4.0f) / 5 * 5))
+			{
+				flowingTime.Flow((int)(D_TIME_LIMIT / 4.0f) / 5 * 5, 0xffff00);
+				timeStep++;
+			}
+			break;
+		default:
 			break;
 		}
 
@@ -240,27 +264,21 @@ eSceneType InGame::Update(float delta_second)
 		// 音再生・停止
 		Cicada::PlayAudio();
 
+		flowingTime.Update(delta_second);
+
 		break;
 	case 5:// ==============================================ゲーム終了
-		timer += delta_second;
+		timer -= delta_second;
 
-		if (timer > 2.0f)
+		if (timer <= 0.0f)
 		{
 			timer = 0.0;
 			changeProduction++;
-		}
-
-		break;
-	case 6:	
-		timer += delta_second;
-
-		if (timer > 0.0f)
-		{
-			changeProduction++;
 			shiita = 0.0f;
 		}
+
 		break;
-	case 7:
+	case 6:
 		shiita -= 2.0f * delta_second;
 
 		{
@@ -274,7 +292,6 @@ eSceneType InGame::Update(float delta_second)
 			if (shiita < -1.5f)
 			{
 				return eResult;	//ゲーム終了時にリザルトに遷移
-				timer = 0.0f;
 			}
 
 			//ジャンプの移動処理
@@ -305,46 +322,54 @@ void InGame::Draw() const
 
 	ObjectManager::Draw();
 
-	unsigned int color = 0xffffff;
+	unsigned int cageColor = 0xffffff;
+	unsigned int timeColor = 0xff0000;
 	Vector2D playerLocation = ObjectManager::GetPlayerLocation();
 
-	// UIがプレイヤーや虫と重なったとき
-	if (ObjectManager::CheckUIOverlapping(180.0f * D_CAGE_RATIO, 160.0f * D_CAGE_RATIO + 50.0f))
+	// 虫かごがプレイヤーや虫と重なったとき
+	if (ObjectManager::CheckUIOverlapping(160.0f * D_CAGE_RATIO, 140.0f * D_CAGE_RATIO + 50.0f))
 	{
 		// 色を薄くする
-		color += 0x60000000;
+		cageColor += 0x60000000;
+	}
+
+	// 54321の残り時間がプレイヤーや虫と重なったとき
+	if (ObjectManager::CheckUIOverlapping(0.0f, 0.0f, { D_WIN_WIDTH / 2.0f + 10.0f, D_WIN_HEIGHT / 2.0f - 150.0f }))
+	{
+		// 色を薄くする
+		timeColor += 0xe0000000;
 	}
 
 	switch(changeProduction)
 	{
 	case 3:
-		Camera::DrawString({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "%d", 3 - (int)timer);
+		Camera::DrawString({ D_WIN_WIDTH / 2.0f + 10.0f, D_WIN_HEIGHT / 2.0f - 150.0f }, 100, 0xffffff, "%d", (int)timer + 1);
 		break;
 	case 4:
-		if (timer <= 1.0f)
+		if (timer >= 59.0f)
 		{
-			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 120.0f, D_WIN_HEIGHT / 2.0f - 100.0f }, 75, 0xffffff, "スタート！");
+			Camera::DrawString({ D_WIN_WIDTH / 2.0f - 150.0f, D_WIN_HEIGHT / 2.0f - 150.0f }, 100, 0xffffff, "スタート！");
 		}
 
-		Camera::DrawString({ 25.0f, 150.0f * D_CAGE_RATIO }, 50, color, "のこり%d秒", 60 - (int)timer);
+		Camera::DrawString({ 25.0f, 150.0f * D_CAGE_RATIO }, 50, cageColor, "のこり%d秒", (int)timer + 1);
 
-		//// スコアの表示
-		//Camera::DrawString({ 75,75 }, 40, GetColor(255, 255, 255), "%d匹", get[0]);
-		//Camera::DrawString({ 75,135 }, 40, GetColor(255, 255, 255), "%d匹", get[1]);
-		//Camera::DrawString({ 75,195 }, 40, GetColor(255, 255, 255), "%d匹", get[2]);
+		// 54321を表示
+		if (timer < 5.0f)
+		{
+			Camera::DrawString({ D_WIN_WIDTH / 2.0f + 10.0f, D_WIN_HEIGHT / 2.0f - 150.0f }, 100, timeColor, "%d", (int)timer + 1);
+		}
 
-		//Camera::DrawGraph({ 25,75 }, 1.7, 1.7, 0.0, icon.cicada);
-		//Camera::DrawGraph({ 25,135 }, 1.7, 1.7, 0.0, icon.dragonfly);
-		//Camera::DrawGraph({ 25,195 }, 1.7, 1.7, 0.0, icon.grasshopper);
 		break;
 	case 5:
-		Camera::DrawString({ 465,260 }, 100, GetColor(255, 255, 255), "そこまで！");
+		Camera::DrawString({ D_WIN_WIDTH / 2.0f - 150.0f, D_WIN_HEIGHT / 2.0f - 150.0f }, 100, 0xffffff, "そこまで！");
 		break;
 	}
 
+	flowingTime.Draw();
+
 	if(changeProduction > 3)
 	{
-		Cage::Draw(eInGame, color);
+		Cage::Draw(eInGame, cageColor);
 	}
 
 	Camera::Draw();
@@ -364,7 +389,6 @@ void InGame::Draw() const
 		break;
 	case 5:
 	case 6:
-	case 7:
 
 		Camera::DrawGraph({ D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT / 2.0f + 40.0f }, 80.0f, 80.0f, 0.0f, productionImage[4 + animCount]);
 

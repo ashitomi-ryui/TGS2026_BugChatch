@@ -17,6 +17,7 @@ private:
 
 	int get[3];
 	float timer;
+	int timeStep;
 
 	int BGM;
 	int whistleSE;

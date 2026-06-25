@@ -44,7 +44,7 @@ void FlowingTime::Draw() const
 	if(m_isDisplay)
 	{
 		int size = 100;
-		Vector2D loc = { m_x, D_WIN_HEIGHT / 2.0f - 100.0f };
+		Vector2D loc = { m_x, D_WIN_HEIGHT / 2.0f - 150.0f };
 		loc.x -= (float)size / 2.0f;
 		unsigned int color = m_color;
 
