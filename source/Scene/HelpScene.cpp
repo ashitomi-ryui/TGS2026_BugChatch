@@ -194,6 +194,8 @@ void Help::Draw()const
 				buttonColor = 0x777777;
 				// •¶š‚Ì˜g‚ğˆÃ‚¢‰©F‚É‚·‚é
 				charColor = 0x773c00;
+
+				charVec[i].y *= -1;
 			}
 			else
 			{
