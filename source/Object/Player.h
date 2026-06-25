@@ -80,12 +80,13 @@ public:
 	Vector2D GetRingLocation() const;
 	float GetRingRadius() const;
 	float GetMaxSpeed() const;
-	Vector2D GetPlayerLocation() const;
-	float GetPlayerRadius() const;
+	Vector2D GetLocation() const;
+	float GetRadius() const;
+	float GetStickmLength() const;
 
 	/// <summary>
 	/// ƒvƒŒƒCƒ„[‚ğˆÚ“®‚³‚¹‚é
 	/// </summary>
 	/// <param name="vector"></param>
-	void PlayerLocationMove(Vector2D vector);
+	void MoveLocation(Vector2D vector);
 };

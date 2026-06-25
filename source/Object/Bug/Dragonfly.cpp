@@ -332,11 +332,11 @@ void Dragonfly::Animation(float delta)
 
 void Dragonfly::Escape(float delta)
 {
-	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+	Vector2D playerLocation = targetPlayer->GetLocation();
 
 	// Œü‚«‚ðƒvƒŒƒCƒ„[‚©‚ç’Ž‚Ö‚ÌŒü‚«‚É
 	m_direction = VecATan2(playerLocation, m_location);
-	if (targetPlayer->GetPlayerLocation().x <= m_location.x)
+	if (targetPlayer->GetLocation().x <= m_location.x)
 	{
 		m_isFlip = true;
 	}
@@ -656,7 +656,7 @@ void Dragonfly::HeadingForABreak(float delta)
 
 void Dragonfly::PerceptionJudgment()
 {
-	Vector2D playerLocation = targetPlayer->GetPlayerLocation();
+	Vector2D playerLocation = targetPlayer->GetLocation();
 	Vector2D ringLocation = targetPlayer->GetRingLocation();
 	float playerLen = Length(Vec2Sub(m_location, playerLocation));
 	float ringLen = Length(Vec2Sub(m_location, ringLocation));

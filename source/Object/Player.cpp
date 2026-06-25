@@ -26,7 +26,7 @@ Player::Player()
 	m_netLength = 55.0f;		// 網の終点までの長さ
 
 	m_ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
-	m_netLocation = Vec2Mult(m_location, m_netLength);	// 網の終点座標（膨らんでいる部分）
+	m_netLocation = m_location;	// 網の終点座標（膨らんでいる部分）
 
 	m_ringRadius = 27.0f;// リングの半径
 
@@ -86,7 +86,7 @@ void Player::Init()
 
 	// 虫網
 	m_ringVector = { 0.0f, 0.0f };	// プレイヤーを基準とした虫網（リング）の中心の座標
-	m_netLocation = Vec2Mult(m_location, m_netLength);	// 網の終点座標（膨らんでいる部分）
+	m_netLocation = m_location;	// 網の終点座標（膨らんでいる部分）
 
 	// 虫網（リング）の太さ
 	m_ringThickness = m_ringRadius;
@@ -641,9 +641,6 @@ void Player::Net(float delta)
 		FixGradually(m_netLocation.x, m_netLocation.x + sinf(netAngle) * ringUnderDistance, ringUnderDistance * delta);
 		FixGradually(m_netLocation.y, m_netLocation.y - cosf(netAngle) * ringUnderDistance, ringUnderDistance * delta);
 
-		m_netRadius = (1.0f - Length(Vec2Sub(m_netLocation, ringLocation)) / m_netLength) * m_ringRadius;
-		
-		
 		// 網の長さ制限
 		if (ringDistance > m_netLength)
 		{
@@ -653,6 +650,8 @@ void Player::Net(float delta)
 			m_netLocation.x += sinf(netAngle) * (ringDistance - m_netLength);
 			m_netLocation.y -= cosf(netAngle) * (ringDistance - m_netLength);
 		}
+
+		m_netRadius = (1.0f - Length(Vec2Sub(m_netLocation, ringLocation)) / m_netLength) * m_ringRadius;
 	}
 }
 
@@ -672,17 +671,22 @@ float Player::GetMaxSpeed() const
 	return m_maxSpeed;
 }
 
-Vector2D Player::GetPlayerLocation() const
+Vector2D Player::GetLocation() const
 {
 	return m_location;
 }
 
-float Player::GetPlayerRadius() const
+float Player::GetRadius() const
 {
 	return m_radius;
 }
 
-void Player::PlayerLocationMove(Vector2D vector)
+float Player::GetStickmLength() const
+{
+	return m_stickLength;
+}
+
+void Player::MoveLocation(Vector2D vector)
 {
 	m_location = Vec2Add(m_location, vector);
 }

@@ -45,7 +45,7 @@ void ObjectManager::Init()
 	player.Init();
 
 	// 木の配置
-	float playerRadius = player.GetPlayerRadius();
+	float playerRadius = player.GetRadius();
 	float treeRadius;	// 木の中心から一番離れた長さ
 	treeRadius = Length(Vec2Sub({ 0.0f, 0.0f }, { D_TREE_WIDTH, D_TREE_HEIGHT }));
 	for (int id = 0; id < D_TREE_MAX; id++)
@@ -127,7 +127,7 @@ void ObjectManager::Init()
 
 void ObjectManager::Update(int changeProduction, float delta)
 {
-	Camera::Update(player.GetPlayerLocation());	// カメラの更新
+	Camera::Update(player.GetLocation());	// カメラの更新
 
 	switch (changeProduction)
 	{
@@ -169,7 +169,7 @@ void ObjectManager::Update(int changeProduction, float delta)
 	}
 
 	// 影の更新
-	shadow.player.Set(player.GetPlayerLocation(), player.GetPlayerRadius(), true, false);
+	shadow.player.Set(player.GetLocation(), player.GetRadius(), true, false);
 	for (int id = 0; id < D_CICADA_MAX; id++)
 	{
 		shadow.cicada[id].Set(cicada[id].GetLocation(), cicada[id].GetHeight(), cicada[id].GetIsAppearance(), cicada[id].GetIsBack());
@@ -580,7 +580,7 @@ Vector2D ObjectManager::RandomLocation(float radius)
 {
 	Vector2D location = {};
 
-	Vector2D playerLocation = player.GetPlayerLocation();
+	Vector2D playerLocation = player.GetLocation();
 
 	 // ランダム
 	int r = (int)Random::GetRand();
@@ -595,7 +595,7 @@ Vector2D ObjectManager::RandomLocation(float radius)
 
 Vector2D ObjectManager::GetPlayerLocation()
 {
-	return player.GetPlayerLocation();
+	return player.GetLocation();
 }
 
 bool ObjectManager::CheckUIOverlapping(float width, float height, Vector2D location)
@@ -608,14 +608,10 @@ bool ObjectManager::CheckUIOverlapping(float width, float height, Vector2D locat
 	location.y -= D_WIN_HEIGHT / 2.0f;
 
 	// プレイヤーの座標と重なっていたら、真を返す
-	Vector2D loc = player.GetPlayerLocation();
-	float radius = player.GetPlayerRadius();
-	if (BoxHitCheck(loc, location, radius, width, height))
-		return true;
-
-	// 虫網の座標と重なっていたら、真を返す
-	loc = player.GetRingLocation();
-	radius = player.GetRingRadius();
+	Vector2D loc = player.GetLocation();
+	float radius = player.GetRadius();
+	radius += player.GetRingRadius();
+	radius += player.GetStickmLength();
 	if (BoxHitCheck(loc, location, radius, width, height))
 		return true;
 
