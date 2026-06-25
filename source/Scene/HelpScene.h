@@ -13,7 +13,7 @@ private:
 	int DecisionSE;
 	int HelpBGM;
 	int back_ground;
-	int controller;
+	int controller[2];
 
 	static int netImage;
 	static int productionImage[2];

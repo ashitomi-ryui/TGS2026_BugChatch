@@ -23,7 +23,8 @@ int Help::Init()
 {
 	buttonImage = LoadGraph("assets/images/UI/Button.PNG");
 	back_ground = LoadGraph("assets/images/UI/HelpBack.PNG");
-	controller = LoadGraph("assets/images/UI/Controller.PNG");
+	controller[0] = LoadGraph("assets/images/UI/Controller1.PNG");
+	controller[1] = LoadGraph("assets/images/UI/Controller2.PNG");
 	netImage = LoadGraph("assets/images/Player/BugNet.PNG");
 	productionImage[0] = LoadGraph("assets/images/UI/SceneProduction/Grasshopper1.PNG");
 	productionImage[1] = LoadGraph("assets/images/UI/SceneProduction/Grasshopper2.PNG");
@@ -155,10 +156,12 @@ eSceneType Help::Update(float delta_second)
 void Help::Draw()const
 {
 	Camera::DrawGraph({ 640,365 }, 1.0, 1.0, 0.0, back_ground);
-	Camera::DrawGraph({ 640,230 }, 1.0, 1.0, 0.0, controller);
+	Camera::DrawGraph({ 540,250 }, 1.0, 1.0, 0.0, controller[0]);
+	Camera::DrawGraph({ 740,150 }, 1.0, 1.0, 0.0, controller[1]);
 
-	Camera::DrawString({ 200,130 }, 55, GetColor(255, 255, 255), "キャラ操作");
-	Camera::DrawString({ 850,320 }, 55, GetColor(255, 255, 255), "網を操作");
+	Camera::DrawString({ 140,160 }, 50, GetColor(255, 255, 255), "キャラ操作");
+	Camera::DrawString({ 740,340 }, 50, GetColor(255, 255, 255), "網を操作");
+	Camera::DrawString({ 940,200 }, 50, GetColor(255, 255, 255), "ゆっくり\nあるく");
 
 	// ボタンのサイズ比率
 	float ratio = 1.0f;

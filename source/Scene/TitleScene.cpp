@@ -211,10 +211,10 @@ void Title::Draw()const
 	// 文字の色
 	unsigned int charColor = 0xffffff;
 	// ボタンの位置
-	Vector2D botLoc[4] = { { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT - 320.0f },		// スタート
-						   { D_WIN_WIDTH / 2.0f - 350.0f, D_WIN_HEIGHT - 200.0f },		// ヘルプ
-						   { D_WIN_WIDTH / 2.0f, D_WIN_HEIGHT - 80.0f },		// おわり
-						   { D_WIN_WIDTH / 2.0f + 350.0f, D_WIN_HEIGHT - 200.0f } };	// ランキング
+	Vector2D botLoc[4] = { { D_WIN_WIDTH / 2.0f + 250.0f, D_WIN_HEIGHT - 350.0f },		// スタート
+						   { D_WIN_WIDTH / 2.0f - 125.0f, D_WIN_HEIGHT - 220.0f },		// ヘルプ
+						   { D_WIN_WIDTH / 2.0f + 100.0f, D_WIN_HEIGHT - 80.0f },		// おわり
+						   { D_WIN_WIDTH / 2.0f + 425.0f, D_WIN_HEIGHT - 200.0f } };	// ランキング
 	// 文字の位置ずらす
 	Vector2D charVec[4] = { { -1.5f, -10.0f },		// スタート
 							 { -1.2f, -10.0f },		// ヘルプ
@@ -262,6 +262,10 @@ void Title::Draw()const
 			charColor = 0xffffff;
 		}
 
+		if (i == 0)
+		{
+			ratio *= 1.2f;
+		}
 		if (i == 3)
 		{
 			charSize = (int)(40.0f * ratio);
