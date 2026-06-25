@@ -19,6 +19,7 @@ private:
 	float timer;
 
 	int BGM;
+	int whistleSE;
 
 	static int groundImage;
 	static int productionImage[6];

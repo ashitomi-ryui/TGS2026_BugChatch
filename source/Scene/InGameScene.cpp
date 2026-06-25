@@ -11,6 +11,7 @@
 int InGame::groundImage = -1;
 int InGame::productionImage[6] = {};
 
+
 InGame::InGame()
 {
 	get[3] = {};
@@ -44,7 +45,7 @@ int InGame::Init()//各プログラムの初期化
 	{
 		return FALSE;
 	}
-	countSE = LoadSoundMem("assets/Audio/AS_1274842_３２１GO！・キャラクター達の競争.wav");
+	countSE = LoadSoundMem("assets/Audio/countSE.wav");
 	if (countSE == -1)
 	{
 		return FALSE;
@@ -54,6 +55,11 @@ int InGame::Init()//各プログラムの初期化
 	{
 		return FALSE;
 	}
+	/*whistleSE = LoadSoundMem("assets/Audio/AS_41577_ビーッ（ホイッスル、警笛の音）.wav");
+	if(whistleSE==-1)
+	{
+		return FALSE;
+	}*/
 	timer = 0.0f;
 
 	for (int i = 0; i < 3; i++)

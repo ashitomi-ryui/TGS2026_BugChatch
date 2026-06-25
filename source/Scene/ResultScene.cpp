@@ -8,6 +8,8 @@ int Result::netImage = -1;
 int Result::productionImage[2] = {};
 int Result::buttonImage = -1;
 
+int Scorecount;
+
 int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
 int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
 
@@ -52,6 +54,11 @@ int Result::Init()
 	}
 	DecisionSE = LoadSoundMem("assets/Audio/AS_134044_Œˆ’è‰¹.wav");
 	if (DecisionSE == -1)
+	{
+		return FALSE;
+	}
+	Scorecount = LoadSoundMem("assets/Audio/HitSE.wav");
+	if (Scorecount == -1)
 	{
 		return FALSE;
 	}
@@ -436,4 +443,6 @@ void Result::AddPoint(Cage::Type type)
 		p.point[2]++;
 		break;
 	}
+
+	PlaySoundMem(Scorecount, DX_PLAYTYPE_BACK);
 }
