@@ -19,6 +19,7 @@ private:
 	int ChoiceSE;
 	int DecisionSE;
 	int ResultBGM;
+	int RankInSE;
 	int back_ground;
 	int bugIcon[3];
 
@@ -37,6 +38,7 @@ private:
 	static point p;
 
 	bool isRankIn;
+	
 	float colorHue;	// ê‘0Å`óŒ1Å`ê¬2Å`ê‘3
 
 	float timer;

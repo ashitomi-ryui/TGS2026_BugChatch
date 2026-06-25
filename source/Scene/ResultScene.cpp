@@ -10,6 +10,8 @@ int Result::buttonImage = -1;
 
 int Scorecount;
 
+bool isRankInPlayed;
+
 int Result::divisor[DISPLAY_LIMIT] = { 1,10,100,1000 };
 int Result::display[DISPLAY_LIMIT][DISPLAY_LIMIT] = {};
 
@@ -20,6 +22,7 @@ Result::point Result::p = {};
 Result::Result()
 {
 	isRankIn = false;
+	isRankInPlayed = false;
 	colorHue = 0.0f;
 
 	timer = 0.0f;
@@ -62,8 +65,13 @@ int Result::Init()
 	{
 		return FALSE;
 	}
+	RankInSE = LoadSoundMem("assets/Audio/RankIn.wav");
+	if (RankInSE == -1)
+	{
+		return FALSE;
+	}
 	pressed = false;
-
+	
 	ChangeVolumeSoundMem(150, ChoiceSE);
 	ChangeVolumeSoundMem(150, DecisionSE);
 	ChangeVolumeSoundMem(130, ResultBGM);
@@ -181,6 +189,7 @@ eSceneType Result::Update(float delta_second)
 
 			if (timer >= 1.0f)
 			{
+				PlaySoundMem(RankInSE, DX_PLAYTYPE_BACK);
 				changeProduction++;
 			}
 		}
@@ -311,7 +320,9 @@ void Result::Draw()const
 
 		if (changeProduction > 2 && isRankIn)
 		{
+			
 			Camera::DrawString({ 375, 375 }, 100, GetColor(r, g, b), "ƒ‰ƒ“ƒNƒCƒ“I");
+			
 		}
 	}
 
