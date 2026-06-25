@@ -43,6 +43,7 @@ private:
 	bool m_reverseFlag;	// 反転フラグ
 	bool m_pullTheNetFlag;	// 虫網を引くフラグ
 	bool m_rotatingThrustFlag;	// 回転させながら出すフラグ
+	bool m_isSneak;	// 忍び足
 
 	// アニメーション
 	float m_blinkTime;		// 瞬き時間
@@ -77,12 +78,47 @@ private:
 
 
 public:
+	/// <summary>
+	/// 虫網のリングの座標を取得する
+	/// </summary>
+	/// <returns></returns>
 	Vector2D GetRingLocation() const;
+	/// <summary>
+	/// 虫網のリングの半径を取得する
+	/// </summary>
+	/// <returns></returns>
 	float GetRingRadius() const;
+	/// <summary>
+	/// プレイヤーの最大速度を取得する
+	/// </summary>
+	/// <returns></returns>
 	float GetMaxSpeed() const;
+	/// <summary>
+	/// プレイヤーの座標を取得する
+	/// </summary>
+	/// <returns></returns>
 	Vector2D GetLocation() const;
+	/// <summary>
+	/// プレイヤーの半径を取得する
+	/// </summary>
+	/// <returns></returns>
 	float GetRadius() const;
+	/// <summary>
+	/// 虫網の棒の長さを取得する
+	/// </summary>
+	/// <returns></returns>
 	float GetStickmLength() const;
+
+	/// <summary>
+	/// 虫網を持っているか取得する
+	/// </summary>
+	/// <returns>持っているならtrue</returns>
+	bool GetNetHolding() const;
+	/// <summary>
+	/// 忍び足か取得する
+	/// </summary>
+	/// <returns>忍び足ならtrue</returns>
+	bool GetSneak() const;
 
 	/// <summary>
 	/// プレイヤーを移動させる

@@ -53,6 +53,7 @@ Player::Player()
 	m_reverseFlag = false;	// 反転フラグ
 	m_pullTheNetFlag = false;	// 虫網を引くフラグ
 	m_rotatingThrustFlag = false;	// 回転させながら出すフラグ
+	m_isSneak = true;	// 忍び足
 
 	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
@@ -111,6 +112,7 @@ void Player::Init()
 	m_reverseFlag = false;	// 反転フラグ
 	m_pullTheNetFlag = false;	// 虫網を引くフラグ
 	m_rotatingThrustFlag = false;	// 回転させながら出すフラグ
+	m_isSneak = true;	// 忍び足
 
 	// アニメーション
 	m_blinkTime = 0.0f;		// 瞬き時間
@@ -390,10 +392,20 @@ void Player::Animation(float delta)
 void Player::Move(float delta)
 {
 	Vector2D leftStick = GetLeftStick();
-	leftStick.y *= -1;
+	leftStick.y *= -1.0f;
 
 	float acceleration = 2700.0f * delta;
 	float deceleration = 1300.0f * delta;
+
+	m_isSneak = GetButtonState(XINPUT_BUTTON_RIGHT_SHOULDER) == eHeld;
+	float max = m_maxSpeed;
+	if(m_isSneak)
+	{
+		acceleration *= 0.5f;
+		deceleration *= 0.5f;
+
+		max *= 0.5f;
+	}
 
 	// 加速
 	// スティック
@@ -427,10 +439,10 @@ void Player::Move(float delta)
 
 	// 最大速度調整
 	float len = Length(m_moveSpeed);
-	if (len > m_maxSpeed)
+	if (len > max)
 	{
 		float shiita = VecATan2(m_moveSpeed, { 0.0f,0.0f });
-		len -= m_maxSpeed;
+		len -= max;
 		m_moveSpeed.x += sinf(shiita) * len;
 		m_moveSpeed.y -= cosf(shiita) * len;
 	}
@@ -684,6 +696,16 @@ float Player::GetRadius() const
 float Player::GetStickmLength() const
 {
 	return m_stickLength;
+}
+
+bool Player::GetNetHolding() const
+{
+	return m_holdingFlag;
+}
+
+bool Player::GetSneak() const
+{
+	return m_isSneak;
 }
 
 void Player::MoveLocation(Vector2D vector)
