@@ -10,6 +10,8 @@ int Ranking::new_rank = -1;
 int Ranking::netImage = -1;
 int Ranking::productionImage[2] = {};
 int Ranking::buttonImage = -1;
+int RankInSE;
+
 
 Ranking::Ranking()
 {
@@ -18,6 +20,7 @@ Ranking::Ranking()
 	RankingBGM = -1;
 	back_ground = -1;
 	buttonSelect = 0;
+	RankInSE = -1;
 	pressed = false;
 
 	shiita = 0.0f;
@@ -54,6 +57,12 @@ int Ranking::Init()
 	{
 		return FALSE;
 	}
+	RankInSE = LoadSoundMem("assets/Audio/RankIn.wav");
+	if (RankInSE == -1)
+	{
+		return FALSE;
+	}
+
 
 	int loadrankdata=LoadRankData();
 	if (loadrankdata != TRUE)
@@ -64,6 +73,7 @@ int Ranking::Init()
 	ChangeVolumeSoundMem(150, ChoiceSE);
 	ChangeVolumeSoundMem(150, DecisionSE);
 	ChangeVolumeSoundMem(130, RankingBGM);
+	ChangeVolumeSoundMem(130, RankInSE);
 	PlaySoundMem(RankingBGM, DX_PLAYTYPE_LOOP);
 
 	buttonSelect = 0;
@@ -348,6 +358,8 @@ int Ranking::LoadRankData()
 
 int Ranking::CheckRankData(int p_point)
 {
+	PlaySoundMem(RankInSE, DX_PLAYTYPE_BACK);
+
 	if (p_point >= ranking[MAX_RANK - 1])
 	{
 		new_data = p_point;

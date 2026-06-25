@@ -21,6 +21,7 @@ private:
 	int ChoiceSE;
 	int DecisionSE;
 	int back_ground;
+   
 
 	static int netImage;
 	static int productionImage[2];
