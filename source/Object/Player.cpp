@@ -45,8 +45,6 @@ Player::Player()
 	m_oldRotateStick = 0.0f;
 	m_valueRotateStick = 0.0f;
 
-	m_ringSpeed = 0.0f;	// リングの速度
-
 	m_walkingFlag = false;	// 歩くフラグ
 	m_holdingFlag = false;	// 虫網を持つフラグ
 	m_oldHoldingFlag = false;	// 前フレームの虫網を持つフラグ
@@ -103,8 +101,6 @@ void Player::Init()
 	m_rotateStick = 0.0f;
 	m_oldRotateStick = 0.0f;
 	m_valueRotateStick = 0.0f;
-
-	m_ringSpeed = 0.0f;	// リングの速度
 
 	m_walkingFlag = false;	// 歩くフラグ
 	m_holdingFlag = false;	// 虫網を持つフラグ
@@ -264,6 +260,7 @@ void Player::Draw() const
 		// 腕を表示
 		Camera::DrawGraphW(frontArmLocation, 2.0f, 2.0f, 0.0f, m_armImage);
 	}
+
 }
 
 void Player::DrawNet(Vector2D ringLocation) const
@@ -397,7 +394,9 @@ void Player::Move(float delta)
 	float acceleration = 2700.0f * delta;
 	float deceleration = 1300.0f * delta;
 
+	// RBボタンで忍び足にする
 	m_isSneak = GetButtonState(XINPUT_BUTTON_RIGHT_SHOULDER) == eHeld;
+	
 	float max = m_maxSpeed;
 	if(m_isSneak)
 	{
@@ -406,6 +405,10 @@ void Player::Move(float delta)
 
 		max *= 0.5f;
 	}
+
+	// 動いていなければ忍び足の判定にする
+	if (leftStick.x == 0.0f && leftStick.y == 0.0f)
+		m_isSneak = true;
 
 	// 加速
 	// スティック
@@ -531,7 +534,6 @@ void Player::Net(float delta)
 
 		// 虫網（リング）の初期化
 		m_ringThickness = 0.0f;
-		m_ringSpeed = 0.0f;
 		m_ringVector = { 0.0f, 0.0f };
 
 		// 網の最短位置初期化
@@ -594,23 +596,18 @@ void Player::Net(float delta)
 		// 虫網を構える
 		m_holdingFlag = true;
 
-		// リングの移動
-		// リングが、倒したい位置に無かった場合
-		if (Length(Vec2Sub(m_ringVector, Vec2Mult(rightStick, m_stickLength))) > 0.06f)
-		{
-			// 加速
-			m_ringSpeed += ringAcceleration;
+		// 目的地を決める
+		Vector2D destination = {};
+		destination.x = sinf(m_rotateStick) * m_tiltStick * m_stickLength;
+		destination.y = -cosf(m_rotateStick) * m_tiltStick * m_stickLength;
 
-			// 位置を変える
-			FixGradually(m_ringVector.x, sinf(m_rotateStick) * m_tiltStick * m_stickLength, m_ringSpeed);
-			FixGradually(m_ringVector.y, -cosf(m_rotateStick) * m_tiltStick * m_stickLength, m_ringSpeed);
-		}
-		else
-		{
-			// その位置にする
-			m_ringSpeed = 0.0f;
-			m_ringVector = Vec2Mult(rightStick, m_stickLength);
-		}
+		// 虫網の勢いがあるとき、忍び足解除
+		float len = Length(Vec2Sub(m_ringVector, destination));
+		if (len > m_stickLength * 5.0f * delta)
+			m_isSneak = false;
+
+		// リングの移動
+		m_ringVector = destination;
 
 		// リングの見た目の太さを、倒したり引いた時に太くする
 		FixGradually(m_ringThickness, 0.0f, fabsf(m_tiltStick - m_oldTiltStick) * m_ringRadius);

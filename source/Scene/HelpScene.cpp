@@ -156,12 +156,12 @@ eSceneType Help::Update(float delta_second)
 void Help::Draw()const
 {
 	Camera::DrawGraph({ 640,365 }, 1.0, 1.0, 0.0, back_ground);
-	Camera::DrawGraph({ 540,250 }, 1.0, 1.0, 0.0, controller[0]);
-	Camera::DrawGraph({ 740,150 }, 1.0, 1.0, 0.0, controller[1]);
+	Camera::DrawGraph({ 540,240 }, 1.0, 1.0, 0.0, controller[0]);
+	Camera::DrawGraph({ 780,150 }, 1.0, 1.0, 0.0, controller[1]);
 
-	Camera::DrawString({ 140,160 }, 50, GetColor(255, 255, 255), "キャラ操作");
-	Camera::DrawString({ 740,340 }, 50, GetColor(255, 255, 255), "網を操作");
-	Camera::DrawString({ 940,200 }, 50, GetColor(255, 255, 255), "ゆっくり\nあるく");
+	Camera::DrawString({ 140,150 }, 50, GetColor(0, 255, 255), "キャラ操作");
+	Camera::DrawString({ 730,330 }, 50, GetColor(255, 0, 0), "網を操作");
+	Camera::DrawString({ 980,200 }, 50, GetColor(255, 255, 0), "ゆっくり\n　あるく");
 
 	// ボタンのサイズ比率
 	float ratio = 1.0f;

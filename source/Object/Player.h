@@ -35,8 +35,6 @@ private:
 	float m_oldRotateStick;	// 前のスティックの角度（90°= 1）
 	float m_valueRotateStick;	// スティックの角度に足す値
 
-	float m_ringSpeed;	// リングの速度
-
 	bool m_walkingFlag;	// 歩くフラグ
 	bool m_holdingFlag;	// 虫網を持つフラグ
 	bool m_oldHoldingFlag;	// 前フレームの虫網を持つフラグ
