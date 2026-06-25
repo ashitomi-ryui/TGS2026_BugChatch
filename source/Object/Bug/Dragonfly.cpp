@@ -661,12 +661,18 @@ void Dragonfly::PerceptionJudgment()
 	float playerLen = Length(Vec2Sub(m_location, playerLocation));
 	float ringLen = Length(Vec2Sub(m_location, ringLocation));
 
+	float detection = m_detectionRange;
+	if (targetPlayer->GetSneak())
+	{
+		detection /= 2.0f;
+	}
+
 	// プレイヤー察知
 	// 察知範囲に入った時
-	if (playerLen < m_detectionRange || ringLen < m_detectionRange)
+	if (playerLen < detection || ringLen < detection)
 	{
 		// 察知班にの1/2に入った時
-		if (playerLen < m_detectionRange / 2.0f || ringLen < m_detectionRange / 2.0f)
+		if (playerLen < detection / 2.0f || ringLen < detection / 2.0f)
 		{
 			// 逃げ状態へ
 			TransitionToEscape();

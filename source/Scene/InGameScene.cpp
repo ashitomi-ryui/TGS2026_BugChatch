@@ -261,8 +261,8 @@ eSceneType InGame::Update(float delta_second)
 		// かごの更新
 		Cage::Update(eInGame, delta_second);
 
-		// 音再生・停止
-		Cicada::PlayAudio();
+		//// 音再生・停止
+		//Cicada::PlayAudio();
 
 		flowingTime.Update(delta_second);
 
