@@ -47,7 +47,7 @@ int InGame::Init()//ŠeƒvƒƒOƒ‰ƒ€‚Ì‰Šú‰»
 	{
 		return FALSE;
 	}
-	countSE = LoadSoundMem("assets/Audio/countSE.wav");
+	countSE = LoadSoundMem("assets/Audio/countSE3.wav");
 	if (countSE == -1)
 	{
 		return FALSE;
