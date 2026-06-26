@@ -357,7 +357,8 @@ void Player::Animation(float delta)
 	{
 		m_legAnimTime += delta;
 
-		if (m_legAnimTime >= 0.2f)
+		if (!m_isSneak && m_legAnimTime >= 0.2f ||
+			m_isSneak && m_legAnimTime >= 0.4f)
 		{
 			m_legAnimCount++;
 
