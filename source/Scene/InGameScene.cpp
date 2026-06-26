@@ -244,8 +244,8 @@ eSceneType InGame::Update(float delta_second)
 			// ‰¹‚ğ~‚ß‚é
 			StopSoundMem(BGM);
 
-			Grasshopper::StopAudio();
-			Cicada::StopAudio();
+			ObjectManager::StopGrasshopperAudio();
+			ObjectManager::StopCicadaAudio();
 
 			// Ÿ‚Ì‰‰o
 			changeProduction++;
