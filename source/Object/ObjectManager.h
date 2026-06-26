@@ -37,7 +37,7 @@ private:
 	};
 	static ObjectShadow shadow;
 
-	static int CicadaSE;
+	
 
 public:
 	ObjectManager();
@@ -178,6 +178,10 @@ public:
 	static void UpdateCicadaAudio();
 
 	static void UpdateGrasshopperAudio();
+
+	static void StopCicadaAudio();
+
+	static void StopGrasshopperAudio();
 
 	
 public:
