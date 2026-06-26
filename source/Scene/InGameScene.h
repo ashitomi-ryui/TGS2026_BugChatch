@@ -37,12 +37,6 @@ private:
 	float animTime;
 	int animCount;
 
-	bool isCountSEPlayed;
-	bool isFinishSE;
-	bool isThirtySEPlayed;
-	bool isTFifteenSEPlayed;
-	bool isFcountSEPlayed;
-
 public:
 	InGame();
 	~InGame();

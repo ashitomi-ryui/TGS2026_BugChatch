@@ -28,11 +28,6 @@ InGame::InGame()
 
 	changeProduction = 0;	// シーン切替演出
 	shiita = 0.0f;
-
-	isCountSEPlayed = false;
-	isFinishSE = false;
-	isThirtySEPlayed = false;
-	isFcountSEPlayed = false;
 }
 
 InGame::~InGame()
@@ -180,6 +175,8 @@ eSceneType InGame::Update(float delta_second)
 				changeProduction++;
 				timer = 3.0f;
 				ratio = 1.0f;
+
+				PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
 			}
 
 			//ジャンプの移動処理
@@ -194,54 +191,22 @@ eSceneType InGame::Update(float delta_second)
 	case 3:
 		timer -= delta_second;
 		
-		if (!isCountSEPlayed)
-		{
-			PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
-			isCountSEPlayed = true;
-		}
-
 		if (timer <= 0.0f)
 		{
 			// 次の演出
 			changeProduction++;
 			timer = D_TIME_LIMIT;
-			isCountSEPlayed = false;
-			isThirtySEPlayed = false;  
-			isTFifteenSEPlayed = false; 
-			isFcountSEPlayed = false;   
 		}
 		
 		break;
 
 	case 4:	// ==============================================ゲームプレイ
 		timer -= delta_second;
-		if (timer <= 30.0f && !isThirtySEPlayed)
-		{
-			PlaySoundMem(ThirtycountSE, DX_PLAYTYPE_BACK);
-			isThirtySEPlayed = true;
-		}
 		
-		if (timer <= 15.0f && !isTFifteenSEPlayed)
-		{
-			PlaySoundMem(TFifteencountSE, DX_PLAYTYPE_BACK);
-			TFifteencountSE = true;
-		}
-		if (timer <= 5.0f && !isFcountSEPlayed)
-		{
-			PlaySoundMem(FcountSE, DX_PLAYTYPE_BACK);
-			FcountSE = true;
-		}
-
-		
-
 		if (timer <= 0.0f)
 		{
-			if (!isFinishSE)
-			{
-				PlaySoundMem(FinishSE, DX_PLAYTYPE_BACK);
-				isFinishSE = true;
-			}
-
+			PlaySoundMem(FinishSE, DX_PLAYTYPE_BACK);
+			
 			timer = 2.0f;
 
 			// 音を止める
@@ -252,7 +217,6 @@ eSceneType InGame::Update(float delta_second)
 
 			// 次の演出
 			changeProduction++;
-			isFinishSE = false;
 
 			animTime = 0.0f;
 			animCount = 0;
@@ -263,16 +227,27 @@ eSceneType InGame::Update(float delta_second)
 		switch (timeStep)
 		{
 		case 0:
-			if (timer <= (float)((int)(D_TIME_LIMIT / 2.0f) / 10 * 10))
+			if (timer <= 30.0f)
 			{
-				flowingTime.Flow((int)(D_TIME_LIMIT / 2.0f) / 10 * 10, 0xffffff);
+				PlaySoundMem(ThirtycountSE, DX_PLAYTYPE_BACK);
+
+				flowingTime.Flow(30.0f, 0xffffff);
 				timeStep++;
 			}
 			break;
 		case 1:
-			if (timer <= (float)((int)(D_TIME_LIMIT / 4.0f) / 5 * 5))
+			if (timer <= 15.0f)
 			{
-				flowingTime.Flow((int)(D_TIME_LIMIT / 4.0f) / 5 * 5, 0xffff00);
+				PlaySoundMem(TFifteencountSE, DX_PLAYTYPE_BACK);
+
+				flowingTime.Flow(15.0f, 0xffff00);
+				timeStep++;
+			}
+			break;
+		case 2:
+			if (timer <= 5.0f)
+			{
+				PlaySoundMem(FcountSE, DX_PLAYTYPE_BACK);
 				timeStep++;
 			}
 			break;
