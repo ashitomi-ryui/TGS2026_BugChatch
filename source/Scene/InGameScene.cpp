@@ -206,30 +206,33 @@ eSceneType InGame::Update(float delta_second)
 			changeProduction++;
 			timer = D_TIME_LIMIT;
 			isCountSEPlayed = false;
+			isThirtySEPlayed = false;  
+			isTFifteenSEPlayed = false; 
+			isFcountSEPlayed = false;   
 		}
 		
 		break;
 
 	case 4:	// ==============================================ÉQÅ[ÉÄÉvÉåÉC
 		timer -= delta_second;
-
+		if (timer <= 30.0f && !isThirtySEPlayed)
+		{
+			PlaySoundMem(ThirtycountSE, DX_PLAYTYPE_BACK);
+			isThirtySEPlayed = true;
+		}
+		
+		if (timer <= 15.0f && !isTFifteenSEPlayed)
+		{
+			PlaySoundMem(TFifteencountSE, DX_PLAYTYPE_BACK);
+			TFifteencountSE = true;
+		}
 		if (timer <= 5.0f && !isFcountSEPlayed)
 		{
 			PlaySoundMem(FcountSE, DX_PLAYTYPE_BACK);
 			FcountSE = true;
 		}
 
-		if (timer <= 15.0f && !isTFifteenSEPlayed)
-		{
-			PlaySoundMem(TFifteencountSE, DX_PLAYTYPE_BACK);
-			TFifteencountSE = true;
-		}
-
-		if (timer <= 30.0f && !isThirtySEPlayed)
-		{
-			PlaySoundMem(ThirtycountSE, DX_PLAYTYPE_BACK);
-			isThirtySEPlayed = true;
-		}
+		
 
 		if (timer <= 0.0f)
 		{
