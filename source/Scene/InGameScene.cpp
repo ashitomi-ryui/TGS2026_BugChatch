@@ -23,12 +23,16 @@ InGame::InGame()
 	BGM = -1;
 	countSE = -1;
 	FinishSE = -1;
+	ThirtycountSE = -1;
+	FcountSE = -1;
 
 	changeProduction = 0;	// シーン切替演出
 	shiita = 0.0f;
 
 	isCountSEPlayed = false;
 	isFinishSE = false;
+	isThirtySEPlayed = false;
+	isFcountSEPlayed = false;
 }
 
 InGame::~InGame()
@@ -53,8 +57,23 @@ int InGame::Init()//各プログラムの初期化
 	{
 		return FALSE;
 	}
+	ThirtycountSE = LoadSoundMem("assets/Audio/jihou_30byou_01.wav");
+	if (ThirtycountSE == -1)
+	{
+		return FALSE;
+	}
+	TFifteencountSE = LoadSoundMem("assets/Audio/15count.wav");
+	if (TFifteencountSE == -1)
+	{
+		return FALSE;
+	}
 	FinishSE = LoadSoundMem("assets/Audio/Finish.wav");
 	if (FinishSE == -1)
+	{
+		return FALSE;
+	}
+	FcountSE = LoadSoundMem("assets/Audio/54321.wav");
+	if (FcountSE == -1)
 	{
 		return FALSE;
 	}
@@ -193,6 +212,25 @@ eSceneType InGame::Update(float delta_second)
 
 	case 4:	// ==============================================ゲームプレイ
 		timer -= delta_second;
+
+		if (timer <= 5.0f && !isFcountSEPlayed)
+		{
+			PlaySoundMem(FcountSE, DX_PLAYTYPE_BACK);
+			FcountSE = true;
+		}
+
+		if (timer <= 15.0f && !isTFifteenSEPlayed)
+		{
+			PlaySoundMem(TFifteencountSE, DX_PLAYTYPE_BACK);
+			TFifteencountSE = true;
+		}
+
+		if (timer <= 30.0f && !isThirtySEPlayed)
+		{
+			PlaySoundMem(ThirtycountSE, DX_PLAYTYPE_BACK);
+			isThirtySEPlayed = true;
+		}
+
 		if (timer <= 0.0f)
 		{
 			if (!isFinishSE)

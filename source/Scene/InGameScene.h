@@ -26,6 +26,9 @@ private:
 	static int productionImage[6];
 
 	int countSE;
+	int ThirtycountSE;
+	int	TFifteencountSE;
+	int FcountSE;
 	int FinishSE;
 
 	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o
@@ -36,6 +39,9 @@ private:
 
 	bool isCountSEPlayed;
 	bool isFinishSE;
+	bool isThirtySEPlayed;
+	bool isTFifteenSEPlayed;
+	bool isFcountSEPlayed;
 
 public:
 	InGame();
