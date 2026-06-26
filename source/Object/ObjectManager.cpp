@@ -2,7 +2,8 @@
 #include"../Utilitys/Camera.h"
 #include"../Utilitys/Random.h"
 
-
+int CicadaSE;
+int GrasshopperSE;
 
 Player ObjectManager::player;
 
@@ -124,6 +125,9 @@ void ObjectManager::Init()
 	{
 		effect[id].SetHidden();
 	}
+
+	CicadaSE = LoadSoundMem("assets/Audio/AS_78229_ミンミンゼミ.wav");
+	GrasshopperSE = LoadSoundMem("assets/Audio/Batta.wav");
 
 }
 
@@ -623,52 +627,10 @@ bool ObjectManager::CheckUIOverlapping(float width, float height, Vector2D locat
 	return false;
 }
 
-//void ObjectManager::UpdateBugAudio(Bug* bugList, int soundHandle, float maxRange)
-//{
-//	// プレイヤーの現在地を取得
-//	Vector2D playerLocation = GetPlayerLocation();
-//
-//	float minDistance = 999999.0f;
-//	bool anyBugOnScreen = false;
-//
-//	
-//	// 出現中かつ、画面内にいるか
-//	if (bugList->GetIsAppearance())
-//	{
-//		if (Camera::CheckItsOnTheScreen(bugList->GetLocation(), bugList->GetRadius()))
-//		{
-//			anyBugOnScreen = true;
-//
-//			// 距離を計算して最短を更新
-//			float len = Length(Vec2Sub(bugList->GetLocation(), playerLocation));
-//			if (len < minDistance)
-//			{
-//				minDistance = len;
-//			}
-//		}
-//	}
-//	
-//	// 音量を決定（デフォルトは100）
-//	int volume = 100;
-//
-//	if (anyBugOnScreen && minDistance < maxRange)
-//	{
-//		// 距離に応じて 100 ～ 255 に滑らかに変化
-//		volume = (int)(255 - (minDistance / maxRange) * (255 - 100));
-//	}
-//
-//	// 指定されたSEハンドルに対して音量を反映・再生
-//	ChangeVolumeSoundMem(volume, soundHandle);
-//
-//	if (CheckSoundMem(soundHandle) != TRUE)
-//	{
-//		PlaySoundMem(soundHandle, DX_PLAYTYPE_BACK);
-//	}
-//}
 
 void ObjectManager::UpdateCicadaAudio()
 {
-	static int CicadaSE = LoadSoundMem("assets/Audio/AS_78229_ミンミンゼミ.wav");
+	
 
 	Vector2D playerLocation = GetPlayerLocation(); // プレイヤーの座標
 	float minDistance = 999999.0f;
@@ -704,7 +666,7 @@ void ObjectManager::UpdateCicadaAudio()
 void ObjectManager::UpdateGrasshopperAudio()
 {
 	//SE
-	static int grasshopperSE = LoadSoundMem("assets/Audio/Batta.wav");
+	
 	/*static int grasshopperjumpSE = LoadSoundMem("assets/Audio/BattaJump.wav");*/
 
 	Vector2D playerLocation = GetPlayerLocation();
@@ -740,11 +702,27 @@ void ObjectManager::UpdateGrasshopperAudio()
 	}
 
 	
-	ChangeVolumeSoundMem(volume, grasshopperSE);
+	ChangeVolumeSoundMem(volume, GrasshopperSE);
 
 	// まだ鳴っていなければ再生を開始
-	if (CheckSoundMem(grasshopperSE) != TRUE)
+	if (CheckSoundMem(GrasshopperSE) != TRUE)
 	{
-		PlaySoundMem(grasshopperSE, DX_PLAYTYPE_BACK);
+		PlaySoundMem(GrasshopperSE, DX_PLAYTYPE_BACK);
+	}
+}
+
+void ObjectManager::StopCicadaAudio()
+{
+	if (CheckSoundMem(CicadaSE) == TRUE)
+	{
+		StopSoundMem(CicadaSE);
+	}
+}
+
+void ObjectManager::StopGrasshopperAudio()
+{
+	if (CheckSoundMem(GrasshopperSE) == TRUE)
+	{
+		StopSoundMem(GrasshopperSE);
 	}
 }
