@@ -26,9 +26,7 @@ private:
 	static int productionImage[6];
 
 	int countSE;
-	int ThirtycountSE;
-	int	TFifteencountSE;
-	int FcountSE;
+	int startSE;
 	int FinishSE;
 
 	int changeProduction;	// ƒV[ƒ“Ø‘Ö‰‰o

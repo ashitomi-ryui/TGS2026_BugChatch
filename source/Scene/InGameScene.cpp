@@ -22,9 +22,8 @@ InGame::InGame()
 
 	BGM = -1;
 	countSE = -1;
+	startSE = -1;
 	FinishSE = -1;
-	ThirtycountSE = -1;
-	FcountSE = -1;
 
 	changeProduction = 0;	// シーン切替演出
 	shiita = 0.0f;
@@ -47,31 +46,26 @@ int InGame::Init()//各プログラムの初期化
 	{
 		return FALSE;
 	}
-	countSE = LoadSoundMem("assets/Audio/countSE3.wav");
+	countSE = LoadSoundMem("assets/Audio/P.wav");
 	if (countSE == -1)
 	{
 		return FALSE;
 	}
-	ThirtycountSE = LoadSoundMem("assets/Audio/jihou_30byou_01.wav");
-	if (ThirtycountSE == -1)
+	ChangeVolumeSoundMem(0x177, countSE);
+
+	startSE = LoadSoundMem("assets/Audio/start.wav");
+	if (startSE == -1)
 	{
 		return FALSE;
 	}
-	TFifteencountSE = LoadSoundMem("assets/Audio/15count.wav");
-	if (TFifteencountSE == -1)
-	{
-		return FALSE;
-	}
+	ChangeVolumeSoundMem(0x177, startSE);
+
 	FinishSE = LoadSoundMem("assets/Audio/Finish.wav");
 	if (FinishSE == -1)
 	{
 		return FALSE;
 	}
-	FcountSE = LoadSoundMem("assets/Audio/54321.wav");
-	if (FcountSE == -1)
-	{
-		return FALSE;
-	}
+	
 	/*whistleSE = LoadSoundMem("assets/Audio/AS_41577_ビーッ（ホイッスル、警笛の音）.wav");
 	if(whistleSE==-1)
 	{
@@ -122,7 +116,7 @@ eSceneType InGame::Update(float delta_second)
 
 	switch (changeProduction)
 	{
-	case 0:	// ==============================================ゲームスタート
+	case 0:	// ==============================================スタート演出
 		shiita -= 2.0f * delta_second;
 
 		Vector2D loc = Camera::GetScreenLocation();
@@ -175,8 +169,6 @@ eSceneType InGame::Update(float delta_second)
 				changeProduction++;
 				timer = 3.0f;
 				ratio = 1.0f;
-
-				PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
 			}
 
 			//ジャンプの移動処理
@@ -191,13 +183,43 @@ eSceneType InGame::Update(float delta_second)
 	case 3:
 		timer -= delta_second;
 		
-		if (timer <= 0.0f)
+		switch (timeStep)
 		{
-			// 次の演出
-			changeProduction++;
-			timer = D_TIME_LIMIT;
+		case 0:
+			// 音を鳴らす
+			PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
+			timeStep++;
+			break;
+		case 1:
+			if (timer <= 2.0f)
+			{
+				// 音を鳴らす
+				PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
+				timeStep++;
+			}
+			break;
+		case 2:
+			if (timer <= 1.0f)
+			{
+				// 音を鳴らす
+				PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
+				timeStep++;
+			}
+			break;
+		case 3:
+			if (timer <= 0.0f)
+			{
+				// 音を鳴らす
+				PlaySoundMem(startSE, DX_PLAYTYPE_BACK);
+
+				// 次の演出
+				changeProduction++;
+				timer = D_TIME_LIMIT;
+				timeStep = 0;
+			}
+			break;
 		}
-		
+
 		break;
 
 	case 4:	// ==============================================ゲームプレイ
@@ -224,33 +246,70 @@ eSceneType InGame::Update(float delta_second)
 			break;
 		}
 
+		// 時間経過演出
 		switch (timeStep)
 		{
-		case 0:
+		case 0:	// のこり30秒生成
 			if (timer <= 30.0f)
 			{
-				PlaySoundMem(ThirtycountSE, DX_PLAYTYPE_BACK);
-
 				flowingTime.Flow(30.0f, 0xffffff);
+			}
+		case 2:
+		case 4:
+			// のこり30秒の音
+			if (timer <= 30.0f - 0.1f * (float)(timeStep))
+			{
+
+				PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
 				timeStep++;
 			}
 			break;
 		case 1:
+		case 3:
+			if (timer <= 30.0f - 0.1f * (float)(timeStep))
+			{
+				StopSoundMem(countSE);
+				timeStep++;
+			}
+			break;
+
+		case 5:	// のこり15秒生成
 			if (timer <= 15.0f)
 			{
-				PlaySoundMem(TFifteencountSE, DX_PLAYTYPE_BACK);
-
 				flowingTime.Flow(15.0f, 0xffff00);
-				timeStep++;
 			}
-			break;
-		case 2:
-			if (timer <= 5.0f)
+		case 7:
+		case 9:
+			// のこり15秒の音
+			if (timer <= 15.0f - 0.1f * (float)(timeStep - 5))
 			{
-				PlaySoundMem(FcountSE, DX_PLAYTYPE_BACK);
+
+				PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
 				timeStep++;
 			}
 			break;
+		case 6:
+		case 8:
+			if (timer <= 15.0f - 0.1f * (float)(timeStep - 5))
+			{
+				StopSoundMem(countSE);
+				timeStep++;
+			}
+			break;
+
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+			// 54321秒の音
+			if (timer <= 5.0f - (float)(timeStep - 10))
+			{
+				PlaySoundMem(countSE, DX_PLAYTYPE_BACK);
+				timeStep++;
+			}
+			break;
+
 		default:
 			break;
 		}
